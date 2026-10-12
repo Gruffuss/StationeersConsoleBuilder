@@ -1,0 +1,17 @@
+# h1
+SCENE w=200 h=100
+# d1
+DEFS {
+    GL id=a x1=0 y1=0 x2=1 y2=0 stops=[[0,#000],[1,#fff]]
+    # dt1
+}
+R x=1 f=@a
+# h2
+SCENE fit=contain  # h2 eol
+# d2
+DEFS {
+    CP id=k { R x=0 y=0 w=5 h=5 }
+    # dt2
+}
+C cx=5 cy=5 rx=2 ry=2
+# t1

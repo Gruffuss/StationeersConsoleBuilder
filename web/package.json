@@ -1,0 +1,7 @@
+{ "name": "vectorbuilder-web", "version": "0.4.0", "private": true, "type": "module",
+  "scripts": { "dev": "vite", "build": "tsc --noEmit && vite build && node ../tools/check-public-paths.mjs dist public/_framework && node ../tools/check-base-path.mjs dist", "test": "vitest run", "precore": "node copy-core.mjs" },
+  "dependencies": { "@codemirror/commands": "^6.11.1", "@codemirror/language": "^6.12.4", "@codemirror/lint": "^6.9.7",
+    "@codemirror/state": "^6.7.6", "@codemirror/view": "^6.43.13", "@lezer/highlight": "^1.2.5",
+    "react": "^19.3.0", "react-dom": "^19.3.0" },
+  "devDependencies": { "@types/node": "^24", "@types/react": "^19.3.0", "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.0", "happy-dom": "~20.14.5", "typescript": "~5.9.3", "vite": "^8.3.0", "vitest": "^5.0.0" } }

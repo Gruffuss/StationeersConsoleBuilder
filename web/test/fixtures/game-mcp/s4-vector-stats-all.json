@@ -1,0 +1,37 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "vector_stats",
+        "arguments": {}
+      }
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"ScriptedScreensVector 0.11.118.0\\r\\nscene \\\"lc\\\" (under \\\"StructureConsole2x2\\\")\\r\\n  nodes 13 root, 13 shapes emitted, 4 verts\\r\\n  rebuilds 2.57/s over 2s, 0.07 ms tessellate off-thread, 0.02 ms upload on-thread\\r\\n  on screen 519 px at the last rebuild, animated False, scroll-driven False\\r\\n  projection: corner depth 1.232..1.288, ratio 1.05x, sigma_min 1.040..1.128 px/unit, spread 1.08x, edge ramp on\\r\\n  no problems\\r\\nscene \\\"lines\\\" (under \\\"StructureConsoleMonitorLarge\\\")\\r\\n  nodes 24 root, 24 shapes emitted, 3110 verts across 2 meshes\\r\\n  rebuilds 58.01/s over 2s, 1.46 ms tessellate off-thread, 0.09 ms upload on-thread\\r\\n  on screen 913 px at the last rebuild, animated True, scroll-driven False\\r\\n  projection: corner depth 0.723..1.184, ratio 1.64x, sigma_min 1.127..2.204 px/unit, spread 1.96x, edge ramp on\\r\\n  no problems\\r\\nscene \\\"html:run\\\" (under \\\"StructureConsoleWide\\\")\\r\\n  nodes 6 root, 21 shapes emitted, 626 verts\\r\\n  rebuilds 3.08/s over 2s, 0.49 ms tessellate off-thread, 0.03 ms upload on-thread\\r\\n  on screen 299 px at the last rebuild, animated False, scroll-driven False\\r\\n  projection: corner depth 1.121..1.161, ratio 1.04x, sigma_min 0.576..0.601 px/unit, spread 1.04x, edge ramp on\\r\\n  no problems\\r\\nscene \\\"p1\\\" (under \\\"StructureConsole\\\")\\r\\n  nodes 1 root, 0 shapes emitted, 16 verts\\r\\n  rebuilds 2.57/s over 2s, 0.02 ms tessellate off-thread, 0.01 ms upload on-thread\\r\\n  on screen 229 px at the last rebuild, animated False, scroll-driven False\\r\\n  projection: corner depth 1.212..1.237, ratio 1.02x, sigma_min 0.478..0.495 px/unit, spread 1.04x, edge ramp on\\r\\n  no problems\\r\\n\"}]}}"
+}

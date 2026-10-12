@@ -1,0 +1,4 @@
+[
+["scene","src_b"],
+["src","# viewbox and fit live on SCENE, not on the element props\nSCENE w=100 h=200 fit=contain\n\nDEFS {\n    GL id=liquid units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#5FD9A8],[1,#2E8B6E]]\n    CP id=tank { R x=20 y=20 w=60 h=160 rx=10 }\n}\n\nR x=20 y=20 w=60 h=160 rx=10 f=#0B1622\n\nG clip=tank {\n    YS n=24 x==18+i*2.8 y==180-clamp($fill,0,1)*152+3*sin(i*0.5+t*1.6) y2=184 f=@liquid fea_edge=0\n}\n\n# Paint defaults on the group, since this format has no map syntax for `style`.\n# Stroke colour is s_ here, because plain `s` on a group means scale.\nG f=none s_=#1E3247 sw=2 fea=0 {\n    R x=20 y=20 w=60 h=160 rx=10\n    R x=26 y=26 w=48 h=6 rx=3\n}\n\nT x=20 y=190 w=60 h=10 text=TEXT size=7 cspace=2 align=center f=#3A5570\n"]
+]

@@ -1,0 +1,26 @@
+SCENE w=200 h=200 fit=stretch size=5 f=#8FA6B8
+R x=0 y=0 w=200 h=200 f=#0B1622 fea=0
+T x=4 y=3 w=192 h=6 text="fit: fill / contain / cover -- same box, same picture"
+R x=4 y=11 w=60 h=34 f=#12202F fea=0
+R x=70 y=11 w=60 h=34 f=#12202F fea=0
+R x=136 y=11 w=60 h=34 f=#12202F fea=0
+IMG x=4 y=11 w=60 h=34 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=fill
+IMG x=70 y=11 w=60 h=34 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=contain
+IMG x=136 y=11 w=60 h=34 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=cover
+T x=4 y=50 w=192 h=6 text="cover + at: keep the left edge, the middle, the right"
+IMG x=4 y=58 w=60 h=26 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=cover at=[0,0.5] rx=3
+IMG x=70 y=58 w=60 h=26 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=cover at=[0.5,0.5] rx=3
+IMG x=136 y=58 w=60 h=26 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=cover at=[1,0.5] rx=3
+T x=4 y=89 w=192 h=6 text="uv: the whole picture, then a quarter of it, magnified"
+IMG x=4 y=97 w=60 h=30 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png uv=[0,0,1,1]
+IMG x=70 y=97 w=60 h=30 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png uv=[0.25,0.25,0.75,0.75]
+IMG x=136 y=97 w=28 h=30 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png uv=[0.3,0.3,0.4,0.42]
+IMG x=168 y=97 w=28 h=30 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png uv=[0.3,0.3,0.4,0.42] smp=point
+T x=4 y=132 w=192 h=6 text="tile: one copy, repeated"
+IMG x=4 y=140 w=92 h=26 rx=4 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png tile=[22,12]
+T x=102 y=132 w=94 h=6 text="slice: corners keep their size"
+IMG x=102 y=140 w=40 h=26 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png slice=[80,120,80,120] bw=[5,7,5,7]
+IMG x=148 y=140 w=48 h=26 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png slice=[80,120,80,120] bw=[5,7,5,7]
+T x=4 y=172 w=192 h=6 text="an IMG rounds, fades and clicks like any other node"
+IMG id=pic x=4 y=180 w=52 h=16 rx=8 src=https://raw.githubusercontent.com/Gruffuss/scripted-screens-vector/09be911193cecfd8cc5a624c6bb55febad26f921/ScriptedScreensVector/About/thumb.png fit=cover fo=0.55 press=1
+T x=62 y=183 w=134 h=8 size=5 f=#5FD9A8 text=$tap missing="(click the rounded one)"

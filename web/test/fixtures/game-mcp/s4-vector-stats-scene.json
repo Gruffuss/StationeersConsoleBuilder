@@ -1,0 +1,39 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "vector_stats",
+        "arguments": {
+          "scene": "p1"
+        }
+      }
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"ScriptedScreensVector 0.11.118.0\\r\\nscene \\\"p1\\\" (under \\\"StructureConsole\\\")\\r\\n  nodes 1 root, 0 shapes emitted, 16 verts\\r\\n  rebuilds 2.45/s over 2s, 0.02 ms tessellate off-thread, 0.01 ms upload on-thread\\r\\n  on screen 229 px at the last rebuild, animated False, scroll-driven False\\r\\n  projection: corner depth 1.217..1.241, ratio 1.02x, sigma_min 0.477..0.494 px/unit, spread 1.04x, edge ramp on\\r\\n  no problems\\r\\n\"}]}}"
+}

@@ -1,0 +1,585 @@
+{
+  "version": 1,
+  "name": "Atmos/tanks",
+  "target": {
+    "vectorMod": "0.11.118"
+  },
+  "theme": "neutral",
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Main",
+      "surface": "main",
+      "shape": "square",
+      "size": {
+        "w": 460,
+        "h": 460
+      },
+      "background": [
+        "#2B2B2B",
+        "#202020"
+      ],
+      "scene": {
+        "header": {
+          "w": 480,
+          "h": 480,
+          "fit": "contain"
+        },
+        "defs": [],
+        "root": [
+          {
+            "op": "G",
+            "attrs": {
+              "id": "hdr1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 0.5,
+                  "w": 431,
+                  "h": 63,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_crit,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 380,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#EF5350"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 398,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_crit:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_warn,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 298,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#F0B429"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 316,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_warn:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 4,
+                  "w": 222,
+                  "h": 56,
+                  "text": "Tank",
+                  "size": 30,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget header hdr1 {\"x\":24,\"y\":0,\"w\":432,\"h\":64,\"title\":\"Tank\",\"clock\":false,\"counts\":true,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "row1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 90,
+                  "w": 432,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=1-eq($row1_st,1)-eq($row1_st,2)-eq($row1_st,3)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#9A9A9A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,1)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#4CC38A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,2)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#F0B429"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,3)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#EF5350"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 64,
+                  "y": 90,
+                  "w": 248,
+                  "h": 50,
+                  "text": "Pressure kPa",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 322,
+                  "y": 90,
+                  "w": 120,
+                  "h": 50,
+                  "text": "{$row1_r1:%.1f}",
+                  "size": 28,
+                  "f": "=if(eq($row1_st,2),#F0B429,if(eq($row1_st,3),#EF5350,#F2F2F2))",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget readoutrow row1 {\"x\":24,\"y\":90,\"w\":432,\"h\":50,\"name\":\"Pressure kPa\",\"fmt1\":\"%.1f\",\"fmt2\":\"\",\"w1\":120,\"w2\":80,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "row2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 160,
+                  "w": 432,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=1-eq($row2_st,1)-eq($row2_st,2)-eq($row2_st,3)",
+                  "cx": 46,
+                  "cy": 185,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#9A9A9A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row2_st,1)",
+                  "cx": 46,
+                  "cy": 185,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#4CC38A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row2_st,2)",
+                  "cx": 46,
+                  "cy": 185,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#F0B429"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row2_st,3)",
+                  "cx": 46,
+                  "cy": 185,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#EF5350"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 64,
+                  "y": 160,
+                  "w": 248,
+                  "h": 50,
+                  "text": "Temperature °C",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 322,
+                  "y": 160,
+                  "w": 120,
+                  "h": 50,
+                  "text": "{$row2_r1:%.1f}",
+                  "size": 28,
+                  "f": "=if(eq($row2_st,2),#F0B429,if(eq($row2_st,3),#EF5350,#F2F2F2))",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget readoutrow row2 {\"x\":24,\"y\":160,\"w\":432,\"h\":50,\"name\":\"Temperature °C\",\"fmt1\":\"%.1f\",\"fmt2\":\"\",\"w1\":120,\"w2\":80,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "bar1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 240,
+                  "w": 432,
+                  "h": 30,
+                  "rx": 3,
+                  "f": "#121212"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 28,
+                  "y": 244,
+                  "w": "=clamp($bar1_lvl,0,1)*424",
+                  "h": 22,
+                  "rx": 2,
+                  "f": "=if(eq($bar1_st,1),#4CC38A,if(eq($bar1_st,2),#F0B429,if(eq($bar1_st,3),#EF5350,#9A9A9A)))"
+                }
+              }
+            ],
+            "comments": [
+              "widget bar bar1 {\"x\":24,\"y\":240,\"w\":432,\"h\":30,\"orient\":\"h\",\"stateMode\":\"bound\",\"marks\":[],\"target\":false,\"floor\":0,\"critBelow\":0.1,\"warnBelow\":0.25,\"cells\":0,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt1"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 24,
+                  "y": 300,
+                  "w": 432,
+                  "h": 33.599998474121094,
+                  "text": "Tank pressure / 10000 kPa",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt1 {\"x\":24,\"y\":300,\"w\":432,\"h\":33.6,\"style\":\"unit\",\"text\":\"Tank pressure / 10000 kPa\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn1_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 410,
+                  "w": 200,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 410.5,
+                  "w": 199,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 410,
+                  "w": 164,
+                  "h": 54,
+                  "text": "Devices",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn1 {\"x\":24,\"y\":410,\"w\":200,\"h\":54,\"states\":[{\"label\":\"Devices\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "id": "tank",
+      "name": "Tank sensor",
+      "prefabs": [
+        "StructureGasSensor"
+      ],
+      "mode": "one",
+      "label": "Tank"
+    }
+  ],
+  "reads": [
+    {
+      "id": "press",
+      "role": "tank",
+      "of": {
+        "lt": {
+          "name": "Pressure"
+        }
+      },
+      "valid": [
+        0,
+        100000
+      ],
+      "th": {
+        "warnAbove": 8000,
+        "critAbove": 9500,
+        "hyst": 200
+      },
+      "history": {
+        "n": 30
+      }
+    },
+    {
+      "id": "frac",
+      "role": "tank",
+      "of": {
+        "lt": {
+          "name": "Pressure"
+        }
+      },
+      "valid": [
+        0,
+        100000
+      ],
+      "scale": 0.0001,
+      "clamp": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "temp",
+      "role": "tank",
+      "of": {
+        "lt": {
+          "name": "Temperature"
+        }
+      },
+      "valid": [
+        1,
+        100000
+      ],
+      "unit": "K>C"
+    }
+  ],
+  "state": [],
+  "actions": [
+    {
+      "id": "devices",
+      "on": "btn1_hit",
+      "do": [
+        {
+          "op": "page",
+          "page": "vb_devices"
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "bindings": {
+    "hdr1_warn": {
+      "from": "expr",
+      "expr": "alarms(2)"
+    },
+    "hdr1_crit": {
+      "from": "expr",
+      "expr": "alarms(3)"
+    },
+    "row1_r1": {
+      "from": "read",
+      "read": "press"
+    },
+    "row1_st": {
+      "from": "read",
+      "read": "press",
+      "part": "state"
+    },
+    "row2_r1": {
+      "from": "read",
+      "read": "temp"
+    },
+    "row2_st": {
+      "from": "read",
+      "read": "temp",
+      "part": "state"
+    },
+    "bar1_lvl": {
+      "from": "read",
+      "read": "frac"
+    },
+    "bar1_st": {
+      "from": "read",
+      "read": "press",
+      "part": "state"
+    }
+  },
+  "customLua": "",
+  "simDevices": [
+    {
+      "id": "s1",
+      "prefab": "StructureGasSensor",
+      "label": "Tank",
+      "ref": 2,
+      "role": "tank",
+      "values": {
+        "Pressure": {
+          "kind": "const",
+          "v": 5000
+        },
+        "Temperature": {
+          "kind": "const",
+          "v": 293.15
+        }
+      }
+    }
+  ],
+  "settings": {
+    "budgets": {
+      "load": 500000,
+      "tick": 50000
+    },
+    "beta": false,
+    "day": {
+      "length": 1200,
+      "start": 0.25
+    },
+    "wipeOnReexport": false
+  }
+}

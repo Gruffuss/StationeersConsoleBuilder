@@ -1,0 +1,39 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "get_network_devices",
+        "arguments": {
+          "network_id": 3001
+        }
+      }
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"[{\\\"ref_id\\\":4001,\\\"prefab_hash\\\":-626563514,\\\"display_name\\\":\\\"Device B\\\",\\\"prefab_name\\\":\\\"StructureComputer\\\"},{\\\"ref_id\\\":4002,\\\"prefab_hash\\\":-626563514,\\\"display_name\\\":\\\"Device B\\\",\\\"prefab_name\\\":\\\"StructureComputer\\\"},{\\\"ref_id\\\":4003,\\\"prefab_hash\\\":-626563514,\\\"display_name\\\":\\\"Device B\\\",\\\"prefab_name\\\":\\\"StructureComputer\\\"},{\\\"ref_id\\\":4004,\\\"prefab_hash\\\":235638270,\\\"display_name\\\":\\\"Console A\\\",\\\"prefab_name\\\":\\\"StructureConsole\\\"},{\\\"ref_id\\\":4005,\\\"prefab_hash\\\":-2016854441,\\\"display_name\\\":\\\"Console B\\\",\\\"prefab_name\\\":\\\"StructureConsoleWide\\\"},{\\\"ref_id\\\":4006,\\\"prefab_hash\\\":-2016854441,\\\"display_name\\\":\\\"Console B\\\",\\\"prefab_name\\\":\\\"StructureConsoleWide\\\"},{\\\"ref_id\\\":4007,\\\"prefab_hash\\\":1362766792,\\\"display_name\\\":\\\"Console C\\\",\\\"prefab_name\\\":\\\"StructureConsole2x2\\\"},{\\\"ref_id\\\":4008,\\\"prefab_hash\\\":-498383857,\\\"display_name\\\":\\\"Console D\\\",\\\"prefab_name\\\":\\\"StructureConsoleLarge\\\"},{\\\"ref_id\\\":4009,\\\"prefab_hash\\\":311268713,\\\"display_name\\\":\\\"Console E\\\",\\\"prefab_name\\\":\\\"StructureConsoleDualWide\\\"},{\\\"ref_id\\\":4010,\\\"prefab_hash\\\":311268713,\\\"display_name\\\":\\\"Console E\\\",\\\"prefab_name\\\":\\\"StructureConsoleDualWide\\\"},{\\\"ref_id\\\":4011,\\\"prefab_hash\\\":488710067,\\\"display_name\\\":\\\"Console F\\\",\\\"prefab_name\\\":\\\"StructureConsoleMonitorWide\\\"},{\\\"ref_id\\\":4012,\\\"prefab_hash\\\":488710067,\\\"display_name\\\":\\\"Console F\\\",\\\"prefab_name\\\":\\\"StructureConsoleMonitorWide\\\"},{\\\"ref_id\\\":4013,\\\"prefab_hash\\\":1169590863,\\\"display_name\\\":\\\"Console G\\\",\\\"prefab_name\\\":\\\"StructureConsoleMonitorLarge\\\"},{\\\"ref_id\\\":4014,\\\"prefab_hash\\\":-1252983604,\\\"display_name\\\":\\\"Device C\\\",\\\"prefab_name\\\":\\\"StructureGasSensor\\\"},{\\\"ref_id\\\":2010,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2018,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2017,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2016,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2015,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2014,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2013,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2012,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2011,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":2019,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing A\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":4015,\\\"prefab_hash\\\":-851746783,\\\"display_name\\\":\\\"Device D\\\",\\\"prefab_name\\\":\\\"StructureLogicMemory\\\"},{\\\"ref_id\\\":2020,\\\"prefab_hash\\\":2037291645,\\\"display_name\\\":\\\"Housing B\\\",\\\"prefab_name\\\":\\\"StructureCircuitHousingCompact\\\"},{\\\"ref_id\\\":4016,\\\"prefab_hash\\\":671052137,\\\"display_name\\\":\\\"Console H\\\",\\\"prefab_name\\\":\\\"StructureConsole3x3\\\"},{\\\"ref_id\\\":1024,\\\"prefab_hash\\\":-2016854441,\\\"display_name\\\":\\\"Console I\\\",\\\"prefab_name\\\":\\\"StructureConsoleWide\\\"},{\\\"ref_id\\\":4017,\\\"prefab_hash\\\":-1860064656,\\\"display_name\\\":\\\"Device E\\\",\\\"prefab_name\\\":\\\"StructureWallLight\\\"},{\\\"ref_id\\\":4018,\\\"prefab_hash\\\":-989558742,\\\"display_name\\\":\\\"Device F\\\",\\\"prefab_name\\\":\\\"WirelessDataAccessPoint\\\"}]\"}]}}"
+}

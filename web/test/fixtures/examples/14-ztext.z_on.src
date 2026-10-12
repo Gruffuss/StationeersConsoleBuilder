@@ -1,0 +1,7 @@
+SCENE w=200 h=240 fit=contain
+T x=0 y=4 w=200 h=14 text=default size=9 align=center f=#5A7085
+R x=20 y=40 w=160 h=90 rx=8 f=#182230
+T x=20 y=70 w=160 h=30 text=COVERED? size=17 align=center f=#7EE0B8
+R x==20+160*(0.5+0.5*sin(t*0.9)) y=40 w=160 h=90 rx=8 f=#E2563D fo=0.85
+R x=20 y=160 w=160 h=60 rx=8 f=#182230
+T x=20 y=178 w=160 h=24 text="always on top" size=12 align=center f=#5B8FB0

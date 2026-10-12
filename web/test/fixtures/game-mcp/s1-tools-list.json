@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "tools/list"
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"tools\":[{\"name\":\"list_chips\",\"description\":\"List accessible programmable chips (IC10 and Lua). Requires the player to have the IC editor open, a wireless development board link (AllowNetworkChipAccess), or worn PAN gear (AllowPersonalAreaNetworkChipAccess). Returns only the selected chip for the normal IC editor by default. If AllowNetworkChipAccess is enabled, the wireless development board can expose all chips on its selected remote network; AllowPersonalAreaNetworkChipAccess exposes worn PAN chips without a wireless link. The normal wired editor only expands to its full data network when AllowNetworkChipAccessOnlyForWirelessBoards is disabled.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{},\"required\":[]}},{\"name\":\"set_chip_code\",\"description\":\"Write full source to a programmable chip by ref_id. The chip recompiles immediately (same as in-game export). Supports mode='editor_only' | 'chip' | 'editor_then_chip'. editor_then_chip updates the in-game IC editor draft when that chip is selected, then exports. For small MCP-side patches, use patch_chip_code.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"ref_id\":{\"type\":\"number\",\"description\":\"Reference ID of the chip\"},\"source\":{\"type\":\"string\",\"description\":\"Source code to write\"},\"mode\":{\"type\":\"string\",\"description\":\"Optional: 'editor_only', 'chip', or 'editor_then_chip'. Default: editor_then_chip when extension API is enabled, else 'chip'. Legacy 'extension_delegate' is treated as 'chip'.\"}},\"required\":[\"ref_id\",\"source\"]}},{\"name\":\"capture_scripted_screen\",\"description\":\"Capture ScriptedScreens surface screenshot(s) for an MCP-accessible chip to temporary PNG(s). Pass surface for one page, surfaces for a list, or all=true for every surface (max 8). Mutually exclusive. Works for board, tablet, visor (wearer only), and Air Conditioner hosts. Returns version per capture so you can tell when the UI model changed after interact.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"ref_id\":{\"type\":\"number\",\"description\":\"Optional programmable chip reference ID. Defaults to the currently selected chip if it is a ScriptedScreens host.\"},\"surface\":{\"type\":\"string\",\"description\":\"Optional single surface name to capture.\"},\"surfaces\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"description\":\"Optional list of surface names to capture in one call (max 8).\"},\"all\":{\"type\":\"boolean\",\"description\":\"When true, capture every surface on the host (max 8).\"}},\"required\":[]}},{\"name\":\"vector_stats\",\"description\":\"Per-surface state of the ScriptedScreens vector layer: rebuild rate and cost, geometry counts, on-screen size, and any scene problems or unresolved data names.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"scene\":{\"type\":\"string\",\"description\":\"Optional scene id to report on; omit for all.\"}}}}]}}"
+}

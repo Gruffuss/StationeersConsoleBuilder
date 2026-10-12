@@ -1,0 +1,12 @@
+.sample-panel { border-radius: 4px 8px 12px 16px; }
+.sample-panel .mark-tl { position: absolute; left: 0; top: 0; width: 12px; height: 2px; background: var(--ink); }
+.sample-panel .mark-tr { position: absolute; right: 0; top: 0; width: 2px; height: 12px; background: var(--ink); }
+.sample-panel .mark-br { position: absolute; right: 0; bottom: 0; width: 12px; height: 2px; background: var(--ink); }
+.sample-panel .mark-bl { position: absolute; left: 0; bottom: 0; width: 2px; height: 12px; background: var(--ink); }
+.sample-row { border-left: 3px solid var(--ink); }
+.sample-button.primary { clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); }
+.sample-header { display: none; }
+.sample-fill { display: none; }
+.sample-chip {}
+.sample-chip::before { content: ""; position: absolute; left: 4px; top: 6px; width: 10px; height: 10px; background: var(--ink); transform: rotate(45deg); }
+.sample-track { background: linear-gradient(45deg, #f00, #0f0, #00f, #fff); }

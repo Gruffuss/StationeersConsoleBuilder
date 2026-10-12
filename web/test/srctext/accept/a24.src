@@ -1,0 +1,2 @@
+T text=$rows[i] f=$c#1 unit=$u,v
+R f=$p[i] p=[$a,$b]

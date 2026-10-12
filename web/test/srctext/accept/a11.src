@@ -1,0 +1,11 @@
+# own-line before the first node
+R x=1  # end of line
+#no space
+T text="a#b c" r=[1,2]#c
+R a=b#c d=1
+G {  # on the G line
+    # before the child
+    R y=2
+    # before G's }
+}
+# at the end

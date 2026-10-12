@@ -1,0 +1,6 @@
+[submodule "core/vendor/lua-csharp"]
+	path = core/vendor/lua-csharp
+	url = https://github.com/nuskey8/Lua-CSharp.git
+[submodule "core/vendor/vector"]
+	path = core/vendor/vector
+	url = https://github.com/Gruffuss/scripted-screens-vector.git

@@ -1,0 +1,21 @@
+SCENE w=200 h=200
+T x=10 y=8 w=180 h=12 text="TEXT NODES" size=8 cspace=4 f=#5A7085
+R x=10 y=24 w=180 h=34 rx=4 f=#0B1622
+T x=18 y=30 w=80 h=10 text=PRESSURE size=7 cspace=2 f=#5A7085
+T x=100 y=28 w=84 h=24 text=$pressure size=18 align=right valign=middle f=#EAF4F8
+R x=10 y=114 w=180 h=30 rx=4 f=#0B1622
+T x=18 y=120 w=60 h=18 text=RAW size=7 valign=middle f=#5A7085
+T x=78 y=118 w=104 h=22 text=$kpa fmt=%.1f unit=" kPa" size=14 align=right valign=middle f=#5FD9A8
+T x=78 y=140 w=104 h=12 text=$never_sent fmt=%.0f unit=" kPa" missing="no data" size=7 align=right f=#3A5570
+R x=10 y=88 w=180 h=22 rx=4 f=#0B1622
+T x=18 y=92 w=164 h=14 text=$long size=9 valign=middle f=#8FA6B8 fit=ellipsis
+C cx=100 cy=168 rx=26 ry=26 f=#0B1622
+C cx=100 cy=168 rx=26 ry=26 f=none s=#1E3247 sw=1.5
+G t=[100,168] r==-120+240*clamp($fill,0,1) {
+    R x=-1 y=-23 w=2 h=23 rx=1 f=#F59E0B
+    T x=-20 y=-35 w=40 h=10 text=$pct size=7 align=center f=#F59E0B
+}
+C cx=100 cy=168 rx=3 ry=3 f=#F59E0B
+T x=10 y=76 w=180 h=10 text="code face: <b>0123</b> 456" size=7 font=code align=center f=#3A5570
+T x=8 y=150 w=60 h=14 text=DROP size=9 align=center valign=middle f=#EAF4F8 sh=[[1,1.5,1.5,0,#000000]]
+T x=132 y=150 w=60 h=14 text=GLOW size=9 align=center valign=middle f=#5FD9A8 sh=[[0,0,4,0,#5FD9A8]]

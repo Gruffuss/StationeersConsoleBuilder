@@ -1,0 +1,43 @@
+.vb-props { min-width: 0; }
+.vb-props > details.disc { margin: 0; padding: var(--sp3) 0; }
+.vb-props details.disc > summary { margin-bottom: var(--sp3); }
+.vb-props .vb-prop { display: block; min-width: 0; margin: 0 0 var(--sp3); }
+.vb-props .vb-prop > .field { position: relative; }
+.vb-props .vb-prop > .field > label { width: auto; }
+.vb-props .vb-prop > .field > input[type=text] { width: 100%; font: var(--f-reading); }
+.vb-props .field > input[type=checkbox] { flex: none; width: calc(30px * var(--s)); margin-left: auto; }
+.vb-props .vb-prop > .field:has(> .vb-colour-fields) { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; }
+.vb-props .field > .vb-colour-fields { display: contents; }
+.vb-props .field > .vb-colour-fields > button { grid-column: 3; grid-row: 1; }
+.vb-props .field > .vb-colour-fields > .vb-colour-panel { grid-column: 1 / -1; grid-row: 2; margin-bottom: var(--sp3); }
+.vb-props .field:has(> .vb-colour-fields) > select[aria-label$=" mode"] { grid-column: 4; grid-row: 1; max-width: none; }
+.vb-props .field > select[aria-label$=" mode"] { flex: 0 0 auto; width: auto; max-width: 45%; color: var(--text-muted); font: var(--f-unit); }
+.vb-props .field > textarea { flex: 1; min-width: 0; width: 100%; border: 0; background: none; font: var(--f-code); text-shadow: none; }
+.vb-props .vb-prop-text { grid-column: 1 / -1; }
+.vb-props .vb-prop-text > .field { align-items: flex-start; padding: var(--sp3); }
+.vb-props .vb-prop-info, .vb-props .vb-prop-warning { margin-top: var(--sp2); font: var(--f-unit); }
+.vb-props .vb-prop-info { color: var(--text-secondary); }
+.vb-props .vb-prop-warning { color: var(--status-warn); }
+.vb-props .vb-paint-fields { min-width: 0; margin-top: var(--sp2); }
+.vb-props .vb-paint-fields.grid2 { display: grid; }
+.vb-props .vb-colour-fields { display: block; }
+.vb-props .vb-paint-fields > label { display: flex; align-items: center; gap: var(--sp2); min-width: 0; }
+.vb-props .vb-paint-fields label > input, .vb-props .vb-paint-fields label > select { min-width: 0; max-width: 100%; }
+.vb-props .vb-paint-fields fieldset { margin: var(--sp3) 0; padding: var(--sp3); }
+.vb-props .vb-paint-fields .grid2 > label { display: flex; flex-direction: column; align-items: stretch; gap: var(--sp2); min-width: 0; font: var(--f-unit); color: var(--text-muted); }
+.vb-props .vb-paint-fields .grid2 input { width: 100%; box-sizing: border-box; }
+.vb-props .vb-colour-panel { padding: var(--sp3); margin-top: var(--sp2); }
+.vb-props .vb-colour-panel > [role=tabpanel] { padding-top: var(--sp3); }
+.vb-props .vb-colour-panel label { width: auto; white-space: normal; }
+.vb-props .vb-colour-panel input[type=text] { width: 100%; font: var(--f-reading); }
+.vb-props .vb-colour-swatches { display: flex; flex-wrap: wrap; gap: var(--sp2); }
+.vb-props .vb-colour-swatches .sw { width: var(--h-ctl); height: var(--h-ctl); }
+.vb-props .vb-widget-actions { display: flex; justify-content: flex-end; gap: var(--sp2); margin-bottom: var(--sp3); }
+.vb-props .vb-widget-list, .vb-props .vb-widget-item { padding: var(--sp3); min-width: 0; }
+.vb-props .vb-widget-item + .vb-widget-item { margin-top: var(--sp3); }
+.vb-props .lrow { flex-wrap: wrap; padding: var(--sp2); box-sizing: border-box; }
+.vb-props .vb-four-up { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp2); }
+.vb-props .vb-four-up > label { display: flex; flex-direction: column; font: var(--f-unit); min-width: 0; color: var(--text-muted); }
+.vb-props .vb-four-up input { width: 100%; box-sizing: border-box; }
+.vb-props .vb-layout-fields .vb-paint-fields { display: grid; gap: var(--sp3); }
+.vb-props .grid2 > .unit, .vb-props .grid2 > [role=alert], .vb-props .grid2 > .vb-prop-info { grid-column: 1 / -1; }

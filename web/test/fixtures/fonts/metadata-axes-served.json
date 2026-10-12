@@ -1,0 +1,198 @@
+{
+  "measuredAt": "2026-10-11T17:58:44.476Z",
+  "method": "Read-only Chrome-user-agent CSS and representative WOFF2 GETs; native FontMetadata.Read. Requested both axes to retain the width table; the page registry group selects weight/style only, so the width axis must remain at its metadata default. Static default-width aliases are from the original Roboto weight-only served-file comparison.",
+  "binaryFixturesCommitted": false,
+  "request": {
+    "family": "Roboto:wdth,wght@75..100,100..900",
+    "cssUrl": "https://fonts.googleapis.com/css2?family=Roboto:wdth,wght@75..100,100..900&display=swap",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "representative": "https://fonts.gstatic.com/s/roboto/v51/KFOmCnqEu92Fr1Mu4mxK.woff2"
+  },
+  "asset": {
+    "url": "https://fonts.gstatic.com/s/roboto/v51/KFOmCnqEu92Fr1Mu4mxK.woff2",
+    "bytes": 66544,
+    "sha256": "2a97fdc23238dfd5781c6b53dfa2c075e68920d577213ebd66ed5a78b89d6a3d",
+    "nativeStatus": "ok"
+  },
+  "metadata": {
+    "family": "Roboto",
+    "style": "Regular",
+    "names": {
+      "1": "Roboto",
+      "2": "Regular"
+    },
+    "axes": [
+      {
+        "tag": "wght",
+        "min": 100,
+        "default": 400,
+        "max": 900,
+        "name": "Weight"
+      },
+      {
+        "tag": "wdth",
+        "min": 75,
+        "default": 100,
+        "max": 100,
+        "name": "Width"
+      }
+    ],
+    "instances": [
+      {
+        "family": "Roboto",
+        "style": "Thin",
+        "axes": {
+          "wght": 100,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "ExtraLight",
+        "axes": {
+          "wght": 200,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Light",
+        "axes": {
+          "wght": 300,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Regular",
+        "axes": {
+          "wght": 400,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Medium",
+        "axes": {
+          "wght": 500,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "SemiBold",
+        "axes": {
+          "wght": 600,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Bold",
+        "axes": {
+          "wght": 700,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "ExtraBold",
+        "axes": {
+          "wght": 800,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Black",
+        "axes": {
+          "wght": 900,
+          "wdth": 100
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Thin",
+        "axes": {
+          "wght": 100,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed ExtraLight",
+        "axes": {
+          "wght": 200,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Light",
+        "axes": {
+          "wght": 300,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Regular",
+        "axes": {
+          "wght": 400,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Medium",
+        "axes": {
+          "wght": 500,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed SemiBold",
+        "axes": {
+          "wght": 600,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Bold",
+        "axes": {
+          "wght": 700,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed ExtraBold",
+        "axes": {
+          "wght": 800,
+          "wdth": 75
+        }
+      },
+      {
+        "family": "Roboto",
+        "style": "Condensed Black",
+        "axes": {
+          "wght": 900,
+          "wdth": 75
+        }
+      }
+    ]
+  },
+  "expectedDefaultWidthAliases": [
+    "Roboto Thin",
+    "Roboto ExtraLight",
+    "Roboto Light",
+    "Roboto",
+    "Roboto Medium",
+    "Roboto SemiBold",
+    "Roboto Bold",
+    "Roboto ExtraBold",
+    "Roboto Black"
+  ]
+}

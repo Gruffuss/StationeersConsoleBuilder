@@ -1,0 +1,821 @@
+{
+  "version": 1,
+  "name": "Airlock",
+  "target": {
+    "vectorMod": "0.11.118"
+  },
+  "theme": "neutral",
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Main",
+      "surface": "main",
+      "shape": "square",
+      "size": {
+        "w": 460,
+        "h": 460
+      },
+      "background": [
+        "#2B2B2B",
+        "#202020"
+      ],
+      "scene": {
+        "header": {
+          "w": 480,
+          "h": 480,
+          "fit": "contain"
+        },
+        "defs": [],
+        "root": [
+          {
+            "op": "G",
+            "attrs": {
+              "id": "hdr1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 0.5,
+                  "w": 431,
+                  "h": 63,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_crit,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 380,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#EF5350"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 398,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_crit:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_warn,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 298,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#F0B429"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 316,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_warn:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 4,
+                  "w": 222,
+                  "h": 56,
+                  "text": "Airlock",
+                  "size": 30,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget header hdr1 {\"x\":24,\"y\":0,\"w\":432,\"h\":64,\"title\":\"Airlock\",\"clock\":false,\"counts\":true,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "row1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 90,
+                  "w": 432,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=1-eq($row1_st,1)-eq($row1_st,2)-eq($row1_st,3)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#9A9A9A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,1)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#4CC38A"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,2)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#F0B429"
+                }
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "v": "=eq($row1_st,3)",
+                  "cx": 46,
+                  "cy": 115,
+                  "rx": 8,
+                  "ry": 8,
+                  "f": "#EF5350"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 64,
+                  "y": 90,
+                  "w": 248,
+                  "h": 50,
+                  "text": "Room pressure kPa",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 322,
+                  "y": 90,
+                  "w": 120,
+                  "h": 50,
+                  "text": "{$row1_r1:%.1f}",
+                  "size": 28,
+                  "f": "=if(eq($row1_st,2),#F0B429,if(eq($row1_st,3),#EF5350,#F2F2F2))",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget readoutrow row1 {\"x\":24,\"y\":90,\"w\":432,\"h\":50,\"name\":\"Room pressure kPa\",\"fmt1\":\"%.1f\",\"fmt2\":\"\",\"w1\":120,\"w2\":80,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn1_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 160,
+                  "w": 210,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 160.5,
+                  "w": 209,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 160,
+                  "w": 174,
+                  "h": 54,
+                  "text": "Open inner",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn1 {\"x\":24,\"y\":160,\"w\":210,\"h\":54,\"states\":[{\"label\":\"Open inner\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn2_hit",
+                  "click": 1,
+                  "x": 246,
+                  "y": 160,
+                  "w": 210,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 246.5,
+                  "y": 160.5,
+                  "w": 209,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 264,
+                  "y": 160,
+                  "w": 174,
+                  "h": 54,
+                  "text": "Open outer",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn2 {\"x\":246,\"y\":160,\"w\":210,\"h\":54,\"states\":[{\"label\":\"Open outer\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn3"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn3_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 230,
+                  "w": 432,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 230.5,
+                  "w": 431,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 230,
+                  "w": 396,
+                  "h": 54,
+                  "text": "Close both",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn3 {\"x\":24,\"y\":230,\"w\":432,\"h\":54,\"states\":[{\"label\":\"Close both\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt1"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 24,
+                  "y": 296,
+                  "w": 432,
+                  "h": 33.599998474121094,
+                  "text": "Opens a door once the other is shut",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt1 {\"x\":24,\"y\":296,\"w\":432,\"h\":33.6,\"style\":\"unit\",\"text\":\"Opens a door once the other is shut\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt2"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 24,
+                  "y": 332,
+                  "w": 432,
+                  "h": 33.599998474121094,
+                  "text": "Logic mode, unlocked; door buttons work",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt2 {\"x\":24,\"y\":332,\"w\":432,\"h\":33.6,\"style\":\"unit\",\"text\":\"Logic mode, unlocked; door buttons work\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn4"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn4_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 400,
+                  "w": 200,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 400.5,
+                  "w": 199,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 400,
+                  "w": 164,
+                  "h": 54,
+                  "text": "Devices",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn4 {\"x\":24,\"y\":400,\"w\":200,\"h\":54,\"states\":[{\"label\":\"Devices\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "id": "inner",
+      "name": "Inner door",
+      "prefabs": [
+        "StructureAirlock"
+      ],
+      "mode": "one",
+      "label": "Inner",
+      "distinct": true
+    },
+    {
+      "id": "outer",
+      "name": "Outer door",
+      "prefabs": [
+        "StructureAirlock"
+      ],
+      "mode": "one",
+      "label": "Outer",
+      "distinct": true
+    },
+    {
+      "id": "room",
+      "name": "Room sensor",
+      "prefabs": [
+        "StructureGasSensor"
+      ],
+      "mode": "one",
+      "label": "Room"
+    }
+  ],
+  "reads": [
+    {
+      "id": "innerActual",
+      "role": "inner",
+      "of": {
+        "lt": {
+          "name": "Open"
+        }
+      }
+    },
+    {
+      "id": "innerSetting",
+      "role": "inner",
+      "of": {
+        "lt": {
+          "name": "Setting"
+        }
+      }
+    },
+    {
+      "id": "innerIdle",
+      "role": "inner",
+      "of": {
+        "lt": {
+          "name": "Idle"
+        }
+      }
+    },
+    {
+      "id": "outerActual",
+      "role": "outer",
+      "of": {
+        "lt": {
+          "name": "Open"
+        }
+      }
+    },
+    {
+      "id": "outerSetting",
+      "role": "outer",
+      "of": {
+        "lt": {
+          "name": "Setting"
+        }
+      }
+    },
+    {
+      "id": "outerIdle",
+      "role": "outer",
+      "of": {
+        "lt": {
+          "name": "Idle"
+        }
+      }
+    },
+    {
+      "id": "pressure",
+      "role": "room",
+      "of": {
+        "lt": {
+          "name": "Pressure"
+        }
+      }
+    }
+  ],
+  "state": [
+    {
+      "name": "want",
+      "type": "enum",
+      "init": 0,
+      "options": [
+        "none",
+        "inner",
+        "outer"
+      ],
+      "save": false
+    }
+  ],
+  "actions": [
+    {
+      "id": "inner",
+      "on": "btn1_hit",
+      "do": [
+        {
+          "op": "set",
+          "state": "want",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "id": "outer",
+      "on": "btn2_hit",
+      "do": [
+        {
+          "op": "set",
+          "state": "want",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "on": "btn3_hit",
+      "do": [
+        {
+          "op": "set",
+          "state": "want",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "id": "devices",
+      "on": "btn4_hit",
+      "do": [
+        {
+          "op": "page",
+          "page": "vb_devices"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "innerMode",
+      "role": "inner",
+      "lt": {
+        "name": "Mode"
+      },
+      "value": "1"
+    },
+    {
+      "id": "innerLock",
+      "role": "inner",
+      "lt": {
+        "name": "Lock"
+      },
+      "value": "0"
+    },
+    {
+      "id": "outerMode",
+      "role": "outer",
+      "lt": {
+        "name": "Mode"
+      },
+      "value": "1"
+    },
+    {
+      "id": "outerLock",
+      "role": "outer",
+      "lt": {
+        "name": "Lock"
+      },
+      "value": "0"
+    },
+    {
+      "id": "innerOpen",
+      "role": "inner",
+      "lt": {
+        "name": "Open"
+      },
+      "value": "X.innerCmd"
+    },
+    {
+      "id": "innerSetting",
+      "role": "inner",
+      "lt": {
+        "name": "Setting"
+      },
+      "value": "X.innerCmd"
+    },
+    {
+      "id": "outerOpen",
+      "role": "outer",
+      "lt": {
+        "name": "Open"
+      },
+      "value": "X.outerCmd"
+    },
+    {
+      "id": "outerSetting",
+      "role": "outer",
+      "lt": {
+        "name": "Setting"
+      },
+      "value": "X.outerCmd"
+    }
+  ],
+  "bindings": {
+    "hdr1_warn": {
+      "from": "expr",
+      "expr": "alarms(2)"
+    },
+    "hdr1_crit": {
+      "from": "expr",
+      "expr": "alarms(3)"
+    },
+    "row1_r1": {
+      "from": "read",
+      "read": "pressure"
+    },
+    "row1_st": {
+      "from": "const",
+      "value": 1
+    }
+  },
+  "customLua": "-- Door handling: one door open at a time, without a pressure cycle. The rules hold both doors in Logic mode (a press lands\n-- in Setting and the door does not move by itself) and unlocked, and write each door's Open AND Setting from X.innerCmd and\n-- X.outerCmd (nil holds a door as it is). This block decides those commands:\n--   * Boot moves no door. Each door is adopted as it stands, the first tick it is bound and readable; its Setting then\n--     follows its Open, so a mismatch left by anything else is not a request. Found both open, the inner one is shut.\n--   * A door's own button is a request: Setting differs from Open while the door is settled (Idle not 0), and from what\n--     this block commands. Both doors asking at once is no direction and is ignored.\n--   * A door opens only once the other is unbound, or reads shut (Open 0) and settled and TRAVEL seconds have passed since\n--     it was commanded shut.\n-- Not known offline: whether a Logic-mode door moves on Open alone (both are written); when Idle and Open change while a\n-- door travels; what a press does to Setting beyond leaving it unequal to Open; how long a door takes to travel.\nlocal TRAVEL = 1.5   -- seconds a door is given to shut before the other may open\nlocal NONE = 0       -- S.want: 0 none, 1 inner, 2 outer\nlocal DOORS = {\n  { role = \"inner\", want = 1, open = \"innerActual\", setting = \"innerSetting\", idle = \"innerIdle\", cmd = \"innerCmd\" },\n  { role = \"outer\", want = 2, open = \"outerActual\", setting = \"outerSetting\", idle = \"outerIdle\", cmd = \"outerCmd\" },\n}\nlocal seen, shut = {}, {}   -- the device each door was adopted on; seconds since it was commanded shut\n\nlocal function settled(P, d)\n  local idle = P[d.idle]\n  return idle == nil or idle >= 0.5\nend\n\nfunction U.after_reads(P, S, dt)\n  local asked = {}\n  for i, d in ipairs(DOORS) do\n    shut[i] = (shut[i] or TRAVEL) + (dt or 0)\n    local ref, open = R[d.role].refs and R[d.role].refs[1], P[d.open]\n    if ref ~= seen[i] then\n      if ref == nil then seen[i], X[d.cmd] = nil, nil\n      elseif open ~= nil then\n        seen[i], X[d.cmd] = ref, open >= 0.5 and 1 or 0\n        if X[d.cmd] == 1 then S.want = d.want elseif S.want == d.want then S.want = NONE end\n      end\n    elseif X[d.cmd] ~= nil then\n      local st = P[d.setting]\n      if st ~= nil and open ~= nil and math.abs(st - open) >= 0.5 and math.abs(st - X[d.cmd]) >= 0.5 and settled(P, d) then\n        asked[i] = st >= 0.5 and 1 or 0\n      end\n    end\n  end\n  if asked[1] == 1 and asked[2] == 1 then\n    -- both asking: stay as we are\n  elseif asked[1] == 1 then S.want = DOORS[1].want\n  elseif asked[2] == 1 then S.want = DOORS[2].want\n  else\n    for i, d in ipairs(DOORS) do if asked[i] == 0 and S.want == d.want then S.want = NONE end end\n  end\n  for i, d in ipairs(DOORS) do\n    if X[d.cmd] ~= nil and S.want ~= d.want then\n      if X[d.cmd] == 1 then shut[i] = 0 end\n      X[d.cmd] = 0\n    end\n  end\n  for i, d in ipairs(DOORS) do\n    local k = 3 - i\n    local o = DOORS[k]\n    if X[d.cmd] == 0 and S.want == d.want then\n      local other = P[o.open]\n      if not R[o.role].ok or (X[o.cmd] == 0 and other ~= nil and other < 0.5 and settled(P, o) and shut[k] >= TRAVEL) then\n        X[d.cmd] = 1\n      end\n    end\n  end\nend\n",
+  "simDevices": [
+    {
+      "id": "s1",
+      "prefab": "StructureAirlock",
+      "label": "Inner",
+      "ref": 2,
+      "role": "inner",
+      "values": {
+        "Mode": {
+          "kind": "const",
+          "v": 1
+        },
+        "On": {
+          "kind": "const",
+          "v": 1
+        },
+        "Open": {
+          "kind": "const",
+          "v": 0
+        },
+        "Setting": {
+          "kind": "const",
+          "v": 0
+        },
+        "Idle": {
+          "kind": "const",
+          "v": 1
+        },
+        "Lock": {
+          "kind": "const",
+          "v": 0
+        }
+      }
+    },
+    {
+      "id": "s2",
+      "prefab": "StructureAirlock",
+      "label": "Outer",
+      "ref": 3,
+      "role": "outer",
+      "values": {
+        "Mode": {
+          "kind": "const",
+          "v": 1
+        },
+        "On": {
+          "kind": "const",
+          "v": 1
+        },
+        "Open": {
+          "kind": "const",
+          "v": 0
+        },
+        "Setting": {
+          "kind": "const",
+          "v": 0
+        },
+        "Idle": {
+          "kind": "const",
+          "v": 1
+        },
+        "Lock": {
+          "kind": "const",
+          "v": 0
+        }
+      }
+    },
+    {
+      "id": "s3",
+      "prefab": "StructureGasSensor",
+      "label": "Room",
+      "ref": 4,
+      "role": "room",
+      "values": {
+        "Pressure": {
+          "kind": "const",
+          "v": 101.325
+        }
+      }
+    }
+  ],
+  "settings": {
+    "budgets": {
+      "load": 500000,
+      "tick": 50000
+    },
+    "beta": false,
+    "day": {
+      "length": 1200,
+      "start": 0.25
+    },
+    "wipeOnReexport": false
+  }
+}

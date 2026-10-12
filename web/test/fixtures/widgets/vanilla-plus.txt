@@ -1,0 +1,779 @@
+alert {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget alert al1 {"x":24,"y":24,"w":440,"h":50,"row":true,"keys":{}}
+G id=al1 {
+    R x=24 y=24 w=440 h=50
+    G v==gt($al1_st,0) {
+        R x=24.5 y=24.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+        R x=38 y=31.6 w=86 h=34.8 rx=4 f==if(eq($al1_st,1),#7FD970,if(eq($al1_st,2),#F2B233,if(eq($al1_st,3),#F7777A,#A6A6B4)))
+        T v==eq($al1_st,1) x=38 y=31.6 w=86 h=34.8 text=OK size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T v==eq($al1_st,2) x=38 y=31.6 w=86 h=34.8 text=WARN size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T v==eq($al1_st,3) x=38 y=31.6 w=86 h=34.8 text=CRIT size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T x=138 y=28 w=312 h=42 text=$al1_msg size=26 font="Barlow Medium" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    }
+}
+
+
+alert {"row":false}
+SCENE w=480 h=480 fit=contain
+# widget alert al1 {"x":24,"y":24,"w":440,"h":50,"row":false,"keys":{}}
+G id=al1 {
+    R x=24 y=24 w=440 h=50
+    G v==gt($al1_st,0) {
+        R x=38 y=31.6 w=86 h=34.8 rx=4 f==if(eq($al1_st,1),#7FD970,if(eq($al1_st,2),#F2B233,if(eq($al1_st,3),#F7777A,#A6A6B4)))
+        T v==eq($al1_st,1) x=38 y=31.6 w=86 h=34.8 text=OK size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T v==eq($al1_st,2) x=38 y=31.6 w=86 h=34.8 text=WARN size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T v==eq($al1_st,3) x=38 y=31.6 w=86 h=34.8 text=CRIT size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+        T x=138 y=28 w=312 h=42 text=$al1_msg size=26 font="Barlow Medium" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    }
+}
+
+
+bar {}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"bound","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+}
+
+
+bar {"orient":"h"}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"bound","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+}
+
+
+bar {"orient":"v"}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"v","stateMode":"bound","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y==49-clamp($bar1_lvl,0,1)*20 w=390 h==clamp($bar1_lvl,0,1)*20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+}
+
+
+bar {"cells":4}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"bound","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":4,"keys":{}}
+G id=bar1 {
+    RP n=4 {
+        R x==24+i*101+0.5 y=24.5 w=96 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+        R x==29+i*101 y==49-20*clamp(clamp($bar1_lvl,0,1)*4-i,0,1) w=87 h==20*clamp(clamp($bar1_lvl,0,1)*4-i,0,1) rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+    }
+}
+
+
+bar {"stateMode":"auto"}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"auto","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f==if(lt($bar1_lvl,0.1),#F7777A,if(lt($bar1_lvl,0.25),#F2B233,#7FD970))
+}
+
+
+bar {"stateMode":"ok"}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"ok","marks":[],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f=#7FD970
+}
+
+
+bar {"marks":[0.5]}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"bound","marks":[0.5],"target":false,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+    R x=223.5 y=27 w=1 h=24 f=#8E8E9E
+}
+
+
+bar {"target":true}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"h","stateMode":"bound","marks":[],"target":true,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=29 w==clamp($bar1_lvl,0,1)*390 h=20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+    R x==28+clamp($bar1_tgt,0,1)*390 y=25 w=2 h=28 f=#FFFFFF
+}
+
+
+bar {"orient":"v","marks":[0.5],"target":true}
+SCENE w=480 h=480 fit=contain
+# widget bar bar1 {"x":24,"y":24,"w":400,"h":30,"orient":"v","stateMode":"bound","marks":[0.5],"target":true,"floor":0,"critBelow":0.1,"warnBelow":0.25,"cells":0,"keys":{}}
+G id=bar1 {
+    R x=24.5 y=24.5 w=399 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y==49-clamp($bar1_lvl,0,1)*20 w=390 h==clamp($bar1_lvl,0,1)*20 rx=2 f==if(eq($bar1_st,1),#7FD970,if(eq($bar1_st,2),#F2B233,if(eq($bar1_st,3),#F7777A,#A6A6B4)))
+    R x=27 y=38.5 w=394 h=1 f=#8E8E9E
+    R x=25 y==48-clamp($bar1_tgt,0,1)*20 w=398 h=2 f=#FFFFFF
+}
+
+
+button {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"Button","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 x=24 y=24 w=200 h=54
+    R x=24.5 y=24.5 w=199 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    T x=42 y=24 w=164 h=54 text=BUTTON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+button {"states":[{"label":"Primary","variant":"primary"}]}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_brand units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#1D4F7F],[1,#0D3B6A]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"Primary","variant":"primary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 x=24 y=24 w=200 h=54
+    R x=25 y=25 w=198 h=52 rx=5 f=@theme_brand s=#FF772D sw=2 fo==1-0.25*down
+    T x=42 y=24 w=164 h=54 text=PRIMARY size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+button {"states":[{"label":"Danger","variant":"danger"}]}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_danger units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#B93237],[1,#932629]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"Danger","variant":"danger","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 x=24 y=24 w=200 h=54
+    R x=24 y=24 w=200 h=54 rx=6 f=@theme_danger fo==1-0.25*down
+    T x=42 y=24 w=164 h=54 text=DANGER size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+button {"states":[{"label":"First","variant":"secondary"},{"label":"Second","variant":"primary"}]}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_brand units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#1D4F7F],[1,#0D3B6A]]
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"First","variant":"secondary","key":0},{"label":"Second","variant":"primary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 x=24 y=24 w=200 h=54
+    G v==eq($btn1_state,0) {
+        R x=24.5 y=24.5 w=199 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    G v==eq($btn1_state,1) {
+        R x=25 y=25 w=198 h=52 rx=5 f=@theme_brand s=#FF772D sw=2 fo==1-0.25*down
+    }
+    T v==eq($btn1_state,0) x=42 y=24 w=164 h=54 text=FIRST size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+    T v==eq($btn1_state,1) x=42 y=24 w=164 h=54 text=SECOND size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+button {"canDisable":true}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"Button","variant":"secondary","key":0}],"canDisable":true,"canSelect":false,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 v==1-$btn1_dis x=24 y=24 w=200 h=54
+    G o==1-0.5*$btn1_dis {
+        R x=24.5 y=24.5 w=199 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+        T x=42 y=24 w=164 h=54 text=BUTTON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+    }
+}
+
+
+button {"canSelect":true}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget button btn1 {"x":24,"y":24,"w":200,"h":54,"states":[{"label":"Button","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+G id=btn1 {
+    R id=btn1_hit click=1 x=24 y=24 w=200 h=54
+    R v==$btn1_sel x=22.5 y=22.5 w=203 h=57 rx=7.5 f=none s=#FF772D sw=3
+    R x=24.5 y=24.5 w=199 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    T x=42 y=24 w=164 h=54 text=BUTTON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+duct {}
+SCENE w=480 h=480 fit=contain
+# widget duct duct1 {"x":24,"y":24,"w":300,"h":4,"dir":"h","period":22,"dash":11,"speed":20,"idle":0,"keys":{}}
+G id=duct1 {
+    R x=24 y=24 w=300 h=4 f=#5A5A69
+    L p=[24,26,324,26] sw=4 s=#C8C8D2 cap=butt dash=[11,11] dofs==-mod(t*20,22) so==clamp($duct1_run,0,1)
+}
+
+
+eventlog {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget eventlog log1 {"x":24,"y":24,"w":440,"h":218,"rows":4,"time":false,"pitch":56,"keys":{}}
+G id=log1 {
+    R x=24 y=24 w=440 h=218
+    RP n=4 {
+        G v==gt($log1_k[i],0) {
+            R x=24.5 y==24+i*56+0.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+            R x=38 y==24+i*56+7.6 w=86 h=34.8 rx=4 f==if(eq($log1_k[i],1),#7FD970,if(eq($log1_k[i],2),#F2B233,if(eq($log1_k[i],3),#F7777A,#A6A6B4)))
+            T v==eq($log1_k[i],1) x=38 y==24+i*56+7.6 w=86 h=34.8 text=OK size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T v==eq($log1_k[i],2) x=38 y==24+i*56+7.6 w=86 h=34.8 text=WARN size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T v==eq($log1_k[i],3) x=38 y==24+i*56+7.6 w=86 h=34.8 text=CRIT size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T x=138 y==24+i*56 w=312 h=50 text="$log1_m[i]" size=26 font="Barlow Medium" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+        }
+    }
+}
+
+
+eventlog {"time":true}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget eventlog log1 {"x":24,"y":24,"w":440,"h":218,"rows":4,"time":true,"pitch":56,"keys":{}}
+G id=log1 {
+    R x=24 y=24 w=440 h=218
+    RP n=4 {
+        G v==gt($log1_k[i],0) {
+            R x=24.5 y==24+i*56+0.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+            R x=38 y==24+i*56+7.6 w=86 h=34.8 rx=4 f==if(eq($log1_k[i],1),#7FD970,if(eq($log1_k[i],2),#F2B233,if(eq($log1_k[i],3),#F7777A,#A6A6B4)))
+            T v==eq($log1_k[i],1) x=38 y==24+i*56+7.6 w=86 h=34.8 text=OK size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T v==eq($log1_k[i],2) x=38 y==24+i*56+7.6 w=86 h=34.8 text=WARN size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T v==eq($log1_k[i],3) x=38 y==24+i*56+7.6 w=86 h=34.8 text=CRIT size=24 font="Barlow Condensed Bold" cspace=2.08 f=#17171B align=center valign=middle
+            T x=138 y==24+i*56 w=80 h=50 text="$log1_t[i]" size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+            T x=228 y==24+i*56 w=222 h=50 text="$log1_m[i]" size=26 font="Barlow Medium" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+        }
+    }
+}
+
+
+glyph {}
+SCENE w=480 h=480 fit=contain
+# widget glyph gl1 {"x":24,"y":24,"w":18.2,"h":18.2,"glyph":"cog","dir":"right","ink":"text-secondary"}
+G id=gl1 {
+    G t=[33.1,33.1] {
+        RP n=8 {
+            G r==i*45 {
+                R x=-1.1544777 y=-9.1 w=2.3089554 h=3.5313435 rx=0.5432836 f=#C8C8D2
+            }
+        }
+        P d="M6.791045 0 A6.791045 6.791045 0 1 0 -6.791045 0 A6.791045 6.791045 0 1 0 6.791045 0 Z M2.716418 0 A2.716418 2.716418 0 1 0 -2.716418 0 A2.716418 2.716418 0 1 0 2.716418 0 Z" fr=evenodd f=#C8C8D2
+    }
+}
+
+
+glyph {"glyph":"cog"}
+SCENE w=480 h=480 fit=contain
+# widget glyph gl1 {"x":24,"y":24,"w":18.2,"h":18.2,"glyph":"cog","dir":"right","ink":"text-secondary"}
+G id=gl1 {
+    G t=[33.1,33.1] {
+        RP n=8 {
+            G r==i*45 {
+                R x=-1.1544777 y=-9.1 w=2.3089554 h=3.5313435 rx=0.5432836 f=#C8C8D2
+            }
+        }
+        P d="M6.791045 0 A6.791045 6.791045 0 1 0 -6.791045 0 A6.791045 6.791045 0 1 0 6.791045 0 Z M2.716418 0 A2.716418 2.716418 0 1 0 -2.716418 0 A2.716418 2.716418 0 1 0 2.716418 0 Z" fr=evenodd f=#C8C8D2
+    }
+}
+
+
+glyph {"glyph":"arrow"}
+SCENE w=480 h=480 fit=contain
+# widget glyph gl1 {"x":24,"y":24,"w":18.2,"h":18.2,"glyph":"arrow","dir":"right","ink":"text-secondary"}
+G id=gl1 {
+    Y p=[24,24,42.2,33.1,24,42.2] f=#C8C8D2
+}
+
+
+glyph {"glyph":"check"}
+SCENE w=480 h=480 fit=contain
+# widget glyph gl1 {"x":24,"y":24,"w":18.2,"h":18.2,"glyph":"check","dir":"right","ink":"text-secondary"}
+G id=gl1 {
+    L p=[26.73,34.010002,31.28,38.56,39.47,27.64] s=#C8C8D2 sw=2.275 cap=round join=round
+}
+
+
+glyph {"glyph":"cross"}
+SCENE w=480 h=480 fit=contain
+# widget glyph gl1 {"x":24,"y":24,"w":18.2,"h":18.2,"glyph":"cross","dir":"right","ink":"text-secondary"}
+G id=gl1 {
+    L p=[27.64,27.64,38.56,38.56] s=#C8C8D2 sw=2.275 cap=round
+    L p=[38.56,27.64,27.64,38.56] s=#C8C8D2 sw=2.275 cap=round
+}
+
+
+header {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_brand units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#1D4F7F],[1,#0D3B6A]]
+}
+# widget header hdr1 {"x":24,"y":24,"w":432,"h":64,"title":"Title","clock":false,"counts":true,"keys":{}}
+G id=hdr1 {
+    R x=25.5 y=25.5 w=429 h=61 rx=12.5 f=@theme_brand s=#FF772D sw=3
+    G v==gt($hdr1_crit,0) {
+        C cx=372 cy=56 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+        T x=391 y=39 w=47 h=34 text="{$hdr1_crit:%.0f}" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    }
+    G v==gt($hdr1_warn,0) {
+        C cx=281 cy=56 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+        T x=300 y=39 w=47 h=34 text="{$hdr1_warn:%.0f}" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    }
+    T x=42 y=30 w=204 h=52 text=TITLE size=36 font="Barlow Condensed Bold" cspace=4.17 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+header {"clock":true}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_brand units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#1D4F7F],[1,#0D3B6A]]
+}
+# widget header hdr1 {"x":24,"y":24,"w":432,"h":64,"title":"Title","clock":true,"counts":true,"keys":{}}
+G id=hdr1 {
+    R x=25.5 y=25.5 w=429 h=61 rx=12.5 f=@theme_brand s=#FF772D sw=3
+    G v==gt($hdr1_crit,0) {
+        C cx=242 cy=56 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+        T x=261 y=39 w=47 h=34 text="{$hdr1_crit:%.0f}" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    }
+    G v==gt($hdr1_warn,0) {
+        C cx=151 cy=56 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+        T x=170 y=39 w=47 h=34 text="{$hdr1_warn:%.0f}" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    }
+    T x=42 y=30 w=74 h=52 text=TITLE size=36 font="Barlow Condensed Bold" cspace=4.17 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=318 y=30 w=120 h=52 text=$hdr1_clock size=28 font="Barlow Condensed SemiBold" cspace=3.57 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+}
+
+
+header {"counts":false}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_brand units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#1D4F7F],[1,#0D3B6A]]
+}
+# widget header hdr1 {"x":24,"y":24,"w":432,"h":64,"title":"Title","clock":false,"counts":false,"keys":{}}
+G id=hdr1 {
+    R x=25.5 y=25.5 w=429 h=61 rx=12.5 f=@theme_brand s=#FF772D sw=3
+    T x=42 y=30 w=386 h=52 text=TITLE size=36 font="Barlow Condensed Bold" cspace=4.17 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+icon {}
+[{"type":"icon","box":{"x":24,"y":24,"w":66,"h":66},"props":{"icon_type":"gas","name":"Oxygen","z_index":6},"style":{}}]
+
+kvtable {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget kvtable kv1 {"x":24,"y":24,"w":440,"h":162,"rows":[{"caption":"Label 1","fmt":"%.1f","state":true,"key":0},{"caption":"Label 2","fmt":"%.1f","state":false,"key":1},{"caption":"Label 3","fmt":"","state":false,"key":2}],"rowH":50,"gap":6,"valueW":176,"keys":{}}
+G id=kv1 {
+    R x=24.5 y=24.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+    T x=38 y=24 w=226 h=50 text="Label 1" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=274 y=24 w=176 h=50 text="{$kv1_v0:%.1f}" size=34 font="Barlow SemiBold" f==if(eq($kv1_s0,2),#F2B233,if(eq($kv1_s0,3),#F7777A,#FFFFFF)) sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+    R x=24.5 y=80.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+    T x=38 y=80 w=226 h=50 text="Label 2" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=274 y=80 w=176 h=50 text="{$kv1_v1:%.1f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+    R x=24.5 y=136.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+    T x=38 y=136 w=226 h=50 text="Label 3" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=274 y=136 w=176 h=50 text=$kv1_v2 size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+}
+
+
+light {}
+SCENE w=480 h=480 fit=contain
+# widget light lt1 {"x":24,"y":24,"w":18,"h":18,"keys":{}}
+G id=lt1 {
+    C v==1-eq($lt1_st,1)-eq($lt1_st,2)-eq($lt1_st,3) cx=33 cy=33 rx=9 ry=9 f=#A6A6B4
+    C v==eq($lt1_st,1) cx=33 cy=33 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+    C v==eq($lt1_st,2) cx=33 cy=33 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+    C v==eq($lt1_st,3) cx=33 cy=33 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+}
+
+
+options {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget options og1 {"x":24,"y":24,"w":440,"h":54,"options":[{"label":"Auto","value":0,"key":0},{"label":"On","value":1,"key":1},{"label":"Off","value":2,"key":2}],"gap":10,"keys":{}}
+G id=og1 {
+    G id=og1_g0 {
+        R id=og1_o0 click=1 x=24 y=24 w=140 h=54
+        R v==eq($og1_sel,0) x=22.5 y=22.5 w=143 h=57 rx=7.5 f=none s=#FF772D sw=3
+        R x=24.5 y=24.5 w=139 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    G id=og1_g1 {
+        R id=og1_o1 click=1 x=174 y=24 w=140 h=54
+        R v==eq($og1_sel,1) x=172.5 y=22.5 w=143 h=57 rx=7.5 f=none s=#FF772D sw=3
+        R x=174.5 y=24.5 w=139 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    G id=og1_g2 {
+        R id=og1_o2 click=1 x=324 y=24 w=140 h=54
+        R v==eq($og1_sel,2) x=322.5 y=22.5 w=143 h=57 rx=7.5 f=none s=#FF772D sw=3
+        R x=324.5 y=24.5 w=139 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    T x=24 y=24 w=140 h=54 text=AUTO size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+    T x=174 y=24 w=140 h=54 text=ON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+    T x=324 y=24 w=140 h=54 text=OFF size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+panel {}
+SCENE w=480 h=480 fit=contain
+# widget panel pnl1 {"x":24,"y":24,"w":440,"h":300,"title":"Title","unit":""}
+G id=pnl1 {
+    R x=24.5 y=24.5 w=439 h=299 rx=9.5 f=#1D1D23 s=#5A5A69 sw=1 sh=[[0,2,6,0,#0000008C,inset]]
+    T x=38 y=34 w=412 h=36.4 text=TITLE size=26 font="Barlow Condensed Bold" cspace=5.77 f=#A6A6B4 sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+panel {"title":"","unit":"kPa"}
+SCENE w=480 h=480 fit=contain
+# widget panel pnl1 {"x":24,"y":24,"w":440,"h":300,"title":"","unit":"kPa"}
+G id=pnl1 {
+    R x=24.5 y=24.5 w=439 h=299 rx=9.5 f=#1D1D23 s=#5A5A69 sw=1 sh=[[0,2,6,0,#0000008C,inset]]
+    T x=370 y=35.4 w=80 h=33.6 text=kPa size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readout {}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":258.2,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24.5 y=201.7 w=344 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=206.2 w==clamp($ro1_lvl,0,1)*335 h=20 rx=2 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=273 h=187.2 text="{$ro1_v:%.0f}" size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T x=24 y=243 w=345 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=243 w=345 h=39.2 text="{$ro1_sub:%.1f}" size=28 font="Barlow Medium" f=#C8C8D2 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readout {"variant":"hero"}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":258.2,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24.5 y=201.7 w=344 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=206.2 w==clamp($ro1_lvl,0,1)*335 h=20 rx=2 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=273 h=187.2 text="{$ro1_v:%.0f}" size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T x=24 y=243 w=345 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=243 w=345 h=39.2 text="{$ro1_sub:%.1f}" size=28 font="Barlow Medium" f=#C8C8D2 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readout {"variant":"kpi"}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":88,"variant":"kpi","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24 y=109 w==clamp($ro1_lvl,0,1)*345 h=3 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=345 h=33.6 text=Label size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=57.6 w=345 h=47.6 text="{$ro1_v:%.0f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle
+}
+
+
+readout {"variant":"compact"}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":39.2,"variant":"compact","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    C v==1-eq($ro1_st,1)-eq($ro1_st,2)-eq($ro1_st,3) cx=33 cy=43.6 rx=9 ry=9 f=#A6A6B4
+    C v==eq($ro1_st,1) cx=33 cy=43.6 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+    C v==eq($ro1_st,2) cx=33 cy=43.6 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+    C v==eq($ro1_st,3) cx=33 cy=43.6 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+    T x=52 y=24 w=187 h=39.2 text=Label size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=249 y=24 w=120 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+}
+
+
+readout {"bar":false}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":258.2,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":false,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    T x=24 y=24 w=273 h=187.2 text="{$ro1_v:%.0f}" size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T x=24 y=243 w=345 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=243 w=345 h=39.2 text="{$ro1_sub:%.1f}" size=28 font="Barlow Medium" f=#C8C8D2 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readout {"unit":""}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":258.2,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24.5 y=201.7 w=344 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=206.2 w==clamp($ro1_lvl,0,1)*335 h=20 rx=2 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=273 h=187.2 text="{$ro1_v:%.0f}" size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T x=24 y=243 w=345 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=243 w=345 h=39.2 text="{$ro1_sub:%.1f}" size=28 font="Barlow Medium" f=#C8C8D2 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readoutrow {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget readoutrow row1 {"x":24,"y":24,"w":440,"h":50,"name":"Label","fmt1":"%.1f","fmt2":"","w1":110,"w2":90,"keys":{}}
+G id=row1 {
+    R x=24.5 y=24.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+    C v==1-eq($row1_st,1)-eq($row1_st,2)-eq($row1_st,3) cx=47 cy=49 rx=9 ry=9 f=#A6A6B4
+    C v==eq($row1_st,1) cx=47 cy=49 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+    C v==eq($row1_st,2) cx=47 cy=49 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+    C v==eq($row1_st,3) cx=47 cy=49 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+    T x=66 y=24 w=264 h=50 text=Label size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=340 y=24 w=110 h=50 text="{$row1_r1:%.1f}" size=34 font="Barlow SemiBold" f==if(eq($row1_st,2),#F2B233,if(eq($row1_st,3),#F7777A,#FFFFFF)) sh=[[0,2,2,0,#00000099]] align=right valign=middle fit=ellipsis
+}
+
+
+repeater {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=330
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            R x=24.5 y==24+i*56+0.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+            C v==1-eq($rep1_st[i],1)-eq($rep1_st[i],2)-eq($rep1_st[i],3) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#A6A6B4
+            C v==eq($rep1_st[i],1) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+            C v==eq($rep1_st[i],2) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+            C v==eq($rep1_st[i],3) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+            T x=66 y==24+i*56 w==lerp(244,384,clamp(and($rep1_ready,eq($rep1_hasv[i],0)),0,1)) h=50 text="$rep1_name[i]" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+            T v==not(and($rep1_ready,eq($rep1_hasv[i],0))) x=320 y==24+i*56 w=130 h=50 text="{$rep1_v[i]:%.1f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+        }
+    }
+}
+
+
+repeater {"item":"row"}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=330
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            R x=24.5 y==24+i*56+0.5 w=439 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+            C v==1-eq($rep1_st[i],1)-eq($rep1_st[i],2)-eq($rep1_st[i],3) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#A6A6B4
+            C v==eq($rep1_st[i],1) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+            C v==eq($rep1_st[i],2) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+            C v==eq($rep1_st[i],3) cx=47 cy==24+i*56+25 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+            T x=66 y==24+i*56 w==lerp(244,384,clamp(and($rep1_ready,eq($rep1_hasv[i],0)),0,1)) h=50 text="$rep1_name[i]" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+            T v==not(and($rep1_ready,eq($rep1_hasv[i],0))) x=320 y==24+i*56 w=130 h=50 text="{$rep1_v[i]:%.1f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+        }
+    }
+}
+
+
+repeater {"item":"text"}
+SCENE w=480 h=480 fit=contain
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":319.2,"max":6,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=319.2
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            T x=24 y==24+i*56 w=440 h=39.2 text="$rep1_t[i]" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+        }
+    }
+}
+
+
+repeater {"item":"bar"}
+SCENE w=480 h=480 fit=contain
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":310,"max":6,"layout":"list","cols":2,"pitch":56,"item":"bar","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=310
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            R x=24.5 y==24+i*56+0.5 w=439 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+            R x=29 y==24+i*56+5 w==clamp($rep1_lvl[i],0,1)*430 h=20 rx=2 f==if(eq($rep1_st[i],1),#7FD970,if(eq($rep1_st[i],2),#F2B233,if(eq($rep1_st[i],3),#F7777A,#A6A6B4)))
+        }
+    }
+}
+
+
+repeater {"item":"light"}
+SCENE w=480 h=480 fit=contain
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":298,"max":6,"layout":"list","cols":2,"pitch":56,"item":"light","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=298
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            C v==1-eq($rep1_st[i],1)-eq($rep1_st[i],2)-eq($rep1_st[i],3) cx=33 cy==24+i*56+9 rx=9 ry=9 f=#A6A6B4
+            C v==eq($rep1_st[i],1) cx=33 cy==24+i*56+9 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+            C v==eq($rep1_st[i],2) cx=33 cy==24+i*56+9 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+            C v==eq($rep1_st[i],3) cx=33 cy==24+i*56+9 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+        }
+    }
+}
+
+
+repeater {"layout":"grid"}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":162,"max":6,"layout":"grid","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+G id=rep1 {
+    R x=24 y=24 w=440 h=162
+    RP n=6 {
+        G v==lt(i,$rep1_n) {
+            R x==24+mod(i,2)*225+0.5 y==24+floor(i/2)*56+0.5 w=214 h=49 rx=5.5 f=@theme_row s=#5A5A69 sw=1
+            C v==1-eq($rep1_st[i],1)-eq($rep1_st[i],2)-eq($rep1_st[i],3) cx==24+mod(i,2)*225+23 cy==24+floor(i/2)*56+25 rx=9 ry=9 f=#A6A6B4
+            C v==eq($rep1_st[i],1) cx==24+mod(i,2)*225+23 cy==24+floor(i/2)*56+25 rx=9 ry=9 f=#7FD970 sh=[[0,0,10,0,#7FD970]]
+            C v==eq($rep1_st[i],2) cx==24+mod(i,2)*225+23 cy==24+floor(i/2)*56+25 rx=9 ry=9 f=#F2B233 sh=[[0,0,10,0,#F2B233]]
+            C v==eq($rep1_st[i],3) cx==24+mod(i,2)*225+23 cy==24+floor(i/2)*56+25 rx=9 ry=9 f=#F7777A sh=[[0,0,10,0,#F7777A]]
+            T x==24+mod(i,2)*225+42 y==24+floor(i/2)*56 w==lerp(19,159,clamp(and($rep1_ready,eq($rep1_hasv[i],0)),0,1)) h=50 text="$rep1_name[i]" size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis missing=""
+            T v==not(and($rep1_ready,eq($rep1_hasv[i],0))) x==24+mod(i,2)*225+71 y==24+floor(i/2)*56 w=130 h=50 text="{$rep1_v[i]:%.1f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+        }
+    }
+}
+
+
+stepper {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget stepper stp1 {"x":24,"y":24,"w":440,"h":54,"name":"Value","fmt":"%.0f","by":1,"min":0,"max":100,"keys":{}}
+G id=stp1 {
+    G id=stp1_gd {
+        R id=stp1_dec press=1 x=226 y=24 w=54 h=54
+        R x=226.5 y=24.5 w=53 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    G id=stp1_gi {
+        R id=stp1_inc press=1 x=410 y=24 w=54 h=54
+        R x=410.5 y=24.5 w=53 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    T x=24 y=24 w=192 h=54 text=Value size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=226 y=24 w=54 h=54 text=− size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle
+    T x=290 y=27.2 w=110 h=47.6 text="{$stp1_v:%.0f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle
+    T x=410 y=24 w=54 h=54 text=+ size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle
+}
+
+
+tabs {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget tabs nav1 {"x":24,"y":24,"w":432,"h":54,"tabs":[{"label":"Main","page":"p1","key":0},{"label":"Power","page":"p2","key":1}],"active":"p1","gap":10}
+G id=nav1 {
+    G id=nav1_g0 {
+        R id=nav1_t0 click=1 x=24 y=24 w=211 h=54
+        R x=22.5 y=22.5 w=214 h=57 rx=7.5 f=none s=#FF772D sw=3
+        R x=24.5 y=24.5 w=210 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    G id=nav1_g1 {
+        R id=nav1_t1 click=1 x=245 y=24 w=211 h=54
+        R x=245.5 y=24.5 w=210 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    }
+    T x=24 y=24 w=211 h=54 text=MAIN size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+    T x=245 y=24 w=211 h=54 text=POWER size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}
+
+
+text {}
+SCENE w=480 h=480 fit=contain
+# widget text txt1 {"x":24,"y":24,"w":300,"h":39.2,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt1 {
+    T x=24 y=24 w=300 h=39.2 text=Label size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+text {"state":true}
+SCENE w=480 h=480 fit=contain
+# widget text txt1 {"x":24,"y":24,"w":300,"h":39.2,"style":"value","text":"Label","align":"left","state":true,"keys":{}}
+G id=txt1 {
+    T x=24 y=24 w=300 h=39.2 text=Label size=28 font="Barlow SemiBold" f==if(eq($txt1_st,2),#F2B233,if(eq($txt1_st,3),#F7777A,#FFFFFF)) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+text {"style":"hero"}
+SCENE w=480 h=480 fit=contain
+# widget text txt1 {"x":24,"y":24,"w":300,"h":218.4,"style":"hero","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt1 {
+    T x=24 y=24 w=300 h=218.4 text=Label size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+textinput {}
+[{"type":"textinput","box":{"x":24,"y":24,"w":300,"h":54},"props":{"value":"","placeholder":"Text","z_index":22},"style":{"bg":"#111116","text":"#FFFFFF","placeholder_color":"#A6A6B4"},"fontSize":26}]
+
+toggle {}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget toggle tg1 {"x":24,"y":24,"w":300,"h":54,"label":"Label","onText":"On","offText":"Off","look":"button","keys":{}}
+G id=tg1 {
+    R id=tg1_hit click=1 x=24 y=24 w=300 h=54
+    R v==$tg1_on x=22.5 y=22.5 w=303 h=57 rx=7.5 f=none s=#FF772D sw=3
+    R x=24.5 y=24.5 w=299 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    T x=42 y=24 w=180 h=54 text=LABEL size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T v==eq($tg1_on,0) x=222 y=24 w=84 h=54 text=OFF size=26 font="Barlow Condensed Bold" cspace=3.85 f=#A6A6B4 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T v==eq($tg1_on,1) x=222 y=24 w=84 h=54 text=ON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+toggle {"look":"button"}
+SCENE w=480 h=480 fit=contain
+DEFS {
+    GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
+}
+# widget toggle tg1 {"x":24,"y":24,"w":300,"h":54,"label":"Label","onText":"On","offText":"Off","look":"button","keys":{}}
+G id=tg1 {
+    R id=tg1_hit click=1 x=24 y=24 w=300 h=54
+    R v==$tg1_on x=22.5 y=22.5 w=303 h=57 rx=7.5 f=none s=#FF772D sw=3
+    R x=24.5 y=24.5 w=299 h=53 rx=5.5 f=@theme_row s=#5A5A69 sw=1 fo==1-0.25*down
+    T x=42 y=24 w=180 h=54 text=LABEL size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T v==eq($tg1_on,0) x=222 y=24 w=84 h=54 text=OFF size=26 font="Barlow Condensed Bold" cspace=3.85 f=#A6A6B4 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T v==eq($tg1_on,1) x=222 y=24 w=84 h=54 text=ON size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+toggle {"look":"switch"}
+SCENE w=480 h=480 fit=contain
+# widget toggle tg1 {"x":24,"y":24,"w":300,"h":54,"label":"Label","onText":"On","offText":"Off","look":"switch","keys":{}}
+G id=tg1 {
+    R id=tg1_hit click=1 x=24 y=24 w=300 h=54
+    R x=242 y=32 w=64 h=38 rx=19 f==mix(#111116,#7FD970,clamp($tg1_on,0,1))
+    R x==244+26*clamp($tg1_on,0,1) y=34 w=34 h=34 rx=17 f=#FFFFFF
+    T x=42 y=24 w=190 h=54 text=LABEL size=26 font="Barlow Condensed Bold" cspace=3.85 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+}
+
+
+readout {"variant":"hero","unit":"%"}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":258.2,"variant":"hero","caption":"Label","unit":"%","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24.5 y=201.7 w=344 h=29 rx=3.5 f=#111116 s=#5A5A69 sw=1
+    R x=29 y=206.2 w==clamp($ro1_lvl,0,1)*335 h=20 rx=2 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=273 h=187.2 text="{$ro1_v:%.0f}" size=156 font="Barlow Condensed Bold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] align=right valign=middle
+    T x=305 y=109.5 w=64 h=89.6 text=% size=64 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] valign=middle
+    T x=24 y=243 w=345 h=39.2 text=$ro1_status size=28 font="Barlow SemiBold" f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4))) sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=243 w=345 h=39.2 text="{$ro1_sub:%.1f}" size=28 font="Barlow Medium" f=#C8C8D2 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+
+
+readout {"variant":"kpi","unit":"%"}
+SCENE w=480 h=480 fit=contain
+# widget readout ro1 {"x":24,"y":24,"w":345,"h":88,"variant":"kpi","caption":"Label","unit":"%","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+G id=ro1 {
+    R x=24 y=109 w==clamp($ro1_lvl,0,1)*345 h=3 f==if(eq($ro1_st,1),#7FD970,if(eq($ro1_st,2),#F2B233,if(eq($ro1_st,3),#F7777A,#A6A6B4)))
+    T x=24 y=24 w=345 h=33.6 text=Label size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
+    T x=24 y=57.6 w=285 h=47.6 text="{$ro1_v:%.0f}" size=34 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle
+    T x=309 y=64.6 w=60 h=33.6 text=% size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] align=right valign=middle
+}
+

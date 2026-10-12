@@ -1,0 +1,19 @@
+SCENE w=200 h=200
+DEFS {
+    GL id=fadeDown units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#0B1622],[1,#0B162200]]
+    GL id=fadeUp units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#0B162200],[1,#0B1622]]
+}
+T x=10 y=8 w=180 h=14 text="EVENT LOG" size=9 cspace=3 f=#5A7085
+R x=10 y=30 w=180 h=132 rx=6 f=#0B1622
+SC id=log x=10 y=30 w=180 h=132 ch=536 rx=6 {
+    RP n=24 {
+        R x=16 y==36+i*22 w=168 h=18 rx=3 f=#12202F fo==0.35+0.4*mod(i,2)
+        C cx=24 cy==45+i*22 rx=2.5 ry=2.5 f="$tints[i]"
+        T x=34 y==36+i*22 w=130 h=18 text="$rows[i]" size=8 valign=middle f=#8FA6B8 fit=ellipsis missing=""
+    }
+    R x=10 y==30+sy w=180 h=10 f=@fadeDown
+    R x=10 y==30+sy+vh-10 w=180 h=10 f=@fadeUp
+    R x=180 y==30+sy w=3 h=132 rx=1.5 f=#12202F
+    R x=180 w=3 h=32.50746 rx=1.5 f=#3A5570 y==30+sy+sy*0.2462686567164179
+}
+T x=10 y=172 w=180 h=12 text="wheel or drag the list" size=7 align=center f=#3A5570

@@ -1,0 +1,60 @@
+.vb-export, .vb-fonts, .vb-fonts > section, .vb-templates {
+  display: flex; flex-direction: column; gap: var(--sp4); min-width: 0;
+}
+.vb-export > section { display: flex; flex-direction: column; gap: var(--sp3); padding: var(--sp4); }
+.vb-export .chk { padding: var(--sp3) var(--sp4); }
+.vb-export-issue { padding: var(--sp3) var(--sp4); overflow-wrap: anywhere; }
+.vb-export-issue .btn { margin-left: var(--sp3); }
+.vb-export-actions { display: flex; flex-wrap: wrap; gap: var(--sp3); align-items: center; }
+.vb-export-actions > :first-child { margin-right: auto; }
+.vb-export textarea { min-height: calc(var(--h-row) * 6); }
+.vb-fonts .raised { padding: var(--sp4); overflow-wrap: anywhere; }
+.vb-fonts ul { display: flex; flex-direction: column; gap: var(--sp3); }
+.vb-fonts .lrow button { margin-left: auto; }
+.vb-font-add, .vb-font-notice { display: flex; align-items: center; gap: var(--sp3); }
+.vb-font-add > label { flex: 1; }
+.vb-templates label.raised { display: grid; grid-template-columns: auto 1fr; gap: var(--sp3); padding: var(--sp4); cursor: pointer; }
+.vb-templates label.raised .unit { grid-column: 2; overflow-wrap: anywhere; }
+.vb-templates label:has(:checked) { box-shadow: var(--focus-ring); }
+.vb-templates > button { align-self: flex-end; }
+
+/* The import and adoption components keep their own markup and callbacks. */
+.vb-project, .vb-adopt-offer { min-width: 0; max-width: 100%; }
+.vb-adopt-offer select { display: block; box-sizing: border-box; min-width: 0; width: 100%; max-width: 100%; }
+.vb-theme-import { box-sizing: border-box; min-width: 0; max-width: 100%; }
+.vb-theme-mapping { min-width: 0; overflow-wrap: anywhere; }
+.vb-theme-import label { display: block; }
+.vb-theme-import input, .vb-theme-import textarea, .vb-theme-import select, .vb-theme-import button { box-sizing: border-box; min-width: 0; max-width: 100%; }
+.vb-theme-import textarea { width: 100%; }
+.vb-theme-import select { display: block; width: 100%; }
+.vb-theme-import table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 var(--sp1); }
+.vb-theme-import th { width: 35%; overflow-wrap: anywhere; font: var(--f-unit); color: var(--text-muted); text-align: left; padding: 0 var(--sp3); }
+.vb-theme-import td { padding: var(--sp2) var(--sp3); background: linear-gradient(var(--surface-row-hi), var(--surface-row-lo)); border-block: 1px solid var(--border); vertical-align: middle; }
+.vb-theme-import td:first-child { border-left: 1px solid var(--border); border-radius: var(--r-md) 0 0 var(--r-md); }
+.vb-theme-import td:last-child { border-right: 1px solid var(--border); border-radius: 0 var(--r-md) var(--r-md) 0; }
+.vb-theme-import fieldset { min-width: 0; margin-inline: 0; padding: var(--sp4); background: linear-gradient(var(--surface-row-hi), var(--surface-row-lo)); border: 1px solid var(--border); border-radius: var(--r-md); }
+.vb-theme-import h2, .vb-theme-import h3, .vb-theme-import legend, .vb-theme-menu ul::before { font: var(--f-panel); letter-spacing: var(--ls-panel); text-transform: uppercase; color: var(--text-muted); }
+.vb-theme-import > *, .vb-theme-mapping > * { margin-block: var(--sp3); }
+.vb-theme-menu li, .vb-adopt-offer, section[aria-label="Adoption report"], section[aria-label="Pictures"] li {
+  padding: var(--sp4); border: 1px solid var(--border); border-radius: var(--r-md); background: linear-gradient(var(--surface-row-hi), var(--surface-row-lo)); overflow-wrap: anywhere;
+}
+.vb-theme-menu li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp3); }
+.vb-theme-menu ul { display: flex; flex-direction: column; gap: var(--sp3); margin-top: var(--sp4); }
+.vb-theme-menu ul::before { content: attr(aria-label); }
+section[aria-label="Pictures"] ul, section[aria-label="Adoption report"] ul { display: flex; flex-direction: column; gap: var(--sp2); }
+section[aria-label="Adoption report"] li { padding: var(--sp2) var(--sp4); border-top: 1px solid var(--border); font: var(--f-message); }
+.vb-theme-menu select, .vb-adopt-offer select, .vb-theme-import input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), .vb-theme-import select {
+  min-height: var(--h-ctl); padding: var(--sp2) var(--sp3); background: var(--surface-well); border: 1px solid var(--border); border-radius: var(--r-md); color: var(--text); font: var(--f-reading);
+}
+.vb-theme-import textarea, .vb-open-text textarea { padding: var(--sp3); background: var(--surface-well); border: 1px solid var(--border); border-radius: var(--r-md); font: var(--f-code); color: var(--text); resize: vertical; }
+.vb-theme-menu button, .vb-theme-import button, .vb-adopt-offer button, section[aria-label="Adoption report"] button, section[aria-label="Pictures"] button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp3); min-height: var(--h-ctl); padding: 0 var(--sp6); font: var(--f-button); letter-spacing: var(--ls-button); text-transform: uppercase; color: var(--text); background: linear-gradient(var(--surface-row-hi), var(--surface-row-lo)); border: 1px solid var(--border); border-radius: var(--r-md);
+}
+.vb-open-file, .vb-open-text, .vb-open-save, .vb-share { min-width: 0; display: flex; flex-direction: column; gap: var(--sp3); }
+.vb-open-file, .vb-open-text { padding: var(--sp4); background: var(--surface-panel); border: 1px solid var(--border); border-radius: var(--r-lg); }
+.vb-open-text textarea, .vb-share input { width: 100%; min-width: 0; }
+.vb-open-dialog > .dlg-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp4); }
+.vb-open-dialog > .dlg-body > :not(.vb-open-file):not(.vb-open-text) { grid-column: 1 / -1; }
+@media (min-width: 641px) {
+  .vb-open-dialog > .dlg-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

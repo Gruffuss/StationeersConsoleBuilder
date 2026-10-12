@@ -1,0 +1,10 @@
+SCENE w=200 h=200
+T x=16 y=10 w=168 h=12 text="TAP A ROW" size=8 cspace=4 f=#5A7085
+R id=sel x=14 y=38 w=172 h=28 rx=5 f=#1E3247
+RP n=5 {
+    R id=row click=1 x=16 y==40+i*28 w=168 h=24 rx=4 f=#12202F
+    T x=26 y==40+i*28 w=120 h=24 text="$names[i]" size=8 valign=middle f=#8FA6B8
+    R x=150 y==49+i*28 w=26 h=6 rx=3 f=#5FD9A8 fo==0.25+0.75*$levels[i]
+}
+R id=accent x=14 y=38 w=3 h=28 rx=1.5 f=#5FD9A8
+T x=16 y=176 w=168 h=12 text=$picked size=8 align=center f=#5A7085

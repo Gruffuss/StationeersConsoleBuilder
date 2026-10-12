@@ -1,0 +1,37 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "get_editor_state",
+        "arguments": {}
+      }
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"editor_open\\\":true,\\\"allow_network_chip_access\\\":true,\\\"allow_network_chip_access_only_for_wireless_boards\\\":false,\\\"allow_personal_area_network_chip_access\\\":true,\\\"mcp_debug_tools_available\\\":false,\\\"mcp_debug_tools_reason\\\":\\\"debugger MCP access requires both [MCP Server] Enabled = true and EnableExtensionApi = true.\\\",\\\"wireless_remote_access_only\\\":true,\\\"pan_remote_access_only\\\":false,\\\"selected_chip_ref_id\\\":null,\\\"selected_housing_ref_id\\\":null,\\\"selected_housing_name\\\":null,\\\"network_id\\\":3001,\\\"network_ids\\\":[3001],\\\"network_names\\\":{\\\"3001\\\":\\\"Device F\\\"},\\\"accessible_chip_count\\\":23,\\\"selected_chip_debugger_available\\\":false,\\\"selected_chip_debugger_reason\\\":\\\"No chip is currently selected in the IC editor.\\\"}\"}]}}"
+}

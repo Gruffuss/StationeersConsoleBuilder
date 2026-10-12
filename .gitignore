@@ -1,0 +1,21 @@
+# Local notes, never committed
+notes/
+
+# Build output
+node_modules/
+dist/
+bin/
+obj/
+*.log
+# tsc -b's incremental state (web/tsconfig.tsbuildinfo)
+*.tsbuildinfo
+# the published .NET core, copied in by web/copy-core.mjs
+web/public/_framework/
+# the vector examples, copied in by web/copy-core.mjs
+web/public/examples/
+
+# Artifacts the web tests generate for the C# suite
+.test-artifacts/
+
+# Local override for the vector mod source folder (holds a local path)
+core/VectorSrc.user.props

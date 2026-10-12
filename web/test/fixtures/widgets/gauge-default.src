@@ -1,0 +1,10 @@
+SCENE w=480 h=480 fit=contain
+# widget gauge gauge1 {"x":24,"y":24,"w":300,"h":300,"label":"Label","unit":"","min":0,"max":100,"start":-135,"end":135,"ticks":0,"fmt":"%.0f","value":false,"state":false,"keys":{}}
+G id=gauge1 {
+    P d="M84.056015 247.14398 A127.2 127.2 0 0 1 174 30 A127.2 127.2 0 0 1 263.94397 247.14398" s=#8E8E9E sw=6
+    G a=[174,157.2] r==-135+clamp(($gauge1_v-0)/100,0,1)*270 {
+        L p=[174,157.2,174,42.72] s=#FF772D sw=4
+    }
+    C cx=174 cy=157.2 rx=6 ry=6 f=#FFFFFF
+    T x=24 y=290.4 w=300 h=33.6 text=Label size=24 font="Barlow Medium" f=#A6A6B4 sh=[[0,2,2,0,#00000099]] align=center valign=middle fit=ellipsis
+}

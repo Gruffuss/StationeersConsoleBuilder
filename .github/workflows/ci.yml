@@ -1,0 +1,88 @@
+# Builds and tests a clean checkout on every pull request and every push to main; deploys the site to GitHub Pages from
+# main only.
+#
+# Both jobs stay off until the repository's owner switches them on with repository variables
+# (Settings > Secrets and variables > Actions > Variables > New repository variable):
+#   VB_CI = on      runs the build and test job on pull requests and pushes to main;
+#   VB_DEPLOY = on  also uploads and deploys the site on a push to main (needs VB_CI = on, and Pages set to
+#                   "GitHub Actions" under Settings > Pages).
+# Without them every job is skipped: nothing runs, nothing is deployed. Deleting a variable switches its part off again.
+#
+# Each third-party action is pinned to a full commit SHA; the comment names its release.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  build:
+    if: vars.VB_CI == 'on'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      DOTNET_NOLOGO: 'true'
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.401
+      - name: Install the WebAssembly workloads
+        run: dotnet workload install wasm-tools wasm-experimental
+      - name: Publish the core
+        run: dotnet publish core/Wasm -c Release -o core/Wasm/bin/publish
+      - name: Install the web dependencies
+        working-directory: web
+        run: npm ci
+      - name: Copy the core into the site
+        working-directory: web
+        run: npm run precore
+      - name: Type-check
+        working-directory: web
+        run: npx tsc -b
+      - name: Web tests (they write the artifacts the core tests read, so they run first)
+        working-directory: web
+        run: npm test
+      - name: Build the site under the project site's path
+        working-directory: web
+        env:
+          VB_BASE: /${{ github.event.repository.name }}/
+        run: npm run build
+      - name: Core tests
+        run: dotnet run --project core/Core.Tests
+      - name: Upload the site for Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.VB_DEPLOY == 'on'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: web/dist
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.VB_CI == 'on' && vars.VB_DEPLOY == 'on'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

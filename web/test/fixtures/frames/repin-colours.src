@@ -1,0 +1,10 @@
+SCENE w=480 h=480 fit=stretch ztext=1
+DEFS { GL id=ramp units=bbox x1=0 y1=0 x2=1 y2=0 stops=[[0,#5FD9A8],[1,#2E8B6E]] }
+RP n=21 { R x==i*22 y=20 w=22 h=50 f="=mix(#000000,#141414,i/20)" fea=0 }
+R x=20 y=100 w=440 h=80 f=@ramp fea=0
+L p=[20,220,460,220] sw=10 s=@ramp fea=0
+L p=[20,250,460,250] sw=10 s=@ramp dash=[60,40] fea=0
+R x=20 y=280 w=440 h=100 f=#0A121C fea=0
+R x=100 y=300 w=200 h=60 f=#E2563D fo=0.85 fea=0
+T x=20 y=400 w=440 h=50 size=32 text="7C translucent label cover" f=#FFFFFF
+R x=200 y=400 w=150 h=50 f=#E2563D fo=0.5 fea=0

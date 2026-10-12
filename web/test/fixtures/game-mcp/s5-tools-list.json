@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "tools/list"
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"tools\":[{\"name\":\"get_editor_state\",\"description\":\"Get the current IC editor state: whether the editor is open, which chip is selected, the data network ID, and whether network-wide chip access is enabled or currently limited to wireless development boards. Call this first to discover accessible chips before using other tools.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{},\"required\":[]}},{\"name\":\"get_editor_code\",\"description\":\"Get the current code shown in the in-game IC editor without exporting to the chip. Only works for the currently selected chip when the editor is open.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"ref_id\":{\"type\":\"number\",\"description\":\"Reference ID of the selected chip\"}},\"required\":[]}},{\"name\":\"set_editor_code\",\"description\":\"Update the in-game IC editor's displayed code without exporting to the chip. The code appears in the editor text fields but the chip does NOT recompile. Only works for the currently selected chip when the editor is open.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"ref_id\":{\"type\":\"number\",\"description\":\"Reference ID of the chip\"},\"source\":{\"type\":\"string\",\"description\":\"Lua source code to display in the editor\"}},\"required\":[\"ref_id\",\"source\"]}},{\"name\":\"get_all_network_devices\",\"description\":\"List all data cable networks in the world and their connected devices. Returns an array of networks, each with a device list showing ref_id, prefab name, and display name.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{},\"required\":[]}},{\"name\":\"get_network_devices\",\"description\":\"List all devices on a specific data cable network by network ID.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"network_id\":{\"type\":\"number\",\"description\":\"Data cable network ID\"}},\"required\":[\"network_id\"]}}]}}"
+}

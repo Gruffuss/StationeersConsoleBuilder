@@ -1,0 +1,11 @@
+SCENE w=200 h=200 fit=stretch size=8 f=#DDE7EE
+DEFS {
+    FONT src="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700"
+}
+R x=0 y=0 w=200 h=200 f=#0E1A26 fea=0
+R x=10 y=10 w=180 h=40 rx=4 f=#16283A s=#3E6A8C sw=1
+T x=18 y=15 w=164 h=16 font="Orbitron Bold" size=12 f=#F2C14E text="REACTOR 2"
+T x=18 y=33 w=164 h=12 font=Orbitron size=6 f=#8FB8D8 text="primary loop nominal"
+T x=10 y=62 w=180 h=34 font=Orbitron size=22 align=center text="1,482 kPa"
+T x=10 y=112 w=180 h=14 size=7 align=center text="core at <font=Orbitron>612 K</font>, within limits"
+T x=10 y=170 w=180 h=20 size=5 wrap=1 align=center f=#6F8799 text="Without the fonts mod every line above still reads, in the game's own font."

@@ -1,0 +1,3 @@
+T text="a\"b\\c\nd\te\q"
+T text="two
+lines" end="\\"

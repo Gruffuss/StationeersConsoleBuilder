@@ -1,0 +1,9 @@
+SCENE w=480 h=480 fit=stretch
+R x=30 y=30 w=100 h=80 f=#FFFFFF
+G t=[200,50] r=30 { R w=100 h=80 f=#FFFFFF }
+P d="M30 170 L150 190 L130 280 L50 260 Z" f=#FFFFFF
+P d="M220 170 L420 170 L420 290 L220 290 Z M270 210 L270 250 L370 250 L370 210 Z" f=#FFFFFF
+L p=[30,340,180,380] s=#FFFFFF sw=1
+L p=[240,340,400,380] s=#FFFFFF sw=8 cap=round
+L p=[30,430,450,430] s=#FFFFFF sw=8 dash=[24,12] cap=round
+T x=20 y=460 w=440 h=20 size=14 text="M6 pixel edges" f=#FFFFFF

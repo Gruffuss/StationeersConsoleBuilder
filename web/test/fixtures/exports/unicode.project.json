@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "name": "Unicode console 漢字 🛰️",
+  "target": { "vectorMod": "0.11.118" },
+  "theme": "vanilla-plus",
+  "pages": [{
+    "id": "p1", "name": "Main", "surface": "main", "shape": "square",
+    "size": { "w": 460, "h": 460 }, "background": ["#171D22"],
+    "scene": {
+      "header": { "w": 480, "h": 480, "fit": "contain" },
+      "defs": [{ "op": "FONT", "attrs": { "src": "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700" } }],
+      "root": [{ "op": "T", "attrs": { "x": 24, "y": 24, "w": 400, "h": 48, "text": "漢字 🛰️" } }]
+    }
+  }],
+  "roles": [], "reads": [], "state": [], "actions": [], "rules": [], "bindings": {},
+  "customLua": "function U.init() log(\"漢字 🛰️\", 1) end\n",
+  "simDevices": [{ "id": "sensor", "prefab": "StructureGasSensor", "label": "Room 漢字", "ref": 2, "values": { "Temperature": { "kind": "const", "v": 295 } } }],
+  "settings": { "budgets": { "load": 500000, "tick": 50000 }, "beta": false, "day": { "length": 1200, "start": 0.25 }, "wipeOnReexport": false }
+}

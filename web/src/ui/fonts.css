@@ -1,0 +1,8 @@
+@font-face { font-family: "VB Barlow"; font-weight: 400; font-display: swap; src: url('/fonts/Barlow-Regular.woff2') format('woff2'); }
+@font-face { font-family: "VB Barlow"; font-weight: 500; font-display: swap; src: url('/fonts/Barlow-Medium.woff2') format('woff2'); }
+@font-face { font-family: "VB Barlow"; font-weight: 600; font-display: swap; src: url('/fonts/Barlow-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: "VB Barlow"; font-weight: 700; font-display: swap; src: url('/fonts/Barlow-Bold.woff2') format('woff2'); }
+@font-face { font-family: "VB Barlow Condensed"; font-weight: 600; font-display: swap; src: url('/fonts/BarlowCondensed-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: "VB Barlow Condensed"; font-weight: 700; font-display: swap; src: url('/fonts/BarlowCondensed-Bold.woff2') format('woff2'); }
+@font-face { font-family: "VB JetBrains Mono"; font-weight: 400; font-display: swap; src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2'); }
+@font-face { font-family: "VB JetBrains Mono"; font-weight: 700; font-display: swap; src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2'); }

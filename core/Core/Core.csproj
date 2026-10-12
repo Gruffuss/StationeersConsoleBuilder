@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../VectorSrc.props" />
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>VectorBuilder.Core</AssemblyName>
+    <RootNamespace>VectorBuilder.Core</RootNamespace>
+    <!-- the `ver` scene variable reads this, so it comes from the vector sources compiled in, never by hand -->
+    <AssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(VectorSrc)ScriptedScreensVector.csproj')), '(?&lt;=&lt;Version&gt;)[^&lt;]+'))</AssemblyVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Parser/tessellator sources from the mod's Tests project; PageFonts and ScaleChoice have no headless consumer. -->
+    <Compile Include="$(VectorSrc)Triangulator.cs;$(VectorSrc)Clip.cs;$(VectorSrc)Gradient.cs;$(VectorSrc)Easing.cs;$(VectorSrc)ImageDecode.cs;$(VectorSrc)Expression.cs;$(VectorSrc)SceneText.cs;$(VectorSrc)TextNode.cs;$(VectorSrc)RadialFill.cs;$(VectorSrc)MeshBuilder.cs;$(VectorSrc)TextOrder.cs;$(VectorSrc)SceneModel.cs;$(VectorSrc)PathData.cs;$(VectorSrc)Stroke.cs;$(VectorSrc)Shadow.cs;$(VectorSrc)Tessellator.cs;$(VectorSrc)TessellationStats.cs;$(VectorSrc)ColourFilter.cs;$(VectorSrc)ConvexPartition.cs;$(VectorSrc)DashWindow.cs;$(VectorSrc)SurfaceProjection.cs;$(VectorSrc)ScaleMeasurement.cs;$(VectorSrc)EdgeRamp.cs;$(VectorSrc)TextOutline.cs;$(VectorSrc)MainThreadWork.cs;$(VectorSrc)DataCadence.cs;$(VectorSrc)UiProps.cs" />
+    <Compile Include="$(VectorSrc)Colours.cs" Condition="Exists('$(VectorSrc)Colours.cs')" />
+    <!-- the mod's config and log come from ModStandIns.cs (the game's defaults), not its test stubs -->
+    <Compile Include="$(VectorSrc)Tests/ImageCacheStub.cs;$(VectorSrc)Tests/ScriptedScreensStubs.cs" />
+    <Compile Include="*.cs" />
+    <ProjectReference Include="$(LuaCSharpProj)" />
+    <InternalsVisibleTo Include="Core.Tests" />
+  </ItemGroup>
+  <Target Name="CheckVectorVersion" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(AssemblyVersion)' == ''" Text="The vector sources in $(VectorSrc) have no &lt;Version&gt; found in ScriptedScreensVector.csproj; the core reads its version from there. Point VectorSrc at a vector checkout (core/VectorSrc.user.props)." />
+    <Error Condition="$([MSBuild]::VersionLessThan('$(AssemblyVersion)', '0.11.64'))" Text="The vector sources in $(VectorSrc) are $(AssemblyVersion); the core needs 0.11.64 or newer. Point VectorSrc at a newer checkout (core/VectorSrc.user.props)." />
+  </Target>
+</Project>

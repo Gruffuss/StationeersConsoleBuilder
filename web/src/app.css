@@ -1,0 +1,77 @@
+html, body, #root { min-height: 100%; margin: 0; }
+.vb-shell { display: grid; grid-template-rows: auto minmax(0,1fr) auto auto; height: 100dvh; gap: var(--sp5); padding: var(--sp7); box-sizing: border-box; }
+.vb-header { display: flex; align-items: center; gap: var(--sp5); min-width: 0; }
+.vb-devbar { padding: var(--sp4); }
+.vb-header-banner { display: flex; align-items: center; flex: 1 1 auto; min-width: 0; min-height: var(--h-head); gap: var(--sp5); padding: var(--sp4); background: linear-gradient(var(--brand-hi), var(--brand), var(--brand-lo)); border-radius: var(--r-xl); box-shadow: var(--focus-ring); }
+.vb-header-banner h1 { margin: 0; }
+.vb-save { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: var(--f-unit); text-align: right; }
+.vb-workspace { display: grid; grid-template-columns: auto clamp(200px,18vw,320px) minmax(0,1fr) clamp(260px,24vw,420px); gap: var(--sp5); min-height: 0; }
+.vb-scripts { grid-template-columns: minmax(0,1fr); }
+.vb-rail { display: flex; flex-direction: column; gap: var(--sp2); padding: var(--sp2); }
+.vb-sidebar, .vb-inspector { min-width: 0; min-height: 0; overflow: auto; padding: var(--sp3); }
+.vb-sidebar > [role=tablist] { position: sticky; top: 0; z-index: 2; background: var(--surface-screen); }
+.vb-center { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: var(--sp5); }
+.vb-canvas-area { position: relative; display: flex; flex: 1; min-height: 200px; background: var(--surface-screen-lo); }
+.vb-preview { display: flex; flex: 1; min-width: 0; min-height: 0; }
+.vb-source { display: flex; flex-direction: column; flex: none; height: calc(470px*var(--s)); resize: vertical; min-height: 120px; max-height: 70vh; overflow: hidden; }
+.vb-source[hidden], .vb-messages[hidden] { display: none; }
+.vb-source-head, .vb-messages-head { display: flex; align-items: center; gap: var(--sp3); padding: var(--sp3); }
+.vb-source-head .unit { flex: 1; }
+.vb-code { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.vb-code-editor { flex: 1; min-height: 0; }
+.vb-code .cm-editor { height: 100%; }
+.vb-source .cm-scroller { font: var(--f-code); }
+.vb-source .cm-gutters { background: var(--surface-well); border-right-color: var(--border); }
+.vb-code-sel { background: var(--surface-row-hi); }
+.vb-code-draft { padding: var(--sp3); color: var(--status-warn); }
+.vb-source .tok-typeName { color: var(--text); font-weight: bold; }
+.vb-source .tok-propertyName, .vb-source .tok-punctuation { color: var(--text-muted); }
+.vb-source .tok-string, .vb-source .tok-string2 { color: var(--text-secondary); font-style: italic; }
+.vb-source .tok-comment { color: var(--text-muted); font-style: italic; }
+.vb-source .tok-number, .vb-source .tok-atom { color: var(--text); }
+.vb-source .tok-variableName { color: var(--text-secondary); text-decoration: underline dotted; }
+.vb-messages { display: flex; flex-direction: column; min-height: 0; height: calc(520px*var(--s)); overflow: auto; }
+.vb-statusbar { grid-row: 4; display: flex; align-items: center; gap: var(--sp3); height: calc(var(--h-ctl) + 2*var(--sp2)); flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; }
+.vb-statusbar > * { flex-shrink: 0; }
+.vb-statusbar input { width: 4em; }
+.vb-statusbar .vb-run-line { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.vb-statusbar .vb-spacer { flex: 1; }
+.vb-crumbs { position: absolute; left: var(--sp3); top: var(--sp3); right: auto; max-width: calc(100% - 2*var(--sp3)); box-sizing: border-box; white-space: nowrap; overflow: auto hidden; pointer-events: none; font: var(--f-unit); }
+.vb-crumbs button { pointer-events: auto; }
+.vb-crumbs button[aria-current] { color: var(--text); }
+.vb-crumbs .vb-lock-reason { color: var(--status-warn); }
+.vb-page-settings .vb-shape { display: flex; flex-wrap: wrap; gap: var(--sp2); }
+.vb-page-settings input { min-width: 0; max-width: 100%; }
+.vb-page-settings .vb-shape input { width: 5em; }
+@media (max-width: 840px) {
+  .vb-shell { height: auto; min-height: 100dvh; }
+  .vb-workspace { display: flex; flex-direction: column; }
+  .vb-rail { flex-direction: row; overflow-x: auto; }
+  .vb-center { order: 1; }
+  .vb-sidebar { order: 2; }
+  .vb-inspector { order: 3; }
+  .vb-canvas-area { flex: none; height: 70vh; }
+  .vb-source { height: 40vh; }
+  .vb-statusbar { position: sticky; bottom: 0; background: var(--surface-screen); z-index: 2; }
+  .vb-header { flex-wrap: wrap; }
+}
+.vb-theme-anchor { position: relative; }
+.vb-theme-menu { width: min(360px, calc(100vw - 32px)); max-height: calc(100dvh - 80px); overflow-y: auto; overscroll-behavior: contain; }
+.vb-theme-menu > .mi { white-space: nowrap; }
+.vb-view-slot, .vb-view-controls { display: flex; align-items: center; gap: var(--sp2); flex-wrap: nowrap; }
+.vb-pointer { min-width: 12ch; font-variant-numeric: tabular-nums; }
+.vb-rail button[aria-pressed="true"] { box-shadow: var(--focus-ring); }
+.vb-defaults { margin-top: auto; display: flex; width: var(--h-ctl); height: var(--h-ctl); }
+.vb-defaults span { width: 50%; border: 1px solid var(--border); }
+.vb-shell .vb-project { display: contents; }
+.vb-inspector-head { display: flex; gap: var(--sp3); align-items: center; padding: var(--sp4) 0; }
+.vb-inspector-head h2 { margin: 0; }
+.vb-align { display: flex; flex-wrap: wrap; gap: var(--sp1); }
+.vb-style-section, .vb-page-settings { display: flex; flex-direction: column; gap: var(--sp3); padding-block: var(--sp3); }
+.vb-taskbar { position: absolute; display: flex; align-items: center; gap: var(--sp3); padding: var(--sp3); z-index: 10; white-space: nowrap; }
+.vb-frame-label { position: absolute; left: 0; top: -24px; pointer-events: none; }
+.vb-play-banner { position: absolute; left: var(--sp4); right: var(--sp4); bottom: var(--sp4); display: flex; gap: var(--sp3); padding: var(--sp3); pointer-events: none; }
+.vb-devices-row .raised { padding: var(--sp3); }
+.vb-view-slot .vb-view-controls { padding: 0; flex-wrap: nowrap; }
+.vb-guides { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.vb-guides line { stroke: #ff4fd8; stroke-width: 1px; }

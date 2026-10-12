@@ -1,0 +1,4 @@
+RP n=3 lod {
+    R x==i*10 y=0 w=8 h=8 f=#5FD9A8
+}
+G clip=tank { RP n=2 { C cx==i*4 cy=2 rx=1 ry=1 lod } }

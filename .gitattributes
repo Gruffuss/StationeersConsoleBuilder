@@ -1,0 +1,2 @@
+web/test/** -text
+*.bin binary

@@ -1,0 +1,756 @@
+{
+  "version": 1,
+  "name": "Power",
+  "target": {
+    "vectorMod": "0.11.118"
+  },
+  "theme": "neutral",
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Main",
+      "surface": "main",
+      "shape": "square",
+      "size": {
+        "w": 460,
+        "h": 460
+      },
+      "background": [
+        "#2B2B2B",
+        "#202020"
+      ],
+      "scene": {
+        "header": {
+          "w": 480,
+          "h": 480,
+          "fit": "contain"
+        },
+        "defs": [],
+        "root": [
+          {
+            "op": "G",
+            "attrs": {
+              "id": "hdr1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 0.5,
+                  "w": 431,
+                  "h": 63,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_crit,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 380,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#EF5350"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 398,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_crit:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_warn,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 298,
+                      "cy": 32,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#F0B429"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 316,
+                      "y": 15,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_warn:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 4,
+                  "w": 222,
+                  "h": 56,
+                  "text": "Power",
+                  "size": 30,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget header hdr1 {\"x\":24,\"y\":0,\"w\":432,\"h\":64,\"title\":\"Power\",\"clock\":false,\"counts\":true,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "bar1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 90,
+                  "w": 432,
+                  "h": 30,
+                  "rx": 3,
+                  "f": "#121212"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 28,
+                  "y": 94,
+                  "w": "=clamp($bar1_lvl,0,1)*424",
+                  "h": 22,
+                  "rx": 2,
+                  "f": "=if(eq($bar1_st,1),#4CC38A,if(eq($bar1_st,2),#F0B429,if(eq($bar1_st,3),#EF5350,#9A9A9A)))"
+                }
+              }
+            ],
+            "comments": [
+              "widget bar bar1 {\"x\":24,\"y\":90,\"w\":432,\"h\":30,\"orient\":\"h\",\"stateMode\":\"bound\",\"marks\":[],\"target\":false,\"floor\":0,\"critBelow\":0.1,\"warnBelow\":0.25,\"cells\":0,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "og1"
+            },
+            "c": [
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g0"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o0",
+                      "click": 1,
+                      "x": 24,
+                      "y": 140,
+                      "w": 137.3333282470703,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,0)",
+                      "x": 23,
+                      "y": 139,
+                      "w": 139.3333282470703,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 24.5,
+                      "y": 140.5,
+                      "w": 136.3333282470703,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g1"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o1",
+                      "click": 1,
+                      "x": 171.3333282470703,
+                      "y": 140,
+                      "w": 137.3333282470703,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,1)",
+                      "x": 170.3333282470703,
+                      "y": 139,
+                      "w": 139.3333282470703,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 171.8333282470703,
+                      "y": 140.5,
+                      "w": 136.3333282470703,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o2",
+                      "click": 1,
+                      "x": 318.6666564941406,
+                      "y": 140,
+                      "w": 137.3333282470703,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,2)",
+                      "x": 317.6666564941406,
+                      "y": 139,
+                      "w": 139.3333282470703,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 319.1666564941406,
+                      "y": 140.5,
+                      "w": 136.3333282470703,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 24,
+                  "y": 140,
+                  "w": 137.3333282470703,
+                  "h": 54,
+                  "text": "Auto",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 171.3333282470703,
+                  "y": 140,
+                  "w": 137.3333282470703,
+                  "h": 54,
+                  "text": "On",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 318.6666564941406,
+                  "y": 140,
+                  "w": 137.3333282470703,
+                  "h": 54,
+                  "text": "Off",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget options og1 {\"x\":24,\"y\":140,\"w\":432,\"h\":54,\"options\":[{\"label\":\"Auto\",\"value\":0,\"key\":0},{\"label\":\"On\",\"value\":1,\"key\":1},{\"label\":\"Off\",\"value\":2,\"key\":2}],\"gap\":10,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "log1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24,
+                  "y": 250,
+                  "w": 432,
+                  "h": 100
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 2
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=gt($log1_k[i],0)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 24,
+                          "y": "=250+i*56",
+                          "w": 432,
+                          "h": 44,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 38,
+                          "y": "=250+i*56+8",
+                          "w": 72,
+                          "h": 28,
+                          "rx": 3,
+                          "f": "=if(eq($log1_k[i],1),#4CC38A,if(eq($log1_k[i],2),#F0B429,if(eq($log1_k[i],3),#EF5350,#9A9A9A)))"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=eq($log1_k[i],1)",
+                          "x": 38,
+                          "y": "=250+i*56+8",
+                          "w": 72,
+                          "h": 28,
+                          "text": "OK",
+                          "size": 20,
+                          "weight": "bold",
+                          "f": "#111111",
+                          "align": "center",
+                          "valign": "middle"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=eq($log1_k[i],2)",
+                          "x": 38,
+                          "y": "=250+i*56+8",
+                          "w": 72,
+                          "h": 28,
+                          "text": "WARN",
+                          "size": 20,
+                          "weight": "bold",
+                          "f": "#111111",
+                          "align": "center",
+                          "valign": "middle"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=eq($log1_k[i],3)",
+                          "x": 38,
+                          "y": "=250+i*56+8",
+                          "w": 72,
+                          "h": 28,
+                          "text": "CRIT",
+                          "size": 20,
+                          "weight": "bold",
+                          "f": "#111111",
+                          "align": "center",
+                          "valign": "middle"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 124,
+                          "y": "=250+i*56",
+                          "w": 318,
+                          "h": 44,
+                          "text": "$log1_m[i]",
+                          "size": 22,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget eventlog log1 {\"x\":24,\"y\":250,\"w\":432,\"h\":100,\"rows\":2,\"time\":false,\"pitch\":56,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn1_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 400,
+                  "w": 200,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 400.5,
+                  "w": 199,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 400,
+                  "w": 164,
+                  "h": 54,
+                  "text": "Devices",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn1 {\"x\":24,\"y\":400,\"w\":200,\"h\":54,\"states\":[{\"label\":\"Devices\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "id": "batt",
+      "name": "Batteries",
+      "prefabs": [
+        "StructureBattery",
+        "StructureBatteryLarge"
+      ],
+      "mode": "all"
+    },
+    {
+      "id": "gen",
+      "name": "Generators",
+      "prefabs": [
+        "StructureSolidFuelGenerator"
+      ],
+      "mode": "all"
+    }
+  ],
+  "reads": [
+    {
+      "id": "cap",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "Maximum"
+        }
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "frac",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "Charge"
+        }
+      },
+      "agg": "sum",
+      "derived": "P.cap and P.cap > 0 and x / P.cap or nil",
+      "th": {
+        "critBelow": 0.1,
+        "warnBelow": 0.25,
+        "hyst": 0.05
+      }
+    }
+  ],
+  "state": [
+    {
+      "name": "og1_sel",
+      "type": "number",
+      "init": 0,
+      "min": 0,
+      "max": 2
+    }
+  ],
+  "actions": [
+    {
+      "id": "mode0",
+      "on": "og1_o0",
+      "do": [
+        {
+          "op": "set",
+          "state": "og1_sel",
+          "value": "0"
+        },
+        {
+          "op": "log",
+          "text": "\"Generators: auto\"",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "mode1",
+      "on": "og1_o1",
+      "do": [
+        {
+          "op": "set",
+          "state": "og1_sel",
+          "value": "1"
+        },
+        {
+          "op": "log",
+          "text": "\"Generators: on\"",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "mode2",
+      "on": "og1_o2",
+      "do": [
+        {
+          "op": "set",
+          "state": "og1_sel",
+          "value": "2"
+        },
+        {
+          "op": "log",
+          "text": "\"Generators: off\"",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "devices",
+      "on": "btn1_hit",
+      "do": [
+        {
+          "op": "page",
+          "page": "vb_devices"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "role": "gen",
+      "lt": {
+        "name": "On"
+      },
+      "value": "S.og1_sel == 1 and 1 or S.og1_sel == 2 and 0 or (P.frac and (P.frac < 0.1 and 1 or P.frac > 0.25 and 0 or nil))"
+    }
+  ],
+  "bindings": {
+    "hdr1_warn": {
+      "from": "expr",
+      "expr": "alarms(2)"
+    },
+    "hdr1_crit": {
+      "from": "expr",
+      "expr": "alarms(3)"
+    },
+    "bar1_lvl": {
+      "from": "read",
+      "read": "frac"
+    },
+    "bar1_st": {
+      "from": "read",
+      "read": "frac",
+      "part": "state"
+    },
+    "og1_sel": {
+      "from": "state",
+      "state": "og1_sel"
+    },
+    "log1_k": {
+      "from": "log",
+      "part": "k"
+    },
+    "log1_m": {
+      "from": "log",
+      "part": "m"
+    }
+  },
+  "customLua": "",
+  "simDevices": [
+    {
+      "id": "s1",
+      "prefab": "StructureBattery",
+      "label": "",
+      "ref": 2,
+      "role": "batt",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 900
+        },
+        "Maximum": {
+          "kind": "const",
+          "v": 1000
+        }
+      }
+    },
+    {
+      "id": "s2",
+      "prefab": "StructureBatteryLarge",
+      "label": "",
+      "ref": 3,
+      "role": "batt",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 600
+        },
+        "Maximum": {
+          "kind": "const",
+          "v": 2000
+        }
+      }
+    },
+    {
+      "id": "s3",
+      "prefab": "StructureSolidFuelGenerator",
+      "label": "",
+      "ref": 4,
+      "role": "gen",
+      "values": {}
+    }
+  ],
+  "settings": {
+    "budgets": {
+      "load": 500000,
+      "tick": 50000
+    },
+    "beta": false,
+    "day": {
+      "length": 1200,
+      "start": 0.25
+    },
+    "wipeOnReexport": false
+  }
+}

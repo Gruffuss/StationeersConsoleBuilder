@@ -1,0 +1,41 @@
+:is(.vb-data, .vb-logic, .vb-sim, .vb-custom) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp3);
+  min-width: 0;
+}
+:is(.vb-data, .vb-logic, .vb-sim) .sechead { justify-content: space-between; flex-wrap: wrap; }
+:is(.vb-data-name, .vb-logic details.raised, .vb-sim details.raised) { padding: var(--sp3) var(--sp4); min-width: 0; }
+.vb-data-name, .vb-data-source, .vb-data-editor { display: flex; flex-direction: column; gap: var(--sp2); }
+.vb-data-head, :is(.vb-logic, .vb-sim) details.raised > summary { display: flex; align-items: baseline; gap: var(--sp2); flex-wrap: wrap; overflow-wrap: anywhere; }
+.vb-data-head > strong { flex: 1; font: var(--f-value); overflow-wrap: anywhere; }
+.vb-data-head .chk { display: inline-flex; }
+:is(.vb-logic, .vb-sim) details.raised > summary { padding-bottom: var(--sp3); }
+:is(.vb-logic, .vb-sim) details.raised > summary::before { content: '›'; color: var(--text-muted); }
+:is(.vb-logic, .vb-sim) details.raised[open] > summary::before { transform: rotate(90deg); }
+:is(.vb-logic, .vb-sim) details.raised > summary > .unit { margin-left: auto; }
+:is(.vb-data, .vb-logic, .vb-sim) :is(input, select, .vb-expr, .vb-source-editor, .grid2, .grid3) { min-width: 0; max-width: 100%; }
+:is(.vb-data, .vb-logic, .vb-sim) .vb-expr { display: flex; flex-direction: column; gap: var(--sp1); }
+:is(.vb-data, .vb-logic, .vb-sim) .vb-expr[data-label]::before { content: attr(data-label); font: var(--f-unit); color: var(--text-muted); }
+:is(.vb-data, .vb-logic, .vb-sim) label .vb-expr[data-label]::before { display: none; }
+:is(.vb-data, .vb-logic, .vb-sim) .vb-expr input { width: 100%; }
+:is(.vb-data, .vb-logic, .vb-sim) :is(.seg, .vb-source-editor, .vb-step, .vb-read-preview) { grid-column: 1 / -1; }
+:is(.vb-data, .vb-logic, .vb-sim) .seg { flex-wrap: wrap; }
+:is(.vb-data, .vb-logic, .vb-sim) .seg::before { content: attr(aria-label); flex-basis: 100%; font: var(--f-unit); color: var(--text-muted); }
+.vb-source-editor { display: flex; flex-direction: column; gap: var(--sp2); }
+.vb-logic details.disc > :not(summary), .vb-sim details.disc > :not(summary) { margin-block-start: var(--sp2); }
+.vb-sim details.raised > :not(summary) { margin-block-start: var(--sp2); }
+.vb-source-editor > .grid3 > label { display: flex; flex-direction: column; gap: var(--sp1); font: var(--f-unit); color: var(--text-muted); }
+.vb-source-editor input[type=range] { width: 100%; grid-column: 1 / -1; }
+.vb-new-read { padding: var(--sp3); }
+.vb-logic .vb-step { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp2); padding: var(--sp2); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-well); }
+.vb-logic .vb-target-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp2); padding: var(--sp2) var(--sp3); }
+.vb-read-preview { display: flex; flex-direction: column; gap: var(--sp2); }
+.vb-sim .vb-sim-value { display: flex; flex-direction: column; gap: var(--sp2); padding: var(--sp3); background: var(--surface-well); border: 1px solid var(--border); border-radius: var(--r-md); }
+.vb-sim .vb-sim-value-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp2); }
+.vb-sim .vb-writes { padding: var(--sp3); background: var(--surface-well); border: 1px solid var(--border); border-radius: var(--r-md); overflow-wrap: anywhere; }
+.vb-sim .vb-not-simulated { padding-inline-start: var(--sp4); }
+.vb-sim .vb-not-simulated li { list-style: disc; }
+.vb-custom { height: 100%; }
+.vb-custom details p { padding: var(--sp3) var(--sp4); overflow-wrap: anywhere; }
+.vb-custom textarea.area { flex: 1; min-height: calc(var(--h-row) * 10); }

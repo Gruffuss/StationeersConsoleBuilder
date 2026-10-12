@@ -1,0 +1,79 @@
+SCENE w=200 h=200 fit=stretch
+DEFS {
+    GL id=liquid units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#5FD9A8],[1,#2E8B6E]]
+    GL id=status units=bbox x1=0 y1=0 x2=1 y2=0 stops=[[0,#5FD9A8],[0.5,#F59E0B],[1,#E23D3D]]
+    CP id=chartwin {
+        R x=94 y=138 w=96 h=46 rx=2
+    }
+    CP id=tank1 {
+        R x=10 y=14 w=38 h=92 rx=4
+    }
+    CP id=tank2 {
+        R x=54 y=14 w=38 h=92 rx=4
+    }
+    CP id=tank3 {
+        R x=98 y=14 w=38 h=92 rx=4
+    }
+    CP id=tank4 {
+        R x=142 y=14 w=38 h=92 rx=4
+    }
+}
+R x=10 y=14 w=38 h=92 rx=4 f=#0B1622 s=#1E3247 sw=1
+G clip=tank1 {
+    YS n=24 x==13+i*1.391304347826087 y="=103-clamp($o2/100,0,1)*86 + 1.84*sin(i*0.5+t*1.5) + 1.104*sin(i*0.31-t*2.1)" y2=103 f=@liquid
+    RP n=40 lod=1 {
+        R x="=13+mod(hash(i)*32 + 1.5*sin(t*(0.3+hash(i+9)*0.6) + hash(i+1)*6.283), 32)" y="=17+mod(hash(i+2)*86 - t*4, 86)" w==0.8+step(0.8,hash(i+4)) h==0.8+step(0.8,hash(i+4)) f=#8FE8C8 fo==0.2+0.4*tri(t*0.4+hash(i+3))
+    }
+}
+R x=10 y=14 w=38 h=2.5 rx=1.25 f=#5FD9A8
+T x=10 y=108 w=38 h=12 text=O2 size=8 cspace=1 align=center f=#5FD9A8
+T x=10 y=96 w=38 h=11 text=$o2 fmt=%.0f unit=% size=9 align=center valign=middle f=#EAF4F8
+R x=54 y=14 w=38 h=92 rx=4 f=#0B1622 s=#1E3247 sw=1
+G clip=tank2 {
+    YS n=24 x==57+i*1.391304347826087 y="=103-clamp($n2/100,0,1)*86 + 1.84*sin(i*0.5+t*1.5) + 1.104*sin(i*0.31-t*2.1)" y2=103 f=@liquid
+    RP n=40 lod=1 {
+        R x="=57+mod(hash(i)*32 + 1.5*sin(t*(0.3+hash(i+9)*0.6) + hash(i+1)*6.283), 32)" y="=17+mod(hash(i+2)*86 - t*4, 86)" w==0.8+step(0.8,hash(i+4)) h==0.8+step(0.8,hash(i+4)) f=#8FE8C8 fo==0.2+0.4*tri(t*0.4+hash(i+3))
+    }
+}
+R x=54 y=14 w=38 h=2.5 rx=1.25 f=#5FD9A8
+T x=54 y=108 w=38 h=12 text=N2 size=8 cspace=1 align=center f=#5FD9A8
+T x=54 y=96 w=38 h=11 text=$n2 fmt=%.0f unit=% size=9 align=center valign=middle f=#EAF4F8
+R x=98 y=14 w=38 h=92 rx=4 f=#0B1622 s=#1E3247 sw=1
+G clip=tank3 {
+    YS n=24 x==101+i*1.391304347826087 y="=103-clamp($co2/100,0,1)*86 + 1.84*sin(i*0.5+t*1.5) + 1.104*sin(i*0.31-t*2.1)" y2=103 f=@liquid
+    RP n=40 lod=1 {
+        R x="=101+mod(hash(i)*32 + 1.5*sin(t*(0.3+hash(i+9)*0.6) + hash(i+1)*6.283), 32)" y="=17+mod(hash(i+2)*86 - t*4, 86)" w==0.8+step(0.8,hash(i+4)) h==0.8+step(0.8,hash(i+4)) f=#8FE8C8 fo==0.2+0.4*tri(t*0.4+hash(i+3))
+    }
+}
+R x=98 y=14 w=38 h=2.5 rx=1.25 f=#5FD9A8
+T x=98 y=108 w=38 h=12 text=CO2 size=8 cspace=1 align=center f=#5FD9A8
+T x=98 y=96 w=38 h=11 text=$co2 fmt=%.0f unit=% size=9 align=center valign=middle f=#EAF4F8
+R x=142 y=14 w=38 h=92 rx=4 f=#0B1622 s=#1E3247 sw=1
+G clip=tank4 {
+    YS n=24 x==145+i*1.391304347826087 y="=103-clamp($vol/100,0,1)*86 + 1.84*sin(i*0.5+t*1.5) + 1.104*sin(i*0.31-t*2.1)" y2=103 f=@liquid
+    RP n=40 lod=1 {
+        R x="=145+mod(hash(i)*32 + 1.5*sin(t*(0.3+hash(i+9)*0.6) + hash(i+1)*6.283), 32)" y="=17+mod(hash(i+2)*86 - t*4, 86)" w==0.8+step(0.8,hash(i+4)) h==0.8+step(0.8,hash(i+4)) f=#8FE8C8 fo==0.2+0.4*tri(t*0.4+hash(i+3))
+    }
+}
+R x=142 y=14 w=38 h=2.5 rx=1.25 f=#5FD9A8
+T x=142 y=108 w=38 h=12 text=VOL size=8 cspace=1 align=center f=#5FD9A8
+T x=142 y=96 w=38 h=11 text=$vol fmt=%.0f unit=% size=9 align=center valign=middle f=#EAF4F8
+C cx=48 cy=152 rx=34 ry=34 f=#0B1622 s=#1E3247 sw=1
+G t=[48,152] {
+    RP n=9 {
+        G r==-120+i*30 {
+            R x=-0.6 y=-31 w=1.2 h=4.5 f=#5FD9A8
+        }
+    }
+}
+G t=[48,152] r==-120+clamp($pressure,0,1)*240 {
+    R x=-0.9 y=-28 w=1.8 h=28 rx=0.9 f=#F59E0B
+}
+C cx=48 cy=152 rx=2.5 ry=2.5 f=#F59E0B
+R x=94 y=122 w=96 h=7 rx=3.5 f=#12202F
+R x=94 y=122 w==96*clamp($pressure,0,1) h=7 rx=3.5 f=@status fat==clamp($pressure,0,1)
+R x=94 y=138 w=96 h=46 rx=2 f=#0B1622
+G clip=chartwin {
+    LS n=24 x==94+i*4.173913043478261 y==182-clamp($history[i],0,1)*42 s=#5FD9A8 sw=1.2 cap=round join=round
+}
+C cx=182 cy=126 rx=5 ry=5 f=@status fat==clamp($alarm,0,1) fo==0.3+0.7*tri(t*$rate)

@@ -1,0 +1,402 @@
+{
+  "version": 1,
+  "name": "Needle gauge",
+  "target": {
+    "vectorMod": "0.11.118"
+  },
+  "theme": "neutral",
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Main",
+      "surface": "main",
+      "shape": "square",
+      "size": {
+        "w": 460,
+        "h": 460
+      },
+      "background": [
+        "#2B2B2B",
+        "#202020"
+      ],
+      "scene": {
+        "header": {
+          "w": 480,
+          "h": 480,
+          "fit": "contain"
+        },
+        "defs": [],
+        "root": [
+          {
+            "op": "C",
+            "attrs": {
+              "cx": 240,
+              "cy": 250,
+              "rx": 140,
+              "ry": 140,
+              "sw": 4,
+              "f": "#1A1A1A",
+              "s": "#7A7A7A"
+            },
+            "comments": [
+              "style {\"f\":{\"role\":\"surface-panel\"},\"s\":{\"role\":\"border-strong\"}}"
+            ]
+          },
+          {
+            "op": "L",
+            "attrs": {
+              "p": [
+                100,
+                250,
+                120,
+                250
+              ],
+              "sw": 3,
+              "s": "#7A7A7A"
+            },
+            "comments": [
+              "style {\"s\":{\"role\":\"border-strong\"}}"
+            ]
+          },
+          {
+            "op": "L",
+            "attrs": {
+              "p": [
+                240,
+                110,
+                240,
+                130
+              ],
+              "sw": 3,
+              "s": "#7A7A7A"
+            },
+            "comments": [
+              "style {\"s\":{\"role\":\"border-strong\"}}"
+            ]
+          },
+          {
+            "op": "L",
+            "attrs": {
+              "p": [
+                360,
+                250,
+                380,
+                250
+              ],
+              "sw": 3,
+              "s": "#7A7A7A"
+            },
+            "comments": [
+              "style {\"s\":{\"role\":\"border-strong\"}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "a": [
+                240,
+                250
+              ],
+              "r": "=clamp($gauge_level,0,1)*180-90",
+              "v": "=gt($gauge_present,0)"
+            },
+            "c": [
+              {
+                "op": "L",
+                "attrs": {
+                  "p": [
+                    240,
+                    250,
+                    240,
+                    120
+                  ],
+                  "sw": 4,
+                  "s": "#3D8BFD"
+                },
+                "comments": [
+                  "style {\"s\":{\"role\":\"accent\"}}"
+                ]
+              }
+            ]
+          },
+          {
+            "op": "C",
+            "attrs": {
+              "cx": 240,
+              "cy": 250,
+              "rx": 8,
+              "ry": 8,
+              "f": "#3D8BFD"
+            },
+            "comments": [
+              "style {\"f\":{\"role\":\"accent\"}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt1"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 40,
+                  "y": 233,
+                  "w": 56,
+                  "h": 33.599998474121094,
+                  "text": "{=0:%.0f}",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt1 {\"x\":40,\"y\":233,\"w\":56,\"h\":33.6,\"style\":\"unit\",\"text\":\"0\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt2"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 212,
+                  "y": 72,
+                  "w": 56,
+                  "h": 33.599998474121094,
+                  "text": "{=50:%.0f}",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt2 {\"x\":212,\"y\":72,\"w\":56,\"h\":33.6,\"style\":\"unit\",\"text\":\"50\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt3"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 384,
+                  "y": 233,
+                  "w": 56,
+                  "h": 33.599998474121094,
+                  "text": "{=100:%.0f}",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt3 {\"x\":384,\"y\":233,\"w\":56,\"h\":33.6,\"style\":\"unit\",\"text\":\"100\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt4"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 150,
+                  "y": 270,
+                  "w": 180,
+                  "h": 39.20000076293945,
+                  "text": "{$gauge_value:%.0f}",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt4 {\"x\":150,\"y\":270,\"w\":180,\"h\":39.2,\"style\":\"value-lg\",\"text\":\"{$gauge_value:%.0f}\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt5"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 160,
+                  "y": 322,
+                  "w": 160,
+                  "h": 33.599998474121094,
+                  "text": "Pressure kPa",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt5 {\"x\":160,\"y\":322,\"w\":160,\"h\":33.6,\"style\":\"unit\",\"text\":\"Pressure kPa\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn1_hit",
+                  "click": 1,
+                  "x": 24,
+                  "y": 400,
+                  "w": 200,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 400.5,
+                  "w": 199,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 400,
+                  "w": 164,
+                  "h": 54,
+                  "text": "Devices",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn1 {\"x\":24,\"y\":400,\"w\":200,\"h\":54,\"states\":[{\"label\":\"Devices\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "id": "sensor",
+      "name": "Sensor",
+      "prefabs": [
+        "StructureGasSensor"
+      ],
+      "mode": "one",
+      "label": "Sensor"
+    }
+  ],
+  "reads": [
+    {
+      "id": "pressure",
+      "role": "sensor",
+      "of": {
+        "lt": {
+          "name": "Pressure"
+        }
+      },
+      "valid": [
+        0,
+        100000
+      ]
+    }
+  ],
+  "state": [],
+  "actions": [
+    {
+      "id": "devices",
+      "on": "btn1_hit",
+      "do": [
+        {
+          "op": "page",
+          "page": "vb_devices"
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "bindings": {
+    "gauge_value": {
+      "from": "read",
+      "read": "pressure"
+    },
+    "gauge_level": {
+      "from": "expr",
+      "expr": "P.pressure and P.pressure / 100 or nil"
+    },
+    "gauge_present": {
+      "from": "expr",
+      "expr": "P.pressure ~= nil and 1 or 0"
+    }
+  },
+  "customLua": "",
+  "simDevices": [
+    {
+      "id": "s1",
+      "prefab": "StructureGasSensor",
+      "label": "Sensor",
+      "ref": 2,
+      "role": "sensor",
+      "values": {
+        "Pressure": {
+          "kind": "const",
+          "v": 50
+        }
+      }
+    }
+  ],
+  "settings": {
+    "budgets": {
+      "load": 500000,
+      "tick": 50000
+    },
+    "beta": false,
+    "day": {
+      "length": 1200,
+      "start": 0.25
+    },
+    "wipeOnReexport": false
+  }
+}

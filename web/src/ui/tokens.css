@@ -1,0 +1,14 @@
+:root {
+color-scheme: dark;
+--s: 0.5;
+--surface-screen-hi:#3A3A43;--surface-screen:#313139;--surface-screen-lo:#24242A;--surface-panel:#1D1D23;--surface-row-hi:#3B3B45;--surface-row:#36363F;--surface-row-lo:#32323A;--surface-well:#111116;--border:#5A5A69;--border-strong:#8E8E9E;--text:#FFFFFF;--text-secondary:#C8C8D2;--text-muted:#A6A6B4;--accent:#FF772D;--brand-hi:#1D4F7F;--brand:#17487A;--brand-lo:#0D3B6A;--status-ok:#7FD970;--status-warn:#F2B233;--status-crit:#F7777A;--status-idle:#A6A6B4;--on-status:#17171B;--danger:#B93237;--danger-lo:#932629;
+--display:"VB Barlow Condensed","Arial Narrow",sans-serif;--body:"VB Barlow",system-ui,sans-serif;--mono:"VB JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+--sp1:calc(4px*var(--s));--sp2:calc(6px*var(--s));--sp3:calc(10px*var(--s));--sp4:calc(14px*var(--s));--sp5:calc(16px*var(--s));--sp6:calc(18px*var(--s));--sp7:calc(24px*var(--s));
+--r-xs:calc(2px*var(--s));--r-sm:calc(4px*var(--s));--r-md:calc(6px*var(--s));--r-lg:calc(10px*var(--s));--r-xl:calc(14px*var(--s));
+--h-head:calc(64px*var(--s));--h-ctl:calc(54px*var(--s));--h-row:calc(50px*var(--s));--light:calc(18px*var(--s));--bar:calc(30px*var(--s));--ic:calc(32px*var(--s));
+--well-inset:inset 0 calc(2px*var(--s)) calc(6px*var(--s)) rgba(0,0,0,0.55);--text-drop:0 calc(2px*var(--s)) calc(2px*var(--s)) rgba(0,0,0,0.6);--focus-ring:0 0 0 calc(3px*var(--s)) #FF772D;
+--glow-ok:0 0 calc(10px*var(--s)) #7FD970;--glow-warn:0 0 calc(10px*var(--s)) #F2B233;--glow-crit:0 0 calc(10px*var(--s)) #F7777A;
+--f-hero:700 calc(156px*var(--s))/0.82 var(--display);--f-title:700 calc(36px*var(--s))/1.1 var(--display);--f-clock:600 calc(28px*var(--s))/1.1 var(--display);--f-panel:700 calc(26px*var(--s))/1.15 var(--display);--f-button:700 calc(26px*var(--s))/1 var(--display);--f-chip:700 calc(24px*var(--s))/1.2 var(--display);
+--f-value-lg:600 calc(34px*var(--s))/1.1 var(--body);--f-value:600 calc(28px*var(--s))/1.15 var(--body);--f-reading:500 calc(28px*var(--s))/1.15 var(--body);--f-message:500 calc(26px*var(--s))/1.2 var(--body);--f-unit:500 calc(24px*var(--s))/1.2 var(--body);--f-code:400 calc(24px*var(--s))/1.5 var(--mono);
+--ls-title:calc(1.5px*var(--s));--ls-clock:calc(1px*var(--s));--ls-panel:calc(1.5px*var(--s));--ls-button:calc(1px*var(--s));--ls-chip:calc(0.5px*var(--s));
+}

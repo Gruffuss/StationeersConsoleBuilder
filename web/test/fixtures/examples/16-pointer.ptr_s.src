@@ -1,0 +1,25 @@
+SCENE w=200 h=200 fit=stretch size=5 f=#EAF4F8
+R x=0 y=0 w=200 h=200 f=#0B1622 fea=0
+T x=6 y=5 w=188 h=6 text="hover and press me: no chip involved"
+G id=btn {
+    R id=btnhit press=1 x=6 y=13 w=86 h=22 rx=4 fea=0 f==if(down,#2E8B6E,if(hover,#6FE3B6,#5FD9A8))
+    T x=6 y=20 w=86 h=8 align=center size=7 f=#0B1622 text=PRESS
+}
+T x=104 y=13 w=90 h=6 text="hoverev tells the chip"
+G id=watch {
+    R id=watchhit hoverev=1 press=1 x=104 y=21 w=90 h=14 rx=4 fea=0 f==mix(#24405A,#3A6E8B,hover)
+    T x=104 y=24 w=90 h=7 align=center size=5 f=#EAF4F8 text=WATCH
+}
+T x=6 y=44 w=188 h=6 text="xy: aim anywhere in the pad -- the dot follows"
+R id=pad xy=1 press=1 x=6 y=52 w=188 h=44 rx=4 f=#12202F fea=0
+C cx==6+188*$padx cy==52+44*$pady rx=4 ry=4 f=#F5D76E missing=0
+T x=6 y=104 w=188 h=6 text="drag the chip into either bay"
+R id=bayA drop=1 x=6 y=112 w=60 h=34 rx=4 f=#16222E s=#3A4A5A sw=1 fea=0
+R id=bayB drop=1 x=74 y=112 w=60 h=34 rx=4 f=#16222E s=#3A4A5A sw=1 fea=0
+T x=6 y=139 w=60 h=7 align=center size=5 f=#53646F text="BAY A"
+T x=74 y=139 w=60 h=7 align=center size=5 f=#53646F text="BAY B"
+R id=chip drag=1 x==if($inB,86,18) y=120 w=36 h=18 rx=3 f=#C98BE0 fea=0 missing=0
+T x=6 y=154 w=188 h=6 text="this bracket answers on the LINE, not inside it"
+L id=bracket press=1 p=[20,164,80,164,80,186,20,186] s=#8FA6B8 sw=5 f=none
+T x=100 y=162 w=94 h=6 text="last event:"
+T x=100 y=170 w=94 h=18 size=5 f=#5FD9A8 text=$last wrap=1 missing="(nothing yet)"

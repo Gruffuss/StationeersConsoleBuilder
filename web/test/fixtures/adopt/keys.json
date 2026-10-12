@@ -1,0 +1,1 @@
+{"report":["complete","error","notes","surfaces","structures","data","natives","clicks","states","untried","vb"],"surface":["name","w","h"],"structure":["key","surface","element","order","rect","props","problems","via"],"data":["surface","element","scene","values"],"native":["surface","id","type","order","rect","style","props","click","via"],"click":["surface","element","id"]}

@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <VectorSrc Condition="'$(VectorSrc)' == ''">$(MSBuildThisFileDirectory)vendor/vector/</VectorSrc>
+    <LuaCSharpProj>$(MSBuildThisFileDirectory)vendor/lua-csharp/src/Lua/Lua.csproj</LuaCSharpProj>
+  </PropertyGroup>
+  <Import Project="VectorSrc.user.props" Condition="Exists('$(MSBuildThisFileDirectory)VectorSrc.user.props')" />
+</Project>

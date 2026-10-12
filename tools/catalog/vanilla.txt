@@ -1,0 +1,6 @@
+# Export-only prefabs the owner rules vanilla (newer than ic10-devices.md's game version). One prefab name per line; # starts
+# a comment. The build's "export only" summary line lists every candidate (the owner's game is modded, so most are a mod's);
+# move the vanilla ones here by hand (ruling P27).
+# Measured 2026-10-12: both names below are in the vanilla game's own data; the 167 other export-only devices are not (mods). The power pylons are vanilla too but carry no logic, so they are not devices.
+ItemCableGun
+Landingpad_CenterPiece01

@@ -1,0 +1,41 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json, text/event-stream",
+      "Host": "127.0.0.1:3030"
+    },
+    "body": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "set_chip_code",
+        "arguments": {
+          "ref_id": 1001,
+          "mode": "editor_then_chip",
+          "source": "-- placeholder for a Lua source of 1269 bytes (UTF-8)\n"
+        }
+      }
+    }
+  },
+  "status": 200,
+  "reason": "OK",
+  "headers": [
+    [
+      "Access-Control-Allow-Methods",
+      "POST, GET, OPTIONS"
+    ],
+    [
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    ],
+    [
+      "Content-Type",
+      "application/json"
+    ]
+  ],
+  "body": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"success\\\":true,\\\"ref_id\\\":1001,\\\"mode\\\":\\\"editor_then_chip\\\",\\\"editor_synced\\\":false,\\\"editor_sync_path\\\":\\\"none\\\",\\\"editor_sync_reason\\\":\\\"chip is not currently selected in the in-game IC editor dropdown\\\",\\\"source_version\\\":2}\"}]}}"
+}

@@ -1,0 +1,2 @@
+T text="a b" w="=1 + 2" x="5"
+T text="$rows[i]" y=" 7 " name="#fff,[x]"

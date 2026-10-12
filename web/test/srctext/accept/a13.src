@@ -1,0 +1,6 @@
+SCENE w=10 h=10
+# comment
+R x=1 f=#fff
+G {
+    T text="a b"
+}

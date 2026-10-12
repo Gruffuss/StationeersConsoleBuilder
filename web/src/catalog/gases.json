@@ -1,0 +1,100 @@
+{
+  "Oxygen": {
+    "fill": "#FFFFFF",
+    "ink": "#000000",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Nitrogen": {
+    "fill": "#000000",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Pollutant": {
+    "fill": "#FFDC00",
+    "ink": "#000000",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Hydrogen": {
+    "fill": [
+      "#C32826",
+      "#8F8F8F"
+    ],
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Helium": {
+    "fill": [
+      "#793699",
+      "#8F8F8F"
+    ],
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Ozone": {
+    "fill": "#793699",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Methane": {
+    "fill": "#C32826",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "CarbonDioxide": {
+    "fill": "#757779",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Water": {
+    "fill": "#00529C",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "NitrousOxide": {
+    "fill": "#059B57",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "PollutedWater": {
+    "fill": [
+      "#683A00",
+      "#00529C"
+    ],
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "LiquidAlcohol": {
+    "fill": "#683A00",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Silanol": {
+    "fill": [
+      "#683A00",
+      "#202020"
+    ],
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "LiquidSodiumChloride": {
+    "fill": [
+      "#FFFFFF",
+      "#FFEB10"
+    ],
+    "ink": "#000000",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "HydrochloricAcid": {
+    "fill": [
+      "#059B57",
+      "#8F8F8F"
+    ],
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  },
+  "Hydrazine": {
+    "fill": "#F4821E",
+    "ink": "#FFFFFF",
+    "source": "Game gas icons supplied by the owner on 2026-10-12"
+  }
+}

@@ -1,0 +1,891 @@
+{
+  "colourFunctions": [
+    "mix"
+  ],
+  "defOps": [
+    "FONT",
+    "GC",
+    "GL",
+    "GR",
+    "CP",
+    "SYM"
+  ],
+  "filterKeys": [
+    "bri",
+    "con",
+    "sat",
+    "hue",
+    "gray",
+    "sep",
+    "inv"
+  ],
+  "functions": {
+    "abs": 1,
+    "and": 2,
+    "atan2": 2,
+    "ceil": 1,
+    "clamp": 3,
+    "cos": 1,
+    "eq": 2,
+    "floor": 1,
+    "gt": 2,
+    "gte": 2,
+    "hash": 1,
+    "hash2": 2,
+    "if": 3,
+    "lerp": 3,
+    "lt": 2,
+    "lte": 2,
+    "max": 2,
+    "min": 2,
+    "mix": 3,
+    "mod": 2,
+    "not": 1,
+    "or": 2,
+    "pi": 0,
+    "pulse": 2,
+    "round": 1,
+    "saw": 1,
+    "sign": 1,
+    "sin": 1,
+    "since": 1,
+    "smoothstep": 3,
+    "sqrt": 1,
+    "step": 2,
+    "tan": 1,
+    "tau": 0,
+    "tri": 1
+  },
+  "groupPaintDefaults": [
+    "f",
+    "fo",
+    "fea",
+    "fea_edge",
+    "fr",
+    "sh",
+    "s_",
+    "so",
+    "sw",
+    "cap",
+    "join",
+    "ml",
+    "dash",
+    "dofs",
+    "size",
+    "font",
+    "weight",
+    "cspace",
+    "kern",
+    "align",
+    "valign",
+    "fit",
+    "min_size"
+  ],
+  "knownKeys": [
+    "a",
+    "align",
+    "at",
+    "blur",
+    "bri",
+    "bw",
+    "c",
+    "cap",
+    "ch",
+    "click",
+    "clip",
+    "close",
+    "con",
+    "cspace",
+    "cx",
+    "cy",
+    "d",
+    "dash",
+    "dofs",
+    "drag",
+    "drop",
+    "f",
+    "fat",
+    "fea",
+    "fea_edge",
+    "fit",
+    "fl",
+    "fmt",
+    "fo",
+    "fo2",
+    "font",
+    "fr",
+    "fx",
+    "fy",
+    "grad",
+    "gray",
+    "h",
+    "hoverev",
+    "hue",
+    "id",
+    "inv",
+    "join",
+    "kern",
+    "lh",
+    "lod",
+    "m",
+    "mask",
+    "mid",
+    "min_size",
+    "missing",
+    "ml",
+    "n",
+    "o",
+    "oc",
+    "off",
+    "op",
+    "ow",
+    "p",
+    "params",
+    "press",
+    "r",
+    "ref",
+    "rep",
+    "rx",
+    "ry",
+    "s",
+    "s_",
+    "sat",
+    "seg",
+    "sep",
+    "sh",
+    "size",
+    "slice",
+    "smp",
+    "so",
+    "sov",
+    "spread",
+    "src",
+    "srep",
+    "stops",
+    "style",
+    "sw",
+    "t",
+    "text",
+    "tile",
+    "unit",
+    "units",
+    "uv",
+    "v",
+    "valign",
+    "w",
+    "weight",
+    "wrap",
+    "x",
+    "xy",
+    "y"
+  ],
+  "literalKeys": [
+    "n",
+    "lod",
+    "seg",
+    "close",
+    "mid",
+    "kern",
+    "wrap",
+    "click",
+    "press",
+    "xy",
+    "hoverev",
+    "drag",
+    "drop",
+    "cspace",
+    "lh",
+    "ml",
+    "p",
+    "dash",
+    "m",
+    "slice",
+    "bw",
+    "uv"
+  ],
+  "sceneLiteralKeys": [
+    "w",
+    "h",
+    "nofill",
+    "nofeather",
+    "nopixeledges",
+    "noeval",
+    "ztext"
+  ],
+  "nodeOps": [
+    "USE",
+    "G",
+    "RP",
+    "SC",
+    "R",
+    "C",
+    "L",
+    "Y",
+    "P",
+    "SP",
+    "LS",
+    "T",
+    "IMG",
+    "YS"
+  ],
+  "pin": "0.11.118",
+  "sceneKeys": [
+    "defs",
+    "noeval",
+    "nofeather",
+    "nofill",
+    "nopixeledges",
+    "parent_id",
+    "probe",
+    "root",
+    "scene",
+    "visible",
+    "visor_anchor_dx",
+    "visor_anchor_dy",
+    "visor_anchor_look",
+    "visor_anchor_ref",
+    "zIndex",
+    "z_index",
+    "ztext"
+  ],
+  "reads": {
+    "C": {
+      "cx": {
+        "default": 0,
+        "kind": "E"
+      },
+      "cy": {
+        "default": 0,
+        "kind": "E"
+      },
+      "id": {
+        "kind": "TEXT"
+      },
+      "rx": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "ry": {
+        "guarded": true,
+        "kind": "E"
+      }
+    },
+    "CP": {
+      "c": {},
+      "id": {
+        "kind": "TEXT"
+      }
+    },
+    "DATA": {
+      "data": {},
+      "ease": {},
+      "keep": {
+        "default": 0,
+        "kind": "N"
+      },
+      "nodes": {},
+      "snap": {
+        "default": 0,
+        "kind": "N"
+      }
+    },
+    "DEF": {
+      "c": {},
+      "id": {
+        "kind": "TEXT"
+      },
+      "op": {
+        "kind": "S"
+      },
+      "params": {}
+    },
+    "FONT": {
+      "src": {
+        "kind": "S"
+      }
+    },
+    "G": {
+      "a": {
+        "default": [
+          0,
+          0
+        ],
+        "kind": "P"
+      },
+      "blur": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "clip": {
+        "kind": "TEXT"
+      },
+      "m": {
+        "guarded": true,
+        "kind": "NL"
+      },
+      "mask": {
+        "kind": "S"
+      },
+      "o": {
+        "default": 1,
+        "kind": "E"
+      },
+      "r": {
+        "default": 0,
+        "kind": "E"
+      },
+      "s": {
+        "default": [
+          1,
+          1
+        ],
+        "kind": "P"
+      },
+      "style": {},
+      "t": {
+        "default": [
+          0,
+          0
+        ],
+        "kind": "P"
+      },
+      "v": {
+        "guarded": true,
+        "kind": "E"
+      }
+    },
+    "GC": {
+      "a": {
+        "default": 0,
+        "kind": "L"
+      },
+      "cx": {
+        "default": 0,
+        "kind": "L"
+      },
+      "cy": {
+        "default": 0,
+        "kind": "L"
+      },
+      "stops": {},
+      "units": {
+        "kind": "S"
+      }
+    },
+    "GL": {
+      "spread": {
+        "kind": "S"
+      },
+      "stops": {},
+      "units": {
+        "kind": "S"
+      },
+      "x1": {
+        "default": 0,
+        "kind": "L"
+      },
+      "x2": {
+        "default": 0,
+        "kind": "L"
+      },
+      "y1": {
+        "default": 0,
+        "kind": "L"
+      },
+      "y2": {
+        "default": 1,
+        "kind": "L"
+      }
+    },
+    "GR": {
+      "cx": {
+        "default": 0,
+        "kind": "L"
+      },
+      "cy": {
+        "default": 0,
+        "kind": "L"
+      },
+      "fx": {
+        "guarded": true,
+        "kind": "L"
+      },
+      "fy": {
+        "guarded": true,
+        "kind": "L"
+      },
+      "r": {
+        "default": 1,
+        "kind": "L"
+      },
+      "spread": {
+        "kind": "S"
+      },
+      "stops": {},
+      "units": {
+        "kind": "S"
+      }
+    },
+    "IMG": {
+      "at": {
+        "default": [
+          0.5,
+          0.5
+        ],
+        "kind": "P"
+      },
+      "bw": {
+        "guarded": true,
+        "kind": "NL"
+      },
+      "fit": {
+        "kind": "S"
+      },
+      "h": {
+        "default": 0,
+        "kind": "E"
+      },
+      "mid": {
+        "default": 1,
+        "kind": "N"
+      },
+      "o": {
+        "default": 1,
+        "kind": "E"
+      },
+      "off": {
+        "default": [
+          0,
+          0
+        ],
+        "kind": "P"
+      },
+      "rep": {},
+      "rx": {
+        "default": 0,
+        "kind": "E"
+      },
+      "ry": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "slice": {
+        "guarded": true,
+        "kind": "NL"
+      },
+      "smp": {
+        "kind": "S"
+      },
+      "src": {
+        "kind": "S"
+      },
+      "srep": {},
+      "tile": {
+        "guarded": true,
+        "kind": "P"
+      },
+      "uv": {
+        "guarded": true,
+        "kind": "NL"
+      },
+      "w": {
+        "default": 0,
+        "kind": "E"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "L": {
+      "p": {
+        "kind": "NL"
+      }
+    },
+    "LS": {
+      "n": {
+        "default": 0,
+        "kind": "N"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "NODE": {
+      "c": {},
+      "cap": {
+        "kind": "S"
+      },
+      "click": {
+        "default": 0,
+        "kind": "N"
+      },
+      "dash": {
+        "kind": "NL"
+      },
+      "dofs": {
+        "default": 0,
+        "kind": "E"
+      },
+      "drag": {
+        "default": 0,
+        "kind": "N"
+      },
+      "drop": {
+        "default": 0,
+        "kind": "N"
+      },
+      "f": {
+        "kind": "S"
+      },
+      "fat": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "fea": {
+        "default": -1,
+        "kind": "E"
+      },
+      "fea_edge": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "fo": {
+        "default": 1,
+        "kind": "E"
+      },
+      "hoverev": {
+        "default": 0,
+        "kind": "N"
+      },
+      "id": {
+        "kind": "TEXT"
+      },
+      "join": {
+        "kind": "S"
+      },
+      "ml": {
+        "default": 4,
+        "kind": "N"
+      },
+      "op": {
+        "kind": "S"
+      },
+      "press": {
+        "default": 0,
+        "kind": "N"
+      },
+      "s": {
+        "kind": "S"
+      },
+      "sat": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "sh": {},
+      "so": {
+        "default": 1,
+        "kind": "E"
+      },
+      "sw": {
+        "default": 1,
+        "kind": "E"
+      },
+      "v": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "xy": {
+        "default": 0,
+        "kind": "N"
+      }
+    },
+    "P": {
+      "d": {
+        "kind": "S"
+      },
+      "fr": {
+        "kind": "S"
+      }
+    },
+    "R": {
+      "h": {
+        "default": 0,
+        "kind": "E"
+      },
+      "rx": {
+        "default": 0,
+        "kind": "E"
+      },
+      "ry": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "w": {
+        "default": 0,
+        "kind": "E"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "RP": {
+      "lod": {
+        "default": 0,
+        "kind": "N"
+      },
+      "n": {
+        "default": 0,
+        "kind": "N"
+      }
+    },
+    "SC": {
+      "ch": {
+        "default": 0,
+        "kind": "E"
+      },
+      "h": {
+        "default": 0,
+        "kind": "E"
+      },
+      "o": {
+        "default": 1,
+        "kind": "E"
+      },
+      "rx": {
+        "default": 0,
+        "kind": "E"
+      },
+      "ry": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "so": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "sov": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "w": {
+        "default": 0,
+        "kind": "E"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "SCENE": {
+      "defs": {},
+      "fit": {
+        "kind": "S"
+      },
+      "h": {
+        "default": 100,
+        "kind": "N"
+      },
+      "noeval": {
+        "default": 0,
+        "kind": "N"
+      },
+      "nofeather": {
+        "default": 0,
+        "kind": "N"
+      },
+      "nofill": {
+        "default": 0,
+        "kind": "N"
+      },
+      "nopixeledges": {
+        "default": 0,
+        "kind": "N"
+      },
+      "root": {},
+      "scene": {
+        "kind": "TEXT"
+      },
+      "style": {},
+      "w": {
+        "default": 100,
+        "kind": "N"
+      },
+      "ztext": {
+        "default": 1,
+        "kind": "N"
+      }
+    },
+    "SP": {
+      "close": {
+        "default": 0,
+        "kind": "N"
+      },
+      "p": {
+        "kind": "NL"
+      },
+      "seg": {
+        "default": 8,
+        "kind": "N"
+      }
+    },
+    "T": {
+      "align": {
+        "kind": "S"
+      },
+      "cspace": {
+        "default": 0,
+        "kind": "N"
+      },
+      "fit": {
+        "kind": "S"
+      },
+      "fl": {
+        "kind": "S"
+      },
+      "fmt": {
+        "kind": "TEXT"
+      },
+      "font": {
+        "kind": "TEXT"
+      },
+      "h": {
+        "default": 0,
+        "kind": "E"
+      },
+      "kern": {
+        "default": 1,
+        "kind": "N"
+      },
+      "lh": {
+        "default": 0,
+        "kind": "N"
+      },
+      "min_size": {
+        "default": 6,
+        "kind": "E"
+      },
+      "missing": {
+        "kind": "TEXT"
+      },
+      "oc": {
+        "kind": "S"
+      },
+      "ow": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "size": {
+        "default": 12,
+        "kind": "E"
+      },
+      "text": {
+        "kind": "TEXT"
+      },
+      "unit": {
+        "kind": "TEXT"
+      },
+      "valign": {
+        "kind": "S"
+      },
+      "w": {
+        "default": 0,
+        "kind": "E"
+      },
+      "weight": {
+        "default": 0,
+        "kind": "SN"
+      },
+      "wrap": {
+        "default": 0,
+        "kind": "N"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "USE": {
+      "clip": {
+        "kind": "TEXT"
+      },
+      "o": {
+        "default": 1,
+        "kind": "E"
+      },
+      "ref": {
+        "kind": "TEXT"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      }
+    },
+    "Y": {
+      "p": {
+        "kind": "NL"
+      }
+    },
+    "YS": {
+      "fo2": {
+        "guarded": true,
+        "kind": "E"
+      },
+      "n": {
+        "default": 0,
+        "kind": "N"
+      },
+      "x": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y": {
+        "default": 0,
+        "kind": "E"
+      },
+      "y2": {
+        "default": 0,
+        "kind": "E"
+      }
+    }
+  },
+  "variables": [
+    "true",
+    "false",
+    "ver",
+    "t",
+    "sy",
+    "vh",
+    "n",
+    "hover",
+    "down",
+    "i",
+    "i1"
+  ]
+}

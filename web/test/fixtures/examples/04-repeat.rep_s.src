@@ -1,0 +1,23 @@
+SCENE w=100 h=100
+RP n=12 {
+    R x==6+i*7.5 y=8 w=5 h=5 rx=1 f=#2E8B6E
+}
+RP n=12 {
+    R x==6+i*7.5 y==20+4*sin(t*2+i*0.5) w=5 h=5 rx=1 f=#5FD9A8
+}
+RP n=10 {
+    R x==6+i*9 y==56-clamp($bars[i],0,1)*18 w=6 h==clamp($bars[i],0,1)*18 f=#F59E0B
+}
+RP n=16 {
+    C cx==78+14*cos(i/n*tau()-pi()/2) cy==78+14*sin(i/n*tau()-pi()/2) rx=1.6 ry=1.6 f=#8FE8C8 fo==0.3+0.7*tri(t*0.5+i/n)
+}
+G t=[28,78] {
+    RP n=9 {
+        G r==-120+i*30 {
+            R x=-0.6 y=-16 w=1.2 h=4 f=#5FD9A8
+        }
+    }
+}
+RP n=120 lod=1 {
+    R x="=mod(hash(i)*100 + 2*sin(t*(0.3+hash(i+9)*0.7) + hash(i+1)*6.283), 100)" y="=88+mod(hash(i+2)*10 - t*3, 10)" w==1+step(0.8,hash(i+4)) h==1+step(0.8,hash(i+4)) f=#8FE8C8 fo==0.25+0.45*tri(t*0.4+hash(i+3))
+}
