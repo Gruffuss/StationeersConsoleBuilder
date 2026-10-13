@@ -1154,293 +1154,317 @@ G id=hdr1 {
     T x=42 y=28 w=1122 h=56 text="HYDRO FARM" size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
     T x=1348 y=28 w=100 h=56 text=$hdr1_clock size=24 f=#C4C4C4 align=right valign=middle fit=ellipsis
 }
-# widget panel pnl1 {"x":24,"y":104,"w":470,"h":608,"title":"LIGHT CYCLE","unit":""}
-G id=pnl1 {
-    R x=24.5 y=104.5 w=469 h=607 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=114 w=442 h=30.8 text="LIGHT CYCLE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget readout ro1 {"x":39,"y":138.2,"w":440,"h":201.6,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
-G id=ro1 {
-    R x=39 y=272.2 w=440 h=24 rx=3 f=#121212
-    R x=43 y=276.2 w==clamp($ro1_lvl,0,1)*432 h=16 rx=2 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))
-    T x=39 y=138.2 w=384 h=144 text="{$ro1_v:%.0f}" size=120 f=#F2F2F2 align=right valign=middle
-    T x=39 y=306.2 w=440 h=33.6 text=$ro1_status size=24 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A))) valign=middle fit=ellipsis
-    T x=39 y=306.2 w=440 h=33.6 text="{$ro1_sub:%.1f}" size=22 f=#C4C4C4 align=right valign=middle
-}
-# widget kvtable kv1 {"x":39,"y":416.9,"w":440,"h":106,"rows":[{"caption":"Light / dark","fmt":"","state":false,"key":0},{"caption":"Grow lights on","fmt":"","state":false,"key":1}],"rowH":50,"gap":6,"valueW":220,"keys":{}}
-G id=kv1 {
-    R x=39 y=416.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=53 y=416.9 w=182 h=50 text="Light / dark" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=245 y=416.9 w=220 h=50 text=$kv1_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=472.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=53 y=472.9 w=182 h=50 text="Grow lights on" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=245 y=472.9 w=220 h=50 text=$kv1_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-}
-# widget text txt1 {"x":43,"y":537,"w":200,"h":28,"style":"unit","text":"Lights","align":"left","state":false,"keys":{}}
-G id=txt1 {
-    T x=43 y=537 w=200 h=28 text=Lights size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget options og1 {"x":42,"y":580,"w":434,"h":54,"options":[{"label":"AUTO","value":0,"key":0},{"label":"ON","value":1,"key":1},{"label":"OFF","value":2,"key":2}],"gap":10,"keys":{}}
-G id=og1 {
-    G id=og1_g0 {
-        R id=og1_o0 click=1 x=42 y=580 w=138 h=54
-        R v==eq($og1_sel,0) x=41 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=42.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=light_cycle {
+    # widget panel pnl1 {"x":24,"y":104,"w":470,"h":608,"title":"LIGHT CYCLE","unit":""}
+    G id=pnl1 {
+        R x=24.5 y=104.5 w=469 h=607 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=114 w=442 h=30.8 text="LIGHT CYCLE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
     }
-    G id=og1_g1 {
-        R id=og1_o1 click=1 x=190 y=580 w=138 h=54
-        R v==eq($og1_sel,1) x=189 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=190.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    # widget readout ro1 {"x":39,"y":138.2,"w":440,"h":201.6,"variant":"hero","caption":"Label","unit":"","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+    G id=ro1 {
+        R x=39 y=272.2 w=440 h=24 rx=3 f=#121212
+        R x=43 y=276.2 w==clamp($ro1_lvl,0,1)*432 h=16 rx=2 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))
+        T x=39 y=138.2 w=384 h=144 text="{$ro1_v:%.0f}" size=120 f=#F2F2F2 align=right valign=middle
+        T x=39 y=306.2 w=440 h=33.6 text=$ro1_status size=24 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A))) valign=middle fit=ellipsis
+        T x=39 y=306.2 w=440 h=33.6 text="{$ro1_sub:%.1f}" size=22 f=#C4C4C4 align=right valign=middle
     }
-    G id=og1_g2 {
-        R id=og1_o2 click=1 x=338 y=580 w=138 h=54
-        R v==eq($og1_sel,2) x=337 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=338.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    # widget kvtable kv1 {"x":39,"y":416.9,"w":440,"h":106,"rows":[{"caption":"Light / dark","fmt":"","state":false,"key":0},{"caption":"Grow lights on","fmt":"","state":false,"key":1}],"rowH":50,"gap":6,"valueW":220,"keys":{}}
+    G id=kv1 {
+        R x=39 y=416.9 w=440 h=50 rx=4 f=#2C2C2C
+        T x=53 y=416.9 w=182 h=50 text="Light / dark" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=245 y=416.9 w=220 h=50 text=$kv1_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=472.9 w=440 h=50 rx=4 f=#2C2C2C
+        T x=53 y=472.9 w=182 h=50 text="Grow lights on" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=245 y=472.9 w=220 h=50 text=$kv1_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
     }
-    T x=42 y=580 w=138 h=54 text=AUTO size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-    T x=190 y=580 w=138 h=54 text=ON size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-    T x=338 y=580 w=138 h=54 text=OFF size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget button btn1 {"x":39,"y":643,"w":250,"h":54,"states":[{"label":"SKIP TO NIGHT","variant":"secondary","key":0},{"label":"SKIP TO DAY","variant":"secondary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn1 {
-    R id=btn1_hit click=1 x=39 y=643 w=250 h=54
-    G v==eq($btn1_state,0) {
-        R x=39.5 y=643.5 w=249 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=lights {
+        # widget text txt1 {"x":43,"y":537,"w":200,"h":28,"style":"unit","text":"Lights","align":"left","state":false,"keys":{}}
+        G id=txt1 {
+            T x=43 y=537 w=200 h=28 text=Lights size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+        # widget options og1 {"x":42,"y":580,"w":434,"h":54,"options":[{"label":"AUTO","value":0,"key":0},{"label":"ON","value":1,"key":1},{"label":"OFF","value":2,"key":2}],"gap":10,"keys":{}}
+        G id=og1 {
+            G id=og1_g0 {
+                R id=og1_o0 click=1 x=42 y=580 w=138 h=54
+                R v==eq($og1_sel,0) x=41 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=42.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=og1_g1 {
+                R id=og1_o1 click=1 x=190 y=580 w=138 h=54
+                R v==eq($og1_sel,1) x=189 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=190.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=og1_g2 {
+                R id=og1_o2 click=1 x=338 y=580 w=138 h=54
+                R v==eq($og1_sel,2) x=337 y=579 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=338.5 y=580.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=42 y=580 w=138 h=54 text=AUTO size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+            T x=190 y=580 w=138 h=54 text=ON size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+            T x=338 y=580 w=138 h=54 text=OFF size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
     }
-    G v==eq($btn1_state,1) {
-        R x=39.5 y=643.5 w=249 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    # widget button btn1 {"x":39,"y":643,"w":250,"h":54,"states":[{"label":"SKIP TO NIGHT","variant":"secondary","key":0},{"label":"SKIP TO DAY","variant":"secondary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn1 {
+        R id=btn1_hit click=1 x=39 y=643 w=250 h=54
+        G v==eq($btn1_state,0) {
+            R x=39.5 y=643.5 w=249 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        }
+        G v==eq($btn1_state,1) {
+            R x=39.5 y=643.5 w=249 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        }
+        T v==eq($btn1_state,0) x=57 y=643 w=214 h=54 text="SKIP TO NIGHT" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        T v==eq($btn1_state,1) x=57 y=643 w=214 h=54 text="SKIP TO DAY" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     }
-    T v==eq($btn1_state,0) x=57 y=643 w=214 h=54 text="SKIP TO NIGHT" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-    T v==eq($btn1_state,1) x=57 y=643 w=214 h=54 text="SKIP TO DAY" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget button btn2 {"x":299,"y":643,"w":180,"h":54,"states":[{"label":"SETTINGS","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn2 {
-    R id=btn2_hit click=1 x=299 y=643 w=180 h=54
-    R x=299.5 y=643.5 w=179 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=317 y=643 w=144 h=54 text=SETTINGS size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget panel pnl2 {"x":510,"y":104,"w":470,"h":288,"title":"PLANT","unit":""}
-G id=pnl2 {
-    R x=510.5 y=104.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=524 y=114 w=442 h=30.8 text=PLANT size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget button btn3 {"x":525,"y":154.9,"w":440,"h":110.1,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn3 {
-    R id=btn3_hit click=1 x=525 y=154.9 w=440 h=110.1
-    R x=525.5 y=155.4 w=439 h=109.1 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=543 y=154.9 w=404 h=110.1 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt2 {"x":620,"y":170,"w":176,"h":47.6,"style":"value-lg","text":"$plantName","align":"left","state":false,"keys":{}}
-G id=txt2 {
-    T x=620 y=170 w=176 h=47.6 text=$plantName size=28 f=#F2F2F2 valign=middle fit=ellipsis
-}
-# widget text txt3 {"x":620,"y":216,"w":176,"h":30.8,"style":"reading","text":"$plantType","align":"left","state":false,"keys":{}}
-G id=txt3 {
-    T x=620 y=216 w=176 h=30.8 text=$plantType size=22 f=#C4C4C4 valign=middle fit=ellipsis
-}
-# widget button btn4 {"x":810,"y":182.9,"w":140,"h":54,"states":[{"label":"CHANGE","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn4 {
-    R id=btn4_hit click=1 x=810 y=182.9 w=140 h=54
-    R x=810.5 y=183.4 w=139 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=828 y=182.9 w=104 h=54 text=CHANGE size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget readoutrow row1 {"x":525,"y":271,"w":440,"h":50,"name":"This pass","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
-G id=row1 {
-    R x=525 y=271 w=440 h=50 rx=4 f=#2C2C2C
-    C v==1-eq($row1_st,1)-eq($row1_st,2)-eq($row1_st,3) cx=547 cy=296 rx=8 ry=8 f=#9A9A9A
-    C v==eq($row1_st,1) cx=547 cy=296 rx=8 ry=8 f=#4CC38A
-    C v==eq($row1_st,2) cx=547 cy=296 rx=8 ry=8 f=#F0B429
-    C v==eq($row1_st,3) cx=547 cy=296 rx=8 ry=8 f=#EF5350
-    T x=565 y=271 w=176 h=50 text="This pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=751 y=271 w=200 h=50 text="{$row1_r1:%.1f}" size=28 f==if(eq($row1_st,2),#F0B429,if(eq($row1_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget readoutrow row2 {"x":525,"y":327,"w":440,"h":50,"name":"Next pass","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
-G id=row2 {
-    R x=525 y=327 w=440 h=50 rx=4 f=#2C2C2C
-    C v==1-eq($row2_st,1)-eq($row2_st,2)-eq($row2_st,3) cx=547 cy=352 rx=8 ry=8 f=#9A9A9A
-    C v==eq($row2_st,1) cx=547 cy=352 rx=8 ry=8 f=#4CC38A
-    C v==eq($row2_st,2) cx=547 cy=352 rx=8 ry=8 f=#F0B429
-    C v==eq($row2_st,3) cx=547 cy=352 rx=8 ry=8 f=#EF5350
-    T x=565 y=327 w=176 h=50 text="Next pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=751 y=327 w=200 h=50 text="{$row2_r1:%.1f}" size=28 f==if(eq($row2_st,2),#F0B429,if(eq($row2_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget panel pnl3 {"x":996,"y":104,"w":470,"h":288,"title":"EXPORT BIN","unit":""}
-G id=pnl3 {
-    R x=996.5 y=104.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=1010 y=114 w=442 h=30.8 text="EXPORT BIN" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget readoutrow row3 {"x":1011,"y":154.9,"w":440,"h":53.4,"name":"Contents","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
-G id=row3 {
-    R x=1011 y=154.9 w=440 h=53.4 rx=4 f=#2C2C2C
-    C v==1-eq($row3_st,1)-eq($row3_st,2)-eq($row3_st,3) cx=1033 cy=181.59999 rx=8 ry=8 f=#9A9A9A
-    C v==eq($row3_st,1) cx=1033 cy=181.59999 rx=8 ry=8 f=#4CC38A
-    C v==eq($row3_st,2) cx=1033 cy=181.59999 rx=8 ry=8 f=#F0B429
-    C v==eq($row3_st,3) cx=1033 cy=181.59999 rx=8 ry=8 f=#EF5350
-    T x=1051 y=154.9 w=176 h=53.4 text=Contents size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=154.9 w=200 h=53.4 text="{$row3_r1:%.1f}" size=28 f==if(eq($row3_st,2),#F0B429,if(eq($row3_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget readoutrow row4 {"x":1011,"y":214.3,"w":440,"h":53.4,"name":"Door","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
-G id=row4 {
-    R x=1011 y=214.3 w=440 h=53.4 rx=4 f=#2C2C2C
-    C v==1-eq($row4_st,1)-eq($row4_st,2)-eq($row4_st,3) cx=1033 cy=241 rx=8 ry=8 f=#9A9A9A
-    C v==eq($row4_st,1) cx=1033 cy=241 rx=8 ry=8 f=#4CC38A
-    C v==eq($row4_st,2) cx=1033 cy=241 rx=8 ry=8 f=#F0B429
-    C v==eq($row4_st,3) cx=1033 cy=241 rx=8 ry=8 f=#EF5350
-    T x=1051 y=214.3 w=176 h=53.4 text=Door size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=214.3 w=200 h=53.4 text="{$row4_r1:%.1f}" size=28 f==if(eq($row4_st,2),#F0B429,if(eq($row4_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget kvtable kv2 {"x":1011,"y":273.7,"w":440,"h":53.4,"rows":[{"caption":"Occupied for","fmt":"","state":true,"key":0}],"rowH":53.4,"gap":6,"valueW":200,"keys":{}}
-G id=kv2 {
-    R x=1011 y=273.7 w=440 h=53.4 rx=4 f=#2C2C2C
-    T x=1025 y=273.7 w=202 h=53.4 text="Occupied for" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=273.7 w=200 h=53.4 text=$kv2_v0 size=28 f==if(eq($kv2_s0,2),#F0B429,if(eq($kv2_s0,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget alert al1 {"x":1011,"y":337.6,"w":440,"h":36.4,"row":false,"keys":{}}
-G id=al1 {
-    R x=1011 y=337.6 w=440 h=36.4
-    G v==gt($al1_st,0) {
-        R x=1025 y=341.80002 w=72 h=28 rx=3 f==if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))
-        T v==eq($al1_st,1) x=1025 y=341.80002 w=72 h=28 text=OK size=20 weight=bold f=#111111 align=center valign=middle
-        T v==eq($al1_st,2) x=1025 y=341.80002 w=72 h=28 text=WARN size=20 weight=bold f=#111111 align=center valign=middle
-        T v==eq($al1_st,3) x=1025 y=341.80002 w=72 h=28 text=CRIT size=20 weight=bold f=#111111 align=center valign=middle
-        T x=1111 y=340.30002 w=326 h=31 text=$al1_msg size=22 f=#F2F2F2 valign=middle fit=ellipsis
+    # widget button btn2 {"x":299,"y":643,"w":180,"h":54,"states":[{"label":"SETTINGS","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn2 {
+        R id=btn2_hit click=1 x=299 y=643 w=180 h=54
+        R x=299.5 y=643.5 w=179 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=317 y=643 w=144 h=54 text=SETTINGS size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     }
 }
-# widget panel pnl4 {"x":510,"y":408,"w":470,"h":304,"title":"LARRE","unit":""}
-G id=pnl4 {
-    R x=510.5 y=408.5 w=469 h=303 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=524 y=418 w=442 h=30.8 text=LARRE size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget readoutrow row5 {"x":525,"y":458.9,"w":440,"h":55.366665,"name":"Status","fmt1":"%.1f","fmt2":"","w1":220,"w2":80,"keys":{}}
-G id=row5 {
-    R x=525 y=458.9 w=440 h=55.366665 rx=4 f=#2C2C2C
-    C v==1-eq($row5_st,1)-eq($row5_st,2)-eq($row5_st,3) cx=547 cy=486.5833 rx=8 ry=8 f=#9A9A9A
-    C v==eq($row5_st,1) cx=547 cy=486.5833 rx=8 ry=8 f=#4CC38A
-    C v==eq($row5_st,2) cx=547 cy=486.5833 rx=8 ry=8 f=#F0B429
-    C v==eq($row5_st,3) cx=547 cy=486.5833 rx=8 ry=8 f=#EF5350
-    T x=565 y=458.9 w=156 h=55.366665 text=Status size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=731 y=458.9 w=220 h=55.366665 text="{$row5_r1:%.1f}" size=28 f==if(eq($row5_st,2),#F0B429,if(eq($row5_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget kvtable kv3 {"x":525,"y":520.26666,"w":440,"h":116.73333,"rows":[{"caption":"Pot","fmt":"","state":false,"key":0},{"caption":"Holding","fmt":"","state":false,"key":1}],"rowH":55.366665,"gap":6,"valueW":220,"keys":{}}
-G id=kv3 {
-    R x=525 y=520.26666 w=440 h=55.366665 rx=4 f=#2C2C2C
-    T x=539 y=520.26666 w=182 h=55.366665 text=Pot size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=731 y=520.26666 w=220 h=55.366665 text=$kv3_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=525 y=581.6333 w=440 h=55.366665 rx=4 f=#2C2C2C
-    T x=539 y=581.6333 w=182 h=55.366665 text=Holding size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=731 y=581.6333 w=220 h=55.366665 text=$kv3_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-}
-# widget button btn5 {"x":525,"y":643,"w":117.6,"h":54,"states":[{"label":"PAUSE","variant":"primary","key":0},{"label":"RESUME","variant":"primary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn5 {
-    R id=btn5_hit click=1 x=525 y=643 w=117.6 h=54
-    G v==eq($btn5_state,0) {
-        R x=525 y=643 w=117.6 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+G id=plant {
+    # widget panel pnl2 {"x":510,"y":104,"w":470,"h":288,"title":"PLANT","unit":""}
+    G id=pnl2 {
+        R x=510.5 y=104.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=524 y=114 w=442 h=30.8 text=PLANT size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
     }
-    G v==eq($btn5_state,1) {
-        R x=525 y=643 w=117.6 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+    G id=current_plant {
+        # widget button btn3 {"x":525,"y":154.9,"w":440,"h":110.1,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+        G id=btn3 {
+            R id=btn3_hit click=1 x=525 y=154.9 w=440 h=110.1
+            R x=525.5 y=155.4 w=439 h=109.1 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=543 y=154.9 w=404 h=110.1 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt2 {"x":620,"y":170,"w":176,"h":47.6,"style":"value-lg","text":"$plantName","align":"left","state":false,"keys":{}}
+        G id=txt2 {
+            T x=620 y=170 w=176 h=47.6 text=$plantName size=28 f=#F2F2F2 valign=middle fit=ellipsis
+        }
+        # widget text txt3 {"x":620,"y":216,"w":176,"h":30.8,"style":"reading","text":"$plantType","align":"left","state":false,"keys":{}}
+        G id=txt3 {
+            T x=620 y=216 w=176 h=30.8 text=$plantType size=22 f=#C4C4C4 valign=middle fit=ellipsis
+        }
+        # widget button btn4 {"x":810,"y":182.9,"w":140,"h":54,"states":[{"label":"CHANGE","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+        G id=btn4 {
+            R id=btn4_hit click=1 x=810 y=182.9 w=140 h=54
+            R x=810.5 y=183.4 w=139 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=828 y=182.9 w=104 h=54 text=CHANGE size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
     }
-    T v==eq($btn5_state,0) x=543 y=643 w=81.6 h=54 text=PAUSE size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
-    T v==eq($btn5_state,1) x=543 y=643 w=81.6 h=54 text=RESUME size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
+    # widget readoutrow row1 {"x":525,"y":271,"w":440,"h":50,"name":"This pass","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
+    G id=row1 {
+        R x=525 y=271 w=440 h=50 rx=4 f=#2C2C2C
+        C v==1-eq($row1_st,1)-eq($row1_st,2)-eq($row1_st,3) cx=547 cy=296 rx=8 ry=8 f=#9A9A9A
+        C v==eq($row1_st,1) cx=547 cy=296 rx=8 ry=8 f=#4CC38A
+        C v==eq($row1_st,2) cx=547 cy=296 rx=8 ry=8 f=#F0B429
+        C v==eq($row1_st,3) cx=547 cy=296 rx=8 ry=8 f=#EF5350
+        T x=565 y=271 w=176 h=50 text="This pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=751 y=271 w=200 h=50 text="{$row1_r1:%.1f}" size=28 f==if(eq($row1_st,2),#F0B429,if(eq($row1_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+    # widget readoutrow row2 {"x":525,"y":327,"w":440,"h":50,"name":"Next pass","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
+    G id=row2 {
+        R x=525 y=327 w=440 h=50 rx=4 f=#2C2C2C
+        C v==1-eq($row2_st,1)-eq($row2_st,2)-eq($row2_st,3) cx=547 cy=352 rx=8 ry=8 f=#9A9A9A
+        C v==eq($row2_st,1) cx=547 cy=352 rx=8 ry=8 f=#4CC38A
+        C v==eq($row2_st,2) cx=547 cy=352 rx=8 ry=8 f=#F0B429
+        C v==eq($row2_st,3) cx=547 cy=352 rx=8 ry=8 f=#EF5350
+        T x=565 y=327 w=176 h=50 text="Next pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=751 y=327 w=200 h=50 text="{$row2_r1:%.1f}" size=28 f==if(eq($row2_st,2),#F0B429,if(eq($row2_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
 }
-# widget button btn6 {"x":652.6,"y":643,"w":155.4,"h":54,"states":[{"label":"SEND HOME","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn6 {
-    R id=btn6_hit click=1 x=652.6 y=643 w=155.4 h=54
-    R x=653.1 y=643.5 w=154.4 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=670.6 y=643 w=119.399994 h=54 text="SEND HOME" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget button btn7 {"x":818,"y":643,"w":147,"h":54,"states":[{"label":"DUMP NOW","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn7 {
-    R id=btn7_hit click=1 x=818 y=643 w=147 h=54
-    R x=818.5 y=643.5 w=146 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=836 y=643 w=111 h=54 text="DUMP NOW" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget panel pnl5 {"x":996,"y":408,"w":470,"h":304,"title":"HARVEST","unit":""}
-G id=pnl5 {
-    R x=996.5 y=408.5 w=469 h=303 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=1010 y=418 w=442 h=30.8 text=HARVEST size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget kvtable kv4 {"x":1011,"y":458.9,"w":440,"h":238.1,"rows":[{"caption":"This pass","fmt":"","state":false,"key":0},{"caption":"All time","fmt":"","state":false,"key":1},{"caption":"Last pass took","fmt":"","state":false,"key":2},{"caption":"Last harvest","fmt":"","state":false,"key":3}],"rowH":55.025,"gap":6,"valueW":200,"keys":{}}
-G id=kv4 {
-    R x=1011 y=458.9 w=440 h=55.025 rx=4 f=#2C2C2C
-    T x=1025 y=458.9 w=202 h=55.025 text="This pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=458.9 w=200 h=55.025 text=$kv4_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=1011 y=519.925 w=440 h=55.025 rx=4 f=#2C2C2C
-    T x=1025 y=519.925 w=202 h=55.025 text="All time" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=519.925 w=200 h=55.025 text=$kv4_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=1011 y=580.95 w=440 h=55.025 rx=4 f=#2C2C2C
-    T x=1025 y=580.95 w=202 h=55.025 text="Last pass took" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=580.95 w=200 h=55.025 text=$kv4_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=1011 y=641.975 w=440 h=55.025 rx=4 f=#2C2C2C
-    T x=1025 y=641.975 w=202 h=55.025 text="Last harvest" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1237 y=641.975 w=200 h=55.025 text=$kv4_v3 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-}
-# widget panel pnl6 {"x":24,"y":728,"w":1442,"h":208,"title":"POTS","unit":""}
-G id=pnl6 {
-    R x=24.5 y=728.5 w=1441 h=207 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=738 w=1414 h=30.8 text=POTS size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget light lt1 {"x":525,"y":750,"w":18,"h":18,"keys":{}}
-G id=lt1 {
-    C v==1-eq($lt1_st,1)-eq($lt1_st,2)-eq($lt1_st,3) cx=534 cy=759 rx=9 ry=9 f=#9A9A9A
-    C v==eq($lt1_st,1) cx=534 cy=759 rx=9 ry=9 f=#4CC38A
-    C v==eq($lt1_st,2) cx=534 cy=759 rx=9 ry=9 f=#F0B429
-    C v==eq($lt1_st,3) cx=534 cy=759 rx=9 ry=9 f=#EF5350
-}
-# widget text txt4 {"x":553,"y":741,"w":90,"h":28,"style":"unit","text":"Healthy","align":"left","state":false,"keys":{}}
-G id=txt4 {
-    T x=553 y=741 w=90 h=28 text=Healthy size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget light lt2 {"x":671,"y":750,"w":18,"h":18,"keys":{}}
-G id=lt2 {
-    C v==1-eq($lt2_st,1)-eq($lt2_st,2)-eq($lt2_st,3) cx=680 cy=759 rx=9 ry=9 f=#9A9A9A
-    C v==eq($lt2_st,1) cx=680 cy=759 rx=9 ry=9 f=#4CC38A
-    C v==eq($lt2_st,2) cx=680 cy=759 rx=9 ry=9 f=#F0B429
-    C v==eq($lt2_st,3) cx=680 cy=759 rx=9 ry=9 f=#EF5350
-}
-# widget text txt5 {"x":699,"y":741,"w":170,"h":28,"style":"unit","text":"Growing slowly","align":"left","state":false,"keys":{}}
-G id=txt5 {
-    T x=699 y=741 w=170 h=28 text="Growing slowly" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget light lt3 {"x":897,"y":750,"w":18,"h":18,"keys":{}}
-G id=lt3 {
-    C v==1-eq($lt3_st,1)-eq($lt3_st,2)-eq($lt3_st,3) cx=906 cy=759 rx=9 ry=9 f=#9A9A9A
-    C v==eq($lt3_st,1) cx=906 cy=759 rx=9 ry=9 f=#4CC38A
-    C v==eq($lt3_st,2) cx=906 cy=759 rx=9 ry=9 f=#F0B429
-    C v==eq($lt3_st,3) cx=906 cy=759 rx=9 ry=9 f=#EF5350
-}
-# widget text txt6 {"x":925,"y":741,"w":110,"h":28,"style":"unit","text":"Damaged","align":"left","state":false,"keys":{}}
-G id=txt6 {
-    T x=925 y=741 w=110 h=28 text=Damaged size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget light lt4 {"x":1063,"y":750,"w":18,"h":18,"keys":{},"__edit":{"v":1,"parts":{},"root":{"o":0.35}}}
-G id=lt4 o=0.35 {
-    C v==1-eq($lt4_st,1)-eq($lt4_st,2)-eq($lt4_st,3) cx=1072 cy=759 rx=9 ry=9 f=#9A9A9A
-    C v==eq($lt4_st,1) cx=1072 cy=759 rx=9 ry=9 f=#4CC38A
-    C v==eq($lt4_st,2) cx=1072 cy=759 rx=9 ry=9 f=#F0B429
-    C v==eq($lt4_st,3) cx=1072 cy=759 rx=9 ry=9 f=#EF5350
-}
-# widget text txt7 {"x":1091,"y":741,"w":230,"h":28,"style":"unit","text":"Not visited this pass","align":"left","state":false,"keys":{}}
-G id=txt7 {
-    T x=1091 y=741 w=230 h=28 text="Not visited this pass" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt8 {"x":1377,"y":741,"w":70,"h":28,"style":"unit","text":"Larre","align":"left","state":false,"keys":{}}
-G id=txt8 {
-    T x=1377 y=741 w=70 h=28 text=Larre size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget repeater rep1 {"x":39,"y":779.4,"w":1412,"h":125.6,"max":90,"layout":"grid","cols":30,"pitch":50.8,"item":"bar","fmt":"","valueW":0,"click":false,"fade":true,"keys":{}}
-G id=rep1 {
-    R x=39 y=779.4 w=1412 h=125.6
-    RP n=90 {
-        G v==lt(i,$rep1_n) o==1-clamp($rep1_fade[i],0,1) {
-            R x==39+mod(i,30)*47.4 y==779.4+floor(i/30)*50.8 w=37.4 h=24 rx=3 f=#121212
-            R x==39+mod(i,30)*47.4+4 y==779.4+floor(i/30)*50.8+4 w==clamp($rep1_lvl[i],0,1)*29.4 h=16 rx=2 f==if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))
+G id=export_bin {
+    # widget panel pnl3 {"x":996,"y":104,"w":470,"h":288,"title":"EXPORT BIN","unit":""}
+    G id=pnl3 {
+        R x=996.5 y=104.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=1010 y=114 w=442 h=30.8 text="EXPORT BIN" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget readoutrow row3 {"x":1011,"y":154.9,"w":440,"h":53.4,"name":"Contents","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
+    G id=row3 {
+        R x=1011 y=154.9 w=440 h=53.4 rx=4 f=#2C2C2C
+        C v==1-eq($row3_st,1)-eq($row3_st,2)-eq($row3_st,3) cx=1033 cy=181.59999 rx=8 ry=8 f=#9A9A9A
+        C v==eq($row3_st,1) cx=1033 cy=181.59999 rx=8 ry=8 f=#4CC38A
+        C v==eq($row3_st,2) cx=1033 cy=181.59999 rx=8 ry=8 f=#F0B429
+        C v==eq($row3_st,3) cx=1033 cy=181.59999 rx=8 ry=8 f=#EF5350
+        T x=1051 y=154.9 w=176 h=53.4 text=Contents size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=154.9 w=200 h=53.4 text="{$row3_r1:%.1f}" size=28 f==if(eq($row3_st,2),#F0B429,if(eq($row3_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+    # widget readoutrow row4 {"x":1011,"y":214.3,"w":440,"h":53.4,"name":"Door","fmt1":"%.1f","fmt2":"","w1":200,"w2":80,"keys":{}}
+    G id=row4 {
+        R x=1011 y=214.3 w=440 h=53.4 rx=4 f=#2C2C2C
+        C v==1-eq($row4_st,1)-eq($row4_st,2)-eq($row4_st,3) cx=1033 cy=241 rx=8 ry=8 f=#9A9A9A
+        C v==eq($row4_st,1) cx=1033 cy=241 rx=8 ry=8 f=#4CC38A
+        C v==eq($row4_st,2) cx=1033 cy=241 rx=8 ry=8 f=#F0B429
+        C v==eq($row4_st,3) cx=1033 cy=241 rx=8 ry=8 f=#EF5350
+        T x=1051 y=214.3 w=176 h=53.4 text=Door size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=214.3 w=200 h=53.4 text="{$row4_r1:%.1f}" size=28 f==if(eq($row4_st,2),#F0B429,if(eq($row4_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+    # widget kvtable kv2 {"x":1011,"y":273.7,"w":440,"h":53.4,"rows":[{"caption":"Occupied for","fmt":"","state":true,"key":0}],"rowH":53.4,"gap":6,"valueW":200,"keys":{}}
+    G id=kv2 {
+        R x=1011 y=273.7 w=440 h=53.4 rx=4 f=#2C2C2C
+        T x=1025 y=273.7 w=202 h=53.4 text="Occupied for" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=273.7 w=200 h=53.4 text=$kv2_v0 size=28 f==if(eq($kv2_s0,2),#F0B429,if(eq($kv2_s0,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+    # widget alert al1 {"x":1011,"y":337.6,"w":440,"h":36.4,"row":false,"keys":{}}
+    G id=al1 {
+        R x=1011 y=337.6 w=440 h=36.4
+        G v==gt($al1_st,0) {
+            R x=1025 y=341.80002 w=72 h=28 rx=3 f==if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))
+            T v==eq($al1_st,1) x=1025 y=341.80002 w=72 h=28 text=OK size=20 weight=bold f=#111111 align=center valign=middle
+            T v==eq($al1_st,2) x=1025 y=341.80002 w=72 h=28 text=WARN size=20 weight=bold f=#111111 align=center valign=middle
+            T v==eq($al1_st,3) x=1025 y=341.80002 w=72 h=28 text=CRIT size=20 weight=bold f=#111111 align=center valign=middle
+            T x=1111 y=340.30002 w=326 h=31 text=$al1_msg size=22 f=#F2F2F2 valign=middle fit=ellipsis
         }
     }
 }
-# style {"s":{"role":"text"}}
-R x=1352 y=753 w=12 h=12 rx=2 f=none sw=3 s=#F2F2F2
-# style {"s":{"role":"text"}}
-R v==gte($potCur,0) x==37.5+mod($potCur,30)*47.4 y==777.9+floor($potCur/30)*50.8 w=40.4 h=33 rx=5.5 f=none sw=3 s=#F2F2F2
+G id=larre {
+    # widget panel pnl4 {"x":510,"y":408,"w":470,"h":304,"title":"LARRE","unit":""}
+    G id=pnl4 {
+        R x=510.5 y=408.5 w=469 h=303 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=524 y=418 w=442 h=30.8 text=LARRE size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget readoutrow row5 {"x":525,"y":458.9,"w":440,"h":55.366665,"name":"Status","fmt1":"%.1f","fmt2":"","w1":220,"w2":80,"keys":{}}
+    G id=row5 {
+        R x=525 y=458.9 w=440 h=55.366665 rx=4 f=#2C2C2C
+        C v==1-eq($row5_st,1)-eq($row5_st,2)-eq($row5_st,3) cx=547 cy=486.5833 rx=8 ry=8 f=#9A9A9A
+        C v==eq($row5_st,1) cx=547 cy=486.5833 rx=8 ry=8 f=#4CC38A
+        C v==eq($row5_st,2) cx=547 cy=486.5833 rx=8 ry=8 f=#F0B429
+        C v==eq($row5_st,3) cx=547 cy=486.5833 rx=8 ry=8 f=#EF5350
+        T x=565 y=458.9 w=156 h=55.366665 text=Status size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=731 y=458.9 w=220 h=55.366665 text="{$row5_r1:%.1f}" size=28 f==if(eq($row5_st,2),#F0B429,if(eq($row5_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+    # widget kvtable kv3 {"x":525,"y":520.26666,"w":440,"h":116.73333,"rows":[{"caption":"Pot","fmt":"","state":false,"key":0},{"caption":"Holding","fmt":"","state":false,"key":1}],"rowH":55.366665,"gap":6,"valueW":220,"keys":{}}
+    G id=kv3 {
+        R x=525 y=520.26666 w=440 h=55.366665 rx=4 f=#2C2C2C
+        T x=539 y=520.26666 w=182 h=55.366665 text=Pot size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=731 y=520.26666 w=220 h=55.366665 text=$kv3_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=525 y=581.6333 w=440 h=55.366665 rx=4 f=#2C2C2C
+        T x=539 y=581.6333 w=182 h=55.366665 text=Holding size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=731 y=581.6333 w=220 h=55.366665 text=$kv3_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+    }
+    # widget button btn5 {"x":525,"y":643,"w":117.6,"h":54,"states":[{"label":"PAUSE","variant":"primary","key":0},{"label":"RESUME","variant":"primary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn5 {
+        R id=btn5_hit click=1 x=525 y=643 w=117.6 h=54
+        G v==eq($btn5_state,0) {
+            R x=525 y=643 w=117.6 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+        }
+        G v==eq($btn5_state,1) {
+            R x=525 y=643 w=117.6 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+        }
+        T v==eq($btn5_state,0) x=543 y=643 w=81.6 h=54 text=PAUSE size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
+        T v==eq($btn5_state,1) x=543 y=643 w=81.6 h=54 text=RESUME size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
+    }
+    # widget button btn6 {"x":652.6,"y":643,"w":155.4,"h":54,"states":[{"label":"SEND HOME","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn6 {
+        R id=btn6_hit click=1 x=652.6 y=643 w=155.4 h=54
+        R x=653.1 y=643.5 w=154.4 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=670.6 y=643 w=119.399994 h=54 text="SEND HOME" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+    }
+    # widget button btn7 {"x":818,"y":643,"w":147,"h":54,"states":[{"label":"DUMP NOW","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn7 {
+        R id=btn7_hit click=1 x=818 y=643 w=147 h=54
+        R x=818.5 y=643.5 w=146 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=836 y=643 w=111 h=54 text="DUMP NOW" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+    }
+}
+G id=harvest {
+    # widget panel pnl5 {"x":996,"y":408,"w":470,"h":304,"title":"HARVEST","unit":""}
+    G id=pnl5 {
+        R x=996.5 y=408.5 w=469 h=303 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=1010 y=418 w=442 h=30.8 text=HARVEST size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget kvtable kv4 {"x":1011,"y":458.9,"w":440,"h":238.1,"rows":[{"caption":"This pass","fmt":"","state":false,"key":0},{"caption":"All time","fmt":"","state":false,"key":1},{"caption":"Last pass took","fmt":"","state":false,"key":2},{"caption":"Last harvest","fmt":"","state":false,"key":3}],"rowH":55.025,"gap":6,"valueW":200,"keys":{}}
+    G id=kv4 {
+        R x=1011 y=458.9 w=440 h=55.025 rx=4 f=#2C2C2C
+        T x=1025 y=458.9 w=202 h=55.025 text="This pass" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=458.9 w=200 h=55.025 text=$kv4_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=1011 y=519.925 w=440 h=55.025 rx=4 f=#2C2C2C
+        T x=1025 y=519.925 w=202 h=55.025 text="All time" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=519.925 w=200 h=55.025 text=$kv4_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=1011 y=580.95 w=440 h=55.025 rx=4 f=#2C2C2C
+        T x=1025 y=580.95 w=202 h=55.025 text="Last pass took" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=580.95 w=200 h=55.025 text=$kv4_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=1011 y=641.975 w=440 h=55.025 rx=4 f=#2C2C2C
+        T x=1025 y=641.975 w=202 h=55.025 text="Last harvest" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1237 y=641.975 w=200 h=55.025 text=$kv4_v3 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+    }
+}
+G id=pots {
+    # widget panel pnl6 {"x":24,"y":728,"w":1442,"h":208,"title":"POTS","unit":""}
+    G id=pnl6 {
+        R x=24.5 y=728.5 w=1441 h=207 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=738 w=1414 h=30.8 text=POTS size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    G id=healthy {
+        # widget light lt1 {"x":525,"y":750,"w":18,"h":18,"keys":{}}
+        G id=lt1 {
+            C v==1-eq($lt1_st,1)-eq($lt1_st,2)-eq($lt1_st,3) cx=534 cy=759 rx=9 ry=9 f=#9A9A9A
+            C v==eq($lt1_st,1) cx=534 cy=759 rx=9 ry=9 f=#4CC38A
+            C v==eq($lt1_st,2) cx=534 cy=759 rx=9 ry=9 f=#F0B429
+            C v==eq($lt1_st,3) cx=534 cy=759 rx=9 ry=9 f=#EF5350
+        }
+        # widget text txt4 {"x":553,"y":741,"w":90,"h":28,"style":"unit","text":"Healthy","align":"left","state":false,"keys":{}}
+        G id=txt4 {
+            T x=553 y=741 w=90 h=28 text=Healthy size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+    }
+    G id=growing_slowly {
+        # widget light lt2 {"x":671,"y":750,"w":18,"h":18,"keys":{}}
+        G id=lt2 {
+            C v==1-eq($lt2_st,1)-eq($lt2_st,2)-eq($lt2_st,3) cx=680 cy=759 rx=9 ry=9 f=#9A9A9A
+            C v==eq($lt2_st,1) cx=680 cy=759 rx=9 ry=9 f=#4CC38A
+            C v==eq($lt2_st,2) cx=680 cy=759 rx=9 ry=9 f=#F0B429
+            C v==eq($lt2_st,3) cx=680 cy=759 rx=9 ry=9 f=#EF5350
+        }
+        # widget text txt5 {"x":699,"y":741,"w":170,"h":28,"style":"unit","text":"Growing slowly","align":"left","state":false,"keys":{}}
+        G id=txt5 {
+            T x=699 y=741 w=170 h=28 text="Growing slowly" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+    }
+    G id=damaged {
+        # widget light lt3 {"x":897,"y":750,"w":18,"h":18,"keys":{}}
+        G id=lt3 {
+            C v==1-eq($lt3_st,1)-eq($lt3_st,2)-eq($lt3_st,3) cx=906 cy=759 rx=9 ry=9 f=#9A9A9A
+            C v==eq($lt3_st,1) cx=906 cy=759 rx=9 ry=9 f=#4CC38A
+            C v==eq($lt3_st,2) cx=906 cy=759 rx=9 ry=9 f=#F0B429
+            C v==eq($lt3_st,3) cx=906 cy=759 rx=9 ry=9 f=#EF5350
+        }
+        # widget text txt6 {"x":925,"y":741,"w":110,"h":28,"style":"unit","text":"Damaged","align":"left","state":false,"keys":{}}
+        G id=txt6 {
+            T x=925 y=741 w=110 h=28 text=Damaged size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+    }
+    G id=not_visited_this_pass {
+        # widget light lt4 {"x":1063,"y":750,"w":18,"h":18,"keys":{},"__edit":{"v":1,"parts":{},"root":{"o":0.35}}}
+        G id=lt4 o=0.35 {
+            C v==1-eq($lt4_st,1)-eq($lt4_st,2)-eq($lt4_st,3) cx=1072 cy=759 rx=9 ry=9 f=#9A9A9A
+            C v==eq($lt4_st,1) cx=1072 cy=759 rx=9 ry=9 f=#4CC38A
+            C v==eq($lt4_st,2) cx=1072 cy=759 rx=9 ry=9 f=#F0B429
+            C v==eq($lt4_st,3) cx=1072 cy=759 rx=9 ry=9 f=#EF5350
+        }
+        # widget text txt7 {"x":1091,"y":741,"w":230,"h":28,"style":"unit","text":"Not visited this pass","align":"left","state":false,"keys":{}}
+        G id=txt7 {
+            T x=1091 y=741 w=230 h=28 text="Not visited this pass" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+    }
+    # widget text txt8 {"x":1377,"y":741,"w":70,"h":28,"style":"unit","text":"Larre","align":"left","state":false,"keys":{}}
+    G id=txt8 {
+        T x=1377 y=741 w=70 h=28 text=Larre size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget repeater rep1 {"x":39,"y":779.4,"w":1412,"h":125.6,"max":90,"layout":"grid","cols":30,"pitch":50.8,"item":"bar","fmt":"","valueW":0,"click":false,"fade":true,"keys":{}}
+    G id=rep1 {
+        R x=39 y=779.4 w=1412 h=125.6
+        RP n=90 {
+            G v==lt(i,$rep1_n) o==1-clamp($rep1_fade[i],0,1) {
+                R x==39+mod(i,30)*47.4 y==779.4+floor(i/30)*50.8 w=37.4 h=24 rx=3 f=#121212
+                R x==39+mod(i,30)*47.4+4 y==779.4+floor(i/30)*50.8+4 w==clamp($rep1_lvl[i],0,1)*29.4 h=16 rx=2 f==if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))
+            }
+        }
+    }
+    # style {"s":{"role":"text"}}
+    R id=larre_legend x=1352 y=753 w=12 h=12 rx=2 f=none sw=3 s=#F2F2F2
+    # style {"s":{"role":"text"}}
+    R id=larre_cursor v==gte($potCur,0) x==37.5+mod($potCur,30)*47.4 y==777.9+floor($potCur/30)*50.8 w=40.4 h=33 rx=5.5 f=none sw=3 s=#F2F2F2
+}
 G v==lt(ver,11118) {
     R x=0 y=0 w=1490 h=115 f=#000000CC
     T x=44.7 y=0 w=1400.6 h=115 text="Update ScriptedScreens Vector to 0.11.118 or newer" size=52 f=#FFCC00
@@ -1511,340 +1535,376 @@ G id=hdr2 {
     T x=42 y=28 w=1122 h=56 text="HYDRO FARM" size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
     T x=1348 y=28 w=100 h=56 text=$hdr2_clock size=24 f=#C4C4C4 align=right valign=middle fit=ellipsis
 }
-# widget panel pnl7 {"x":24,"y":104,"w":1442,"h":832,"title":"SELECT PLANT","unit":"Light / dark, s"}
-G id=pnl7 {
-    R x=24.5 y=104.5 w=1441 h=831 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=114 w=1340 h=30.8 text="SELECT PLANT" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-    T x=1388 y=115.4 w=64 h=28 text="Light / dark, s" size=20 f=#9A9A9A align=right valign=middle
-}
-# widget button btn8 {"x":39,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn8 {
-    R id=btn8_hit click=1 x=39 y=155.8 w=227 h=248.4
-    R v==$btn8_sel x=38 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=39.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=57 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt9 {"x":54,"y":291,"w":197,"h":33.6,"style":"value","text":"Potato","align":"center","state":false,"keys":{}}
-G id=txt9 {
-    T x=54 y=291 w=197 h=33.6 text=Potato size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt10 {"x":54,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt10 {
-    T x=54 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt11 {"x":54,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt11 {
-    T x=54 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn9 {"x":276,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn9 {
-    R id=btn9_hit click=1 x=276 y=155.8 w=227 h=248.4
-    R v==$btn9_sel x=275 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=276.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=294 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt12 {"x":291,"y":291,"w":197,"h":33.6,"style":"value","text":"Wheat","align":"center","state":false,"keys":{}}
-G id=txt12 {
-    T x=291 y=291 w=197 h=33.6 text=Wheat size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt13 {"x":291,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt13 {
-    T x=291 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt14 {"x":291,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt14 {
-    T x=291 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn10 {"x":513,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn10 {
-    R id=btn10_hit click=1 x=513 y=155.8 w=227 h=248.4
-    R v==$btn10_sel x=512 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=513.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=531 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt15 {"x":528,"y":291,"w":197,"h":33.6,"style":"value","text":"Rice","align":"center","state":false,"keys":{}}
-G id=txt15 {
-    T x=528 y=291 w=197 h=33.6 text=Rice size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt16 {"x":528,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt16 {
-    T x=528 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt17 {"x":528,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt17 {
-    T x=528 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn11 {"x":750,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn11 {
-    R id=btn11_hit click=1 x=750 y=155.8 w=227 h=248.4
-    R v==$btn11_sel x=749 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=750.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=768 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt18 {"x":765,"y":291,"w":197,"h":33.6,"style":"value","text":"Soybean","align":"center","state":false,"keys":{}}
-G id=txt18 {
-    T x=765 y=291 w=197 h=33.6 text=Soybean size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt19 {"x":765,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt19 {
-    T x=765 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt20 {"x":765,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt20 {
-    T x=765 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn12 {"x":987,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn12 {
-    R id=btn12_hit click=1 x=987 y=155.8 w=227 h=248.4
-    R v==$btn12_sel x=986 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=987.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1005 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt21 {"x":1002,"y":291,"w":197,"h":33.6,"style":"value","text":"Corn","align":"center","state":false,"keys":{}}
-G id=txt21 {
-    T x=1002 y=291 w=197 h=33.6 text=Corn size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt22 {"x":1002,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt22 {
-    T x=1002 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt23 {"x":1002,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
-G id=txt23 {
-    T x=1002 y=357.6 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn13 {"x":1224,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn13 {
-    R id=btn13_hit click=1 x=1224 y=155.8 w=227 h=248.4
-    R v==$btn13_sel x=1223 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=1224.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1242 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt24 {"x":1239,"y":291,"w":197,"h":33.6,"style":"value","text":"Mushroom","align":"center","state":false,"keys":{}}
-G id=txt24 {
-    T x=1239 y=291 w=197 h=33.6 text=Mushroom size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt25 {"x":1239,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt25 {
-    T x=1239 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt26 {"x":1239,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitMush","align":"center","state":false,"keys":{}}
-G id=txt26 {
-    T x=1239 y=357.6 w=197 h=30.8 text=$splitMush size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn14 {"x":39,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn14 {
-    R id=btn14_hit click=1 x=39 y=414.2 w=227 h=248.4
-    R v==$btn14_sel x=38 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=39.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=57 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt27 {"x":54,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Alien mushroom","align":"center","state":false,"keys":{}}
-G id=txt27 {
-    T x=54 y=549.4 w=197 h=33.6 text="Alien mushroom" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt28 {"x":54,"y":588.6,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
-G id=txt28 {
-    T x=54 y=588.6 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt29 {"x":54,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitMush","align":"center","state":false,"keys":{}}
-G id=txt29 {
-    T x=54 y=616 w=197 h=30.8 text=$splitMush size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn15 {"x":276,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn15 {
-    R id=btn15_hit click=1 x=276 y=414.2 w=227 h=248.4
-    R v==$btn15_sel x=275 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=276.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=294 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt30 {"x":291,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Tomato","align":"center","state":false,"keys":{}}
-G id=txt30 {
-    T x=291 y=549.4 w=197 h=33.6 text=Tomato size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt31 {"x":291,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt31 {
-    T x=291 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt32 {"x":291,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
-G id=txt32 {
-    T x=291 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn16 {"x":513,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn16 {
-    R id=btn16_hit click=1 x=513 y=414.2 w=227 h=248.4
-    R v==$btn16_sel x=512 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=513.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=531 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt33 {"x":528,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Pumpkin","align":"center","state":false,"keys":{}}
-G id=txt33 {
-    T x=528 y=549.4 w=197 h=33.6 text=Pumpkin size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt34 {"x":528,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt34 {
-    T x=528 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt35 {"x":528,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
-G id=txt35 {
-    T x=528 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn17 {"x":750,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn17 {
-    R id=btn17_hit click=1 x=750 y=414.2 w=227 h=248.4
-    R v==$btn17_sel x=749 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=750.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=768 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt36 {"x":765,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Fern","align":"center","state":false,"keys":{}}
-G id=txt36 {
-    T x=765 y=549.4 w=197 h=33.6 text=Fern size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt37 {"x":765,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt37 {
-    T x=765 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt38 {"x":765,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
-G id=txt38 {
-    T x=765 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn18 {"x":987,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn18 {
-    R id=btn18_hit click=1 x=987 y=414.2 w=227 h=248.4
-    R v==$btn18_sel x=986 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=987.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1005 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt39 {"x":1002,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Darga fern","align":"center","state":false,"keys":{}}
-G id=txt39 {
-    T x=1002 y=549.4 w=197 h=33.6 text="Darga fern" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt40 {"x":1002,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt40 {
-    T x=1002 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt41 {"x":1002,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt41 {
-    T x=1002 y=616 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn19 {"x":1224,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn19 {
-    R id=btn19_hit click=1 x=1224 y=414.2 w=227 h=248.4
-    R v==$btn19_sel x=1223 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=1224.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1242 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt42 {"x":1239,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Peace lily","align":"center","state":false,"keys":{}}
-G id=txt42 {
-    T x=1239 y=549.4 w=197 h=33.6 text="Peace lily" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt43 {"x":1239,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt43 {
-    T x=1239 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt44 {"x":1239,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt44 {
-    T x=1239 y=616 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn20 {"x":39,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn20 {
-    R id=btn20_hit click=1 x=39 y=672.6 w=227 h=248.4
-    R v==$btn20_sel x=38 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=39.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=57 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt45 {"x":54,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Tropical lily","align":"center","state":false,"keys":{}}
-G id=txt45 {
-    T x=54 y=807.8 w=197 h=33.6 text="Tropical lily" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt46 {"x":54,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt46 {
-    T x=54 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt47 {"x":54,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt47 {
-    T x=54 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn21 {"x":276,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn21 {
-    R id=btn21_hit click=1 x=276 y=672.6 w=227 h=248.4
-    R v==$btn21_sel x=275 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=276.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=294 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt48 {"x":291,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Winterspawn A","align":"center","state":false,"keys":{}}
-G id=txt48 {
-    T x=291 y=807.8 w=197 h=33.6 text="Winterspawn A" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt49 {"x":291,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt49 {
-    T x=291 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt50 {"x":291,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt50 {
-    T x=291 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn22 {"x":513,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn22 {
-    R id=btn22_hit click=1 x=513 y=672.6 w=227 h=248.4
-    R v==$btn22_sel x=512 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=513.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=531 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt51 {"x":528,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Winterspawn B","align":"center","state":false,"keys":{}}
-G id=txt51 {
-    T x=528 y=807.8 w=197 h=33.6 text="Winterspawn B" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt52 {"x":528,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt52 {
-    T x=528 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt53 {"x":528,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt53 {
-    T x=528 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn23 {"x":750,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn23 {
-    R id=btn23_hit click=1 x=750 y=672.6 w=227 h=248.4
-    R v==$btn23_sel x=749 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=750.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=768 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt54 {"x":765,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Hades flower A","align":"center","state":false,"keys":{}}
-G id=txt54 {
-    T x=765 y=807.8 w=197 h=33.6 text="Hades flower A" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt55 {"x":765,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt55 {
-    T x=765 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt56 {"x":765,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt56 {
-    T x=765 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn24 {"x":987,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
-G id=btn24 {
-    R id=btn24_hit click=1 x=987 y=672.6 w=227 h=248.4
-    R v==$btn24_sel x=986 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
-    R x=987.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1005 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt57 {"x":1002,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Hades flower B","align":"center","state":false,"keys":{}}
-G id=txt57 {
-    T x=1002 y=807.8 w=197 h=33.6 text="Hades flower B" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt58 {"x":1002,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
-G id=txt58 {
-    T x=1002 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt59 {"x":1002,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
-G id=txt59 {
-    T x=1002 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
-}
-# widget button btn25 {"x":1224,"y":672.6,"w":227,"h":248.4,"states":[{"label":"BACK","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn25 {
-    R id=btn25_hit click=1 x=1224 y=672.6 w=227 h=248.4
-    R x=1224.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1242 y=672.6 w=191 h=248.4 text=BACK size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+G id=select_plant {
+    # widget panel pnl7 {"x":24,"y":104,"w":1442,"h":832,"title":"SELECT PLANT","unit":"Light / dark, s"}
+    G id=pnl7 {
+        R x=24.5 y=104.5 w=1441 h=831 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=114 w=1340 h=30.8 text="SELECT PLANT" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+        T x=1388 y=115.4 w=64 h=28 text="Light / dark, s" size=20 f=#9A9A9A align=right valign=middle
+    }
+    G id=potato {
+        # widget button btn8 {"x":39,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn8 {
+            R id=btn8_hit click=1 x=39 y=155.8 w=227 h=248.4
+            R v==$btn8_sel x=38 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=39.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=57 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt9 {"x":54,"y":291,"w":197,"h":33.6,"style":"value","text":"Potato","align":"center","state":false,"keys":{}}
+        G id=txt9 {
+            T x=54 y=291 w=197 h=33.6 text=Potato size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt10 {"x":54,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt10 {
+            T x=54 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt11 {"x":54,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt11 {
+            T x=54 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=wheat {
+        # widget button btn9 {"x":276,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn9 {
+            R id=btn9_hit click=1 x=276 y=155.8 w=227 h=248.4
+            R v==$btn9_sel x=275 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=276.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=294 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt12 {"x":291,"y":291,"w":197,"h":33.6,"style":"value","text":"Wheat","align":"center","state":false,"keys":{}}
+        G id=txt12 {
+            T x=291 y=291 w=197 h=33.6 text=Wheat size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt13 {"x":291,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt13 {
+            T x=291 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt14 {"x":291,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt14 {
+            T x=291 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=rice {
+        # widget button btn10 {"x":513,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn10 {
+            R id=btn10_hit click=1 x=513 y=155.8 w=227 h=248.4
+            R v==$btn10_sel x=512 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=513.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=531 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt15 {"x":528,"y":291,"w":197,"h":33.6,"style":"value","text":"Rice","align":"center","state":false,"keys":{}}
+        G id=txt15 {
+            T x=528 y=291 w=197 h=33.6 text=Rice size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt16 {"x":528,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt16 {
+            T x=528 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt17 {"x":528,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt17 {
+            T x=528 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=soybean {
+        # widget button btn11 {"x":750,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn11 {
+            R id=btn11_hit click=1 x=750 y=155.8 w=227 h=248.4
+            R v==$btn11_sel x=749 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=750.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=768 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt18 {"x":765,"y":291,"w":197,"h":33.6,"style":"value","text":"Soybean","align":"center","state":false,"keys":{}}
+        G id=txt18 {
+            T x=765 y=291 w=197 h=33.6 text=Soybean size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt19 {"x":765,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt19 {
+            T x=765 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt20 {"x":765,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt20 {
+            T x=765 y=357.6 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=corn {
+        # widget button btn12 {"x":987,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn12 {
+            R id=btn12_hit click=1 x=987 y=155.8 w=227 h=248.4
+            R v==$btn12_sel x=986 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=987.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=1005 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt21 {"x":1002,"y":291,"w":197,"h":33.6,"style":"value","text":"Corn","align":"center","state":false,"keys":{}}
+        G id=txt21 {
+            T x=1002 y=291 w=197 h=33.6 text=Corn size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt22 {"x":1002,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt22 {
+            T x=1002 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt23 {"x":1002,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
+        G id=txt23 {
+            T x=1002 y=357.6 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=mushroom {
+        # widget button btn13 {"x":1224,"y":155.8,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn13 {
+            R id=btn13_hit click=1 x=1224 y=155.8 w=227 h=248.4
+            R v==$btn13_sel x=1223 y=154.8 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=1224.5 y=156.3 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=1242 y=155.8 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt24 {"x":1239,"y":291,"w":197,"h":33.6,"style":"value","text":"Mushroom","align":"center","state":false,"keys":{}}
+        G id=txt24 {
+            T x=1239 y=291 w=197 h=33.6 text=Mushroom size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt25 {"x":1239,"y":330.2,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt25 {
+            T x=1239 y=330.2 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt26 {"x":1239,"y":357.6,"w":197,"h":30.8,"style":"reading","text":"$splitMush","align":"center","state":false,"keys":{}}
+        G id=txt26 {
+            T x=1239 y=357.6 w=197 h=30.8 text=$splitMush size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=alien_mushroom {
+        # widget button btn14 {"x":39,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn14 {
+            R id=btn14_hit click=1 x=39 y=414.2 w=227 h=248.4
+            R v==$btn14_sel x=38 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=39.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=57 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt27 {"x":54,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Alien mushroom","align":"center","state":false,"keys":{}}
+        G id=txt27 {
+            T x=54 y=549.4 w=197 h=33.6 text="Alien mushroom" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt28 {"x":54,"y":588.6,"w":197,"h":28,"style":"unit","text":"Annual","align":"center","state":false,"keys":{}}
+        G id=txt28 {
+            T x=54 y=588.6 w=197 h=28 text=Annual size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt29 {"x":54,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitMush","align":"center","state":false,"keys":{}}
+        G id=txt29 {
+            T x=54 y=616 w=197 h=30.8 text=$splitMush size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=tomato {
+        # widget button btn15 {"x":276,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn15 {
+            R id=btn15_hit click=1 x=276 y=414.2 w=227 h=248.4
+            R v==$btn15_sel x=275 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=276.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=294 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt30 {"x":291,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Tomato","align":"center","state":false,"keys":{}}
+        G id=txt30 {
+            T x=291 y=549.4 w=197 h=33.6 text=Tomato size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt31 {"x":291,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt31 {
+            T x=291 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt32 {"x":291,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
+        G id=txt32 {
+            T x=291 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=pumpkin {
+        # widget button btn16 {"x":513,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn16 {
+            R id=btn16_hit click=1 x=513 y=414.2 w=227 h=248.4
+            R v==$btn16_sel x=512 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=513.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=531 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt33 {"x":528,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Pumpkin","align":"center","state":false,"keys":{}}
+        G id=txt33 {
+            T x=528 y=549.4 w=197 h=33.6 text=Pumpkin size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt34 {"x":528,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt34 {
+            T x=528 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt35 {"x":528,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
+        G id=txt35 {
+            T x=528 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=fern {
+        # widget button btn17 {"x":750,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn17 {
+            R id=btn17_hit click=1 x=750 y=414.2 w=227 h=248.4
+            R v==$btn17_sel x=749 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=750.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=768 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt36 {"x":765,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Fern","align":"center","state":false,"keys":{}}
+        G id=txt36 {
+            T x=765 y=549.4 w=197 h=33.6 text=Fern size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt37 {"x":765,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt37 {
+            T x=765 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt38 {"x":765,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitShort","align":"center","state":false,"keys":{}}
+        G id=txt38 {
+            T x=765 y=616 w=197 h=30.8 text=$splitShort size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=darga_fern {
+        # widget button btn18 {"x":987,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn18 {
+            R id=btn18_hit click=1 x=987 y=414.2 w=227 h=248.4
+            R v==$btn18_sel x=986 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=987.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=1005 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt39 {"x":1002,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Darga fern","align":"center","state":false,"keys":{}}
+        G id=txt39 {
+            T x=1002 y=549.4 w=197 h=33.6 text="Darga fern" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt40 {"x":1002,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt40 {
+            T x=1002 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt41 {"x":1002,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt41 {
+            T x=1002 y=616 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=peace_lily {
+        # widget button btn19 {"x":1224,"y":414.2,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn19 {
+            R id=btn19_hit click=1 x=1224 y=414.2 w=227 h=248.4
+            R v==$btn19_sel x=1223 y=413.2 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=1224.5 y=414.7 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=1242 y=414.2 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt42 {"x":1239,"y":549.4,"w":197,"h":33.6,"style":"value","text":"Peace lily","align":"center","state":false,"keys":{}}
+        G id=txt42 {
+            T x=1239 y=549.4 w=197 h=33.6 text="Peace lily" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt43 {"x":1239,"y":588.6,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt43 {
+            T x=1239 y=588.6 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt44 {"x":1239,"y":616,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt44 {
+            T x=1239 y=616 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=tropical_lily {
+        # widget button btn20 {"x":39,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn20 {
+            R id=btn20_hit click=1 x=39 y=672.6 w=227 h=248.4
+            R v==$btn20_sel x=38 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=39.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=57 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt45 {"x":54,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Tropical lily","align":"center","state":false,"keys":{}}
+        G id=txt45 {
+            T x=54 y=807.8 w=197 h=33.6 text="Tropical lily" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt46 {"x":54,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt46 {
+            T x=54 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt47 {"x":54,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt47 {
+            T x=54 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=winterspawn_a {
+        # widget button btn21 {"x":276,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn21 {
+            R id=btn21_hit click=1 x=276 y=672.6 w=227 h=248.4
+            R v==$btn21_sel x=275 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=276.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=294 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt48 {"x":291,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Winterspawn A","align":"center","state":false,"keys":{}}
+        G id=txt48 {
+            T x=291 y=807.8 w=197 h=33.6 text="Winterspawn A" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt49 {"x":291,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt49 {
+            T x=291 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt50 {"x":291,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt50 {
+            T x=291 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=winterspawn_b {
+        # widget button btn22 {"x":513,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn22 {
+            R id=btn22_hit click=1 x=513 y=672.6 w=227 h=248.4
+            R v==$btn22_sel x=512 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=513.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=531 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt51 {"x":528,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Winterspawn B","align":"center","state":false,"keys":{}}
+        G id=txt51 {
+            T x=528 y=807.8 w=197 h=33.6 text="Winterspawn B" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt52 {"x":528,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt52 {
+            T x=528 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt53 {"x":528,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt53 {
+            T x=528 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=hades_flower_a {
+        # widget button btn23 {"x":750,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn23 {
+            R id=btn23_hit click=1 x=750 y=672.6 w=227 h=248.4
+            R v==$btn23_sel x=749 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=750.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=768 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt54 {"x":765,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Hades flower A","align":"center","state":false,"keys":{}}
+        G id=txt54 {
+            T x=765 y=807.8 w=197 h=33.6 text="Hades flower A" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt55 {"x":765,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt55 {
+            T x=765 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt56 {"x":765,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt56 {
+            T x=765 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    G id=hades_flower_b {
+        # widget button btn24 {"x":987,"y":672.6,"w":227,"h":248.4,"states":[{"label":"","variant":"secondary","key":0}],"canDisable":false,"canSelect":true,"keys":{}}
+        G id=btn24 {
+            R id=btn24_hit click=1 x=987 y=672.6 w=227 h=248.4
+            R v==$btn24_sel x=986 y=671.6 w=229 h=250.4 rx=5 f=none s=#3D8BFD sw=2
+            R x=987.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            T x=1005 y=672.6 w=191 h=248.4 text="" size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt57 {"x":1002,"y":807.8,"w":197,"h":33.6,"style":"value","text":"Hades flower B","align":"center","state":false,"keys":{}}
+        G id=txt57 {
+            T x=1002 y=807.8 w=197 h=33.6 text="Hades flower B" size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
+        }
+        # widget text txt58 {"x":1002,"y":847,"w":197,"h":28,"style":"unit","text":"Perennial","align":"center","state":false,"keys":{}}
+        G id=txt58 {
+            T x=1002 y=847 w=197 h=28 text=Perennial size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt59 {"x":1002,"y":874.4,"w":197,"h":30.8,"style":"reading","text":"$splitLong","align":"center","state":false,"keys":{}}
+        G id=txt59 {
+            T x=1002 y=874.4 w=197 h=30.8 text=$splitLong size=22 f=#C4C4C4 align=center valign=middle fit=ellipsis
+        }
+    }
+    # widget button btn25 {"x":1224,"y":672.6,"w":227,"h":248.4,"states":[{"label":"BACK","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn25 {
+        R id=btn25_hit click=1 x=1224 y=672.6 w=227 h=248.4
+        R x=1224.5 y=673.1 w=226 h=247.4 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=1242 y=672.6 w=191 h=248.4 text=BACK size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+    }
 }
 G v==lt(ver,11118) {
     R x=0 y=0 w=1490 h=115 f=#000000CC
@@ -1895,271 +1955,305 @@ G id=hdr3 {
     T x=42 y=28 w=1122 h=56 text="HYDRO FARM SETTINGS" size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
     T x=1348 y=28 w=100 h=56 text=$hdr3_clock size=24 f=#C4C4C4 align=right valign=middle fit=ellipsis
 }
-# widget panel pnl8 {"x":24,"y":104,"w":713,"h":358,"title":"POTS","unit":""}
-G id=pnl8 {
-    R x=24.5 y=104.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=114 w=685 h=30.8 text=POTS size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget panel pnl9 {"x":753,"y":104,"w":713,"h":358,"title":"LIGHT PHASE","unit":"s"}
-G id=pnl9 {
-    R x=753.5 y=104.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=767 y=114 w=611 h=30.8 text="LIGHT PHASE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-    T x=1388 y=115.4 w=64 h=28 text=s size=20 f=#9A9A9A align=right valign=middle
-}
-# widget panel pnl10 {"x":24,"y":478,"w":713,"h":358,"title":"HARVEST","unit":""}
-G id=pnl10 {
-    R x=24.5 y=478.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=488 w=685 h=30.8 text=HARVEST size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget panel pnl11 {"x":753,"y":478,"w":713,"h":358,"title":"DARK PHASE","unit":"s"}
-G id=pnl11 {
-    R x=753.5 y=478.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=767 y=488 w=611 h=30.8 text="DARK PHASE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-    T x=1388 y=489.4 w=64 h=28 text=s size=20 f=#9A9A9A align=right valign=middle
-}
-# widget stepper stp1 {"x":39,"y":158.9,"w":683,"h":54,"name":"First pot","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
-G id=stp1 {
-    G id=stp1_gd {
-        R id=stp1_dec press=1 x=498 y=158.9 w=54 h=54
-        R x=498.5 y=159.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=pots {
+    # widget panel pnl8 {"x":24,"y":104,"w":713,"h":358,"title":"POTS","unit":""}
+    G id=pnl8 {
+        R x=24.5 y=104.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=114 w=685 h=30.8 text=POTS size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
     }
-    G id=stp1_gi {
-        R id=stp1_inc press=1 x=668 y=158.9 w=54 h=54
-        R x=668.5 y=159.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=first_pot {
+        # widget stepper stp1 {"x":39,"y":158.9,"w":683,"h":54,"name":"First pot","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
+        G id=stp1 {
+            G id=stp1_gd {
+                R id=stp1_dec press=1 x=498 y=158.9 w=54 h=54
+                R x=498.5 y=159.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp1_gi {
+                R id=stp1_inc press=1 x=668 y=158.9 w=54 h=54
+                R x=668.5 y=159.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=158.9 w=449 h=54 text="First pot" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=158.9 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=166.29999 w=96 h=39.2 text="{$stp1_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=158.9 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt60 {"x":39,"y":214.9,"w":445,"h":28,"style":"unit","text":"Station where the Larre starts","align":"left","state":false,"keys":{}}
+        G id=txt60 {
+            T x=39 y=214.9 w=445 h=28 text="Station where the Larre starts" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=39 y=158.9 w=449 h=54 text="First pot" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=158.9 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=166.29999 w=96 h=39.2 text="{$stp1_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=158.9 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt60 {"x":39,"y":214.9,"w":445,"h":28,"style":"unit","text":"Station where the Larre starts","align":"left","state":false,"keys":{}}
-G id=txt60 {
-    T x=39 y=214.9 w=445 h=28 text="Station where the Larre starts" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp2 {"x":39,"y":258.26666,"w":683,"h":54,"name":"Last pot","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
-G id=stp2 {
-    G id=stp2_gd {
-        R id=stp2_dec press=1 x=498 y=258.26666 w=54 h=54
-        R x=498.5 y=258.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=last_pot {
+        # widget stepper stp2 {"x":39,"y":258.26666,"w":683,"h":54,"name":"Last pot","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
+        G id=stp2 {
+            G id=stp2_gd {
+                R id=stp2_dec press=1 x=498 y=258.26666 w=54 h=54
+                R x=498.5 y=258.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp2_gi {
+                R id=stp2_inc press=1 x=668 y=258.26666 w=54 h=54
+                R x=668.5 y=258.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=258.26666 w=449 h=54 text="Last pot" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=258.26666 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=265.66666 w=96 h=39.2 text="{$stp2_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=258.26666 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt61 {"x":39,"y":314.26666,"w":445,"h":28,"style":"unit","text":"Station where the Larre stops","align":"left","state":false,"keys":{}}
+        G id=txt61 {
+            T x=39 y=314.26666 w=445 h=28 text="Station where the Larre stops" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    G id=stp2_gi {
-        R id=stp2_inc press=1 x=668 y=258.26666 w=54 h=54
-        R x=668.5 y=258.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=dump_station {
+        # widget stepper stp3 {"x":39,"y":357.63333,"w":683,"h":54,"name":"Dump station","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
+        G id=stp3 {
+            G id=stp3_gd {
+                R id=stp3_dec press=1 x=498 y=357.63333 w=54 h=54
+                R x=498.5 y=358.13333 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp3_gi {
+                R id=stp3_inc press=1 x=668 y=357.63333 w=54 h=54
+                R x=668.5 y=358.13333 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=357.63333 w=449 h=54 text="Dump station" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=357.63333 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=365.03333 w=96 h=39.2 text="{$stp3_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=357.63333 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt62 {"x":39,"y":413.63333,"w":445,"h":28,"style":"unit","text":"Station above the export bin","align":"left","state":false,"keys":{}}
+        G id=txt62 {
+            T x=39 y=413.63333 w=445 h=28 text="Station above the export bin" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=39 y=258.26666 w=449 h=54 text="Last pot" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=258.26666 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=265.66666 w=96 h=39.2 text="{$stp2_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=258.26666 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
 }
-# widget text txt61 {"x":39,"y":314.26666,"w":445,"h":28,"style":"unit","text":"Station where the Larre stops","align":"left","state":false,"keys":{}}
-G id=txt61 {
-    T x=39 y=314.26666 w=445 h=28 text="Station where the Larre stops" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp3 {"x":39,"y":357.63333,"w":683,"h":54,"name":"Dump station","fmt":"%.0f","by":1,"min":0,"max":999,"keys":{}}
-G id=stp3 {
-    G id=stp3_gd {
-        R id=stp3_dec press=1 x=498 y=357.63333 w=54 h=54
-        R x=498.5 y=358.13333 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=light_phase {
+    # widget panel pnl9 {"x":753,"y":104,"w":713,"h":358,"title":"LIGHT PHASE","unit":"s"}
+    G id=pnl9 {
+        R x=753.5 y=104.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=767 y=114 w=611 h=30.8 text="LIGHT PHASE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+        T x=1388 y=115.4 w=64 h=28 text=s size=20 f=#9A9A9A align=right valign=middle
     }
-    G id=stp3_gi {
-        R id=stp3_inc press=1 x=668 y=357.63333 w=54 h=54
-        R x=668.5 y=358.13333 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=light_long_day {
+        # widget stepper stp4 {"x":768,"y":159.8,"w":683,"h":54,"name":"Long day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp4 {
+            G id=stp4_gd {
+                R id=stp4_dec press=1 x=1227 y=159.8 w=54 h=54
+                R x=1227.5 y=160.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp4_gi {
+                R id=stp4_inc press=1 x=1397 y=159.8 w=54 h=54
+                R x=1397.5 y=160.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=159.8 w=449 h=54 text="Long day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=159.8 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=167.2 w=96 h=39.2 text="{$stp4_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=159.8 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt63 {"x":768,"y":215.8,"w":445,"h":28,"style":"unit","text":"Potato, wheat, rice and 8 more","align":"left","state":false,"keys":{}}
+        G id=txt63 {
+            T x=768 y=215.8 w=445 h=28 text="Potato, wheat, rice and 8 more" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=39 y=357.63333 w=449 h=54 text="Dump station" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=357.63333 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=365.03333 w=96 h=39.2 text="{$stp3_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=357.63333 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt62 {"x":39,"y":413.63333,"w":445,"h":28,"style":"unit","text":"Station above the export bin","align":"left","state":false,"keys":{}}
-G id=txt62 {
-    T x=39 y=413.63333 w=445 h=28 text="Station above the export bin" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp4 {"x":768,"y":159.8,"w":683,"h":54,"name":"Long day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp4 {
-    G id=stp4_gd {
-        R id=stp4_dec press=1 x=1227 y=159.8 w=54 h=54
-        R x=1227.5 y=160.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=light_short_day {
+        # widget stepper stp5 {"x":768,"y":258.86667,"w":683,"h":54,"name":"Short day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp5 {
+            G id=stp5_gd {
+                R id=stp5_dec press=1 x=1227 y=258.86667 w=54 h=54
+                R x=1227.5 y=259.36667 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp5_gi {
+                R id=stp5_inc press=1 x=1397 y=258.86667 w=54 h=54
+                R x=1397.5 y=259.36667 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=258.86667 w=449 h=54 text="Short day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=258.86667 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=266.26666 w=96 h=39.2 text="{$stp5_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=258.86667 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt64 {"x":768,"y":314.86667,"w":445,"h":28,"style":"unit","text":"Corn, tomato, pumpkin, fern","align":"left","state":false,"keys":{}}
+        G id=txt64 {
+            T x=768 y=314.86667 w=445 h=28 text="Corn, tomato, pumpkin, fern" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    G id=stp4_gi {
-        R id=stp4_inc press=1 x=1397 y=159.8 w=54 h=54
-        R x=1397.5 y=160.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=light_mushrooms {
+        # widget stepper stp6 {"x":768,"y":357.93332,"w":683,"h":54,"name":"Mushrooms","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp6 {
+            G id=stp6_gd {
+                R id=stp6_dec press=1 x=1227 y=357.93332 w=54 h=54
+                R x=1227.5 y=358.43332 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp6_gi {
+                R id=stp6_inc press=1 x=1397 y=357.93332 w=54 h=54
+                R x=1397.5 y=358.43332 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=357.93332 w=449 h=54 text=Mushrooms size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=357.93332 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=365.3333 w=96 h=39.2 text="{$stp6_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=357.93332 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt65 {"x":768,"y":413.93332,"w":445,"h":28,"style":"unit","text":"Mushroom, alien mushroom","align":"left","state":false,"keys":{}}
+        G id=txt65 {
+            T x=768 y=413.93332 w=445 h=28 text="Mushroom, alien mushroom" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=768 y=159.8 w=449 h=54 text="Long day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=159.8 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=167.2 w=96 h=39.2 text="{$stp4_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=159.8 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
 }
-# widget text txt63 {"x":768,"y":215.8,"w":445,"h":28,"style":"unit","text":"Potato, wheat, rice and 8 more","align":"left","state":false,"keys":{}}
-G id=txt63 {
-    T x=768 y=215.8 w=445 h=28 text="Potato, wheat, rice and 8 more" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp5 {"x":768,"y":258.86667,"w":683,"h":54,"name":"Short day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp5 {
-    G id=stp5_gd {
-        R id=stp5_dec press=1 x=1227 y=258.86667 w=54 h=54
-        R x=1227.5 y=259.36667 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=harvest {
+    # widget panel pnl10 {"x":24,"y":478,"w":713,"h":358,"title":"HARVEST","unit":""}
+    G id=pnl10 {
+        R x=24.5 y=478.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=488 w=685 h=30.8 text=HARVEST size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
     }
-    G id=stp5_gi {
-        R id=stp5_inc press=1 x=1397 y=258.86667 w=54 h=54
-        R x=1397.5 y=259.36667 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=perennial_ready_at {
+        # widget stepper stp7 {"x":39,"y":532.9,"w":683,"h":54,"name":"Perennial ready at","fmt":"%.0f","by":1,"min":5,"max":5,"keys":{}}
+        G id=stp7 {
+            G id=stp7_gd {
+                R id=stp7_dec press=1 x=498 y=532.9 w=54 h=54
+                R x=498.5 y=533.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp7_gi {
+                R id=stp7_inc press=1 x=668 y=532.9 w=54 h=54
+                R x=668.5 y=533.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=532.9 w=449 h=54 text="Perennial ready at" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=532.9 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=540.30005 w=96 h=39.2 text="{$stp7_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=532.9 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt66 {"x":39,"y":588.9,"w":445,"h":28,"style":"unit","text":"Growth stage","align":"left","state":false,"keys":{}}
+        G id=txt66 {
+            T x=39 y=588.9 w=445 h=28 text="Growth stage" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=768 y=258.86667 w=449 h=54 text="Short day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=258.86667 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=266.26666 w=96 h=39.2 text="{$stp5_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=258.86667 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt64 {"x":768,"y":314.86667,"w":445,"h":28,"style":"unit","text":"Corn, tomato, pumpkin, fern","align":"left","state":false,"keys":{}}
-G id=txt64 {
-    T x=768 y=314.86667 w=445 h=28 text="Corn, tomato, pumpkin, fern" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp6 {"x":768,"y":357.93332,"w":683,"h":54,"name":"Mushrooms","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp6 {
-    G id=stp6_gd {
-        R id=stp6_dec press=1 x=1227 y=357.93332 w=54 h=54
-        R x=1227.5 y=358.43332 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=annual_ready_at {
+        # widget stepper stp8 {"x":39,"y":632.26666,"w":683,"h":54,"name":"Annual ready at","fmt":"%.0f","by":1,"min":5,"max":5,"keys":{}}
+        G id=stp8 {
+            G id=stp8_gd {
+                R id=stp8_dec press=1 x=498 y=632.26666 w=54 h=54
+                R x=498.5 y=632.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp8_gi {
+                R id=stp8_inc press=1 x=668 y=632.26666 w=54 h=54
+                R x=668.5 y=632.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=632.26666 w=449 h=54 text="Annual ready at" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=632.26666 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=639.6667 w=96 h=39.2 text="{$stp8_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=632.26666 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt67 {"x":39,"y":688.26666,"w":445,"h":28,"style":"unit","text":"Growth stage","align":"left","state":false,"keys":{}}
+        G id=txt67 {
+            T x=39 y=688.26666 w=445 h=28 text="Growth stage" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    G id=stp6_gi {
-        R id=stp6_inc press=1 x=1397 y=357.93332 w=54 h=54
-        R x=1397.5 y=358.43332 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=bin_warning_after {
+        # widget stepper stp9 {"x":39,"y":731.63336,"w":683,"h":54,"name":"Bin warning after","fmt":"%.0f","by":1,"min":1,"max":60,"keys":{}}
+        G id=stp9 {
+            G id=stp9_gd {
+                R id=stp9_dec press=1 x=498 y=731.63336 w=54 h=54
+                R x=498.5 y=732.13336 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp9_gi {
+                R id=stp9_inc press=1 x=668 y=731.63336 w=54 h=54
+                R x=668.5 y=732.13336 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=39 y=731.63336 w=449 h=54 text="Bin warning after" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=498 y=731.63336 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=562 y=739.0334 w=96 h=39.2 text="{$stp9_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=668 y=731.63336 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt68 {"x":39,"y":787.63336,"w":445,"h":28,"style":"unit","text":"Minutes occupied","align":"left","state":false,"keys":{}}
+        G id=txt68 {
+            T x=39 y=787.63336 w=445 h=28 text="Minutes occupied" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=768 y=357.93332 w=449 h=54 text=Mushrooms size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=357.93332 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=365.3333 w=96 h=39.2 text="{$stp6_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=357.93332 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
 }
-# widget text txt65 {"x":768,"y":413.93332,"w":445,"h":28,"style":"unit","text":"Mushroom, alien mushroom","align":"left","state":false,"keys":{}}
-G id=txt65 {
-    T x=768 y=413.93332 w=445 h=28 text="Mushroom, alien mushroom" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp7 {"x":39,"y":532.9,"w":683,"h":54,"name":"Perennial ready at","fmt":"%.0f","by":1,"min":5,"max":5,"keys":{}}
-G id=stp7 {
-    G id=stp7_gd {
-        R id=stp7_dec press=1 x=498 y=532.9 w=54 h=54
-        R x=498.5 y=533.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=dark_phase {
+    # widget panel pnl11 {"x":753,"y":478,"w":713,"h":358,"title":"DARK PHASE","unit":"s"}
+    G id=pnl11 {
+        R x=753.5 y=478.5 w=712 h=357 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=767 y=488 w=611 h=30.8 text="DARK PHASE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+        T x=1388 y=489.4 w=64 h=28 text=s size=20 f=#9A9A9A align=right valign=middle
     }
-    G id=stp7_gi {
-        R id=stp7_inc press=1 x=668 y=532.9 w=54 h=54
-        R x=668.5 y=533.4 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=dark_long_day {
+        # widget stepper stp10 {"x":768,"y":533.8,"w":683,"h":54,"name":"Long day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp10 {
+            G id=stp10_gd {
+                R id=stp10_dec press=1 x=1227 y=533.8 w=54 h=54
+                R x=1227.5 y=534.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp10_gi {
+                R id=stp10_inc press=1 x=1397 y=533.8 w=54 h=54
+                R x=1397.5 y=534.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=533.8 w=449 h=54 text="Long day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=533.8 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=541.2 w=96 h=39.2 text="{$stp10_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=533.8 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt69 {"x":768,"y":589.8,"w":445,"h":28,"style":"unit","text":"Potato, wheat, rice and 8 more","align":"left","state":false,"keys":{}}
+        G id=txt69 {
+            T x=768 y=589.8 w=445 h=28 text="Potato, wheat, rice and 8 more" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=39 y=532.9 w=449 h=54 text="Perennial ready at" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=532.9 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=540.30005 w=96 h=39.2 text="{$stp7_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=532.9 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt66 {"x":39,"y":588.9,"w":445,"h":28,"style":"unit","text":"Growth stage","align":"left","state":false,"keys":{}}
-G id=txt66 {
-    T x=39 y=588.9 w=445 h=28 text="Growth stage" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp8 {"x":39,"y":632.26666,"w":683,"h":54,"name":"Annual ready at","fmt":"%.0f","by":1,"min":5,"max":5,"keys":{}}
-G id=stp8 {
-    G id=stp8_gd {
-        R id=stp8_dec press=1 x=498 y=632.26666 w=54 h=54
-        R x=498.5 y=632.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=dark_short_day {
+        # widget stepper stp11 {"x":768,"y":632.86664,"w":683,"h":54,"name":"Short day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp11 {
+            G id=stp11_gd {
+                R id=stp11_dec press=1 x=1227 y=632.86664 w=54 h=54
+                R x=1227.5 y=633.36664 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp11_gi {
+                R id=stp11_inc press=1 x=1397 y=632.86664 w=54 h=54
+                R x=1397.5 y=633.36664 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=632.86664 w=449 h=54 text="Short day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=632.86664 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=640.26666 w=96 h=39.2 text="{$stp11_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=632.86664 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt70 {"x":768,"y":688.86664,"w":445,"h":28,"style":"unit","text":"Corn, tomato, pumpkin, fern","align":"left","state":false,"keys":{}}
+        G id=txt70 {
+            T x=768 y=688.86664 w=445 h=28 text="Corn, tomato, pumpkin, fern" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    G id=stp8_gi {
-        R id=stp8_inc press=1 x=668 y=632.26666 w=54 h=54
-        R x=668.5 y=632.76666 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    G id=dark_mushrooms {
+        # widget stepper stp12 {"x":768,"y":731.93335,"w":683,"h":54,"name":"Mushrooms","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
+        G id=stp12 {
+            G id=stp12_gd {
+                R id=stp12_dec press=1 x=1227 y=731.93335 w=54 h=54
+                R x=1227.5 y=732.43335 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=stp12_gi {
+                R id=stp12_inc press=1 x=1397 y=731.93335 w=54 h=54
+                R x=1397.5 y=732.43335 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=768 y=731.93335 w=449 h=54 text=Mushrooms size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=1227 y=731.93335 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
+            T x=1291 y=739.3334 w=96 h=39.2 text="{$stp12_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+            T x=1397 y=731.93335 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
+        }
+        # widget text txt71 {"x":768,"y":787.93335,"w":445,"h":28,"style":"unit","text":"Mushroom, alien mushroom","align":"left","state":false,"keys":{}}
+        G id=txt71 {
+            T x=768 y=787.93335 w=445 h=28 text="Mushroom, alien mushroom" size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
     }
-    T x=39 y=632.26666 w=449 h=54 text="Annual ready at" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=632.26666 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=639.6667 w=96 h=39.2 text="{$stp8_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=632.26666 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
 }
-# widget text txt67 {"x":39,"y":688.26666,"w":445,"h":28,"style":"unit","text":"Growth stage","align":"left","state":false,"keys":{}}
-G id=txt67 {
-    T x=39 y=688.26666 w=445 h=28 text="Growth stage" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp9 {"x":39,"y":731.63336,"w":683,"h":54,"name":"Bin warning after","fmt":"%.0f","by":1,"min":1,"max":60,"keys":{}}
-G id=stp9 {
-    G id=stp9_gd {
-        R id=stp9_dec press=1 x=498 y=731.63336 w=54 h=54
-        R x=498.5 y=732.13336 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+G id=bottom_bar {
+    # widget panel pnl12 {"x":24,"y":852,"w":1442,"h":84,"title":"","unit":""}
+    G id=pnl12 {
+        R x=24.5 y=852.5 w=1441 h=83 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
     }
-    G id=stp9_gi {
-        R id=stp9_inc press=1 x=668 y=731.63336 w=54 h=54
-        R x=668.5 y=732.13336 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    # widget button btn26 {"x":39,"y":867,"w":1052,"h":54,"states":[{"label":"BACK","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn26 {
+        R id=btn26_hit click=1 x=39 y=867 w=1052 h=54
+        R x=39.5 y=867.5 w=1051 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=57 y=867 w=1016 h=54 text=BACK size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     }
-    T x=39 y=731.63336 w=449 h=54 text="Bin warning after" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=498 y=731.63336 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=562 y=739.0334 w=96 h=39.2 text="{$stp9_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=668 y=731.63336 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt68 {"x":39,"y":787.63336,"w":445,"h":28,"style":"unit","text":"Minutes occupied","align":"left","state":false,"keys":{}}
-G id=txt68 {
-    T x=39 y=787.63336 w=445 h=28 text="Minutes occupied" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp10 {"x":768,"y":533.8,"w":683,"h":54,"name":"Long day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp10 {
-    G id=stp10_gd {
-        R id=stp10_dec press=1 x=1227 y=533.8 w=54 h=54
-        R x=1227.5 y=534.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    # widget button btn27 {"x":1101,"y":867,"w":350,"h":54,"states":[{"label":"DEVICES","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn27 {
+        R id=btn27_hit click=1 x=1101 y=867 w=350 h=54
+        R x=1101.5 y=867.5 w=349 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=1119 y=867 w=314 h=54 text=DEVICES size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     }
-    G id=stp10_gi {
-        R id=stp10_inc press=1 x=1397 y=533.8 w=54 h=54
-        R x=1397.5 y=534.3 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    T x=768 y=533.8 w=449 h=54 text="Long day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=533.8 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=541.2 w=96 h=39.2 text="{$stp10_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=533.8 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt69 {"x":768,"y":589.8,"w":445,"h":28,"style":"unit","text":"Potato, wheat, rice and 8 more","align":"left","state":false,"keys":{}}
-G id=txt69 {
-    T x=768 y=589.8 w=445 h=28 text="Potato, wheat, rice and 8 more" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp11 {"x":768,"y":632.86664,"w":683,"h":54,"name":"Short day","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp11 {
-    G id=stp11_gd {
-        R id=stp11_dec press=1 x=1227 y=632.86664 w=54 h=54
-        R x=1227.5 y=633.36664 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    G id=stp11_gi {
-        R id=stp11_inc press=1 x=1397 y=632.86664 w=54 h=54
-        R x=1397.5 y=633.36664 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    T x=768 y=632.86664 w=449 h=54 text="Short day" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=632.86664 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=640.26666 w=96 h=39.2 text="{$stp11_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=632.86664 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt70 {"x":768,"y":688.86664,"w":445,"h":28,"style":"unit","text":"Corn, tomato, pumpkin, fern","align":"left","state":false,"keys":{}}
-G id=txt70 {
-    T x=768 y=688.86664 w=445 h=28 text="Corn, tomato, pumpkin, fern" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget stepper stp12 {"x":768,"y":731.93335,"w":683,"h":54,"name":"Mushrooms","fmt":"%.0f","by":15,"min":0,"max":2400,"keys":{}}
-G id=stp12 {
-    G id=stp12_gd {
-        R id=stp12_dec press=1 x=1227 y=731.93335 w=54 h=54
-        R x=1227.5 y=732.43335 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    G id=stp12_gi {
-        R id=stp12_inc press=1 x=1397 y=731.93335 w=54 h=54
-        R x=1397.5 y=732.43335 w=53 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    T x=768 y=731.93335 w=449 h=54 text=Mushrooms size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1227 y=731.93335 w=54 h=54 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=1291 y=739.3334 w=96 h=39.2 text="{$stp12_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=1397 y=731.93335 w=54 h=54 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
-}
-# widget text txt71 {"x":768,"y":787.93335,"w":445,"h":28,"style":"unit","text":"Mushroom, alien mushroom","align":"left","state":false,"keys":{}}
-G id=txt71 {
-    T x=768 y=787.93335 w=445 h=28 text="Mushroom, alien mushroom" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget panel pnl12 {"x":24,"y":852,"w":1442,"h":84,"title":"","unit":""}
-G id=pnl12 {
-    R x=24.5 y=852.5 w=1441 h=83 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-}
-# widget button btn26 {"x":39,"y":867,"w":1052,"h":54,"states":[{"label":"BACK","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn26 {
-    R id=btn26_hit click=1 x=39 y=867 w=1052 h=54
-    R x=39.5 y=867.5 w=1051 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=57 y=867 w=1016 h=54 text=BACK size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget button btn27 {"x":1101,"y":867,"w":350,"h":54,"states":[{"label":"DEVICES","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn27 {
-    R id=btn27_hit click=1 x=1101 y=867 w=350 h=54
-    R x=1101.5 y=867.5 w=349 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=1119 y=867 w=314 h=54 text=DEVICES size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
 }
 G v==lt(ver,11118) {
     R x=0 y=0 w=1490 h=115 f=#000000CC

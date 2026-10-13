@@ -72,3 +72,19 @@ it('a native commit reads only the store: a page the store no longer has is not 
   expect(actions).toEqual([])
   expect(Array.from(ui.container.querySelectorAll('[role=alert]'), e => e.textContent)).toEqual([WIDGET_GONE])
 })
+
+it('keeps a long icon name whole on one line in its placeholder at any zoom', () => {
+  const p = newProject()
+  const at = (zoom: number) => {
+    const page = { ...p.pages[0], size: { w: 460, h: 460 }, scene: { header: { w: 480, h: 480, fit: 'contain' }, defs: [], root: [] },
+      natives: [instance('icon', { x: 0, y: 0, w: 96, h: 96, kind: 'prefab', name: '1929046963' })] }
+    return mount(<NativeLayer page={page} theme={t} zoom={zoom} onSelect={() => {}} />).container.querySelector<HTMLElement>('.vb-native')!
+  }
+  // 96 units are 92, 69 and 23 px at zoom 1, 0.75 and 0.25; the ten characters (7.2 px each at 12 px here, without a canvas)
+  // fill the box less its borders, padding and a spare pixel (15 px), never more than 12 px and never wrapped.
+  expect(at(1).style.fontSize).toBe('12px')
+  expect(parseFloat(at(0.75).style.fontSize)).toBeCloseTo(12 * (69 - 15) / 72, 5)
+  const tiny = at(0.25)
+  expect(parseFloat(tiny.style.fontSize)).toBeCloseTo(12 * (23 - 15) / 72, 5)
+  expect([tiny.style.whiteSpace, tiny.textContent]).toEqual(['', '1929046963'])
+})

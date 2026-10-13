@@ -4,7 +4,7 @@ VectorBuilder is a free web editor for Stationeers console screens. Draw a scree
 
 **Open the builder:** [https://gruffuss.github.io/StationeersConsoleBuilder/](https://gruffuss.github.io/StationeersConsoleBuilder/). Everything runs in your browser; projects are not uploaded.
 
-**Status:** release 3: the Design tab shows the page's settings only when nothing is selected, and dropdown values sit centred. Release 2 added the Power wall (3×2 and 2×3) and Hydro farm (3×2) starters, and a blank page shows nothing. Exports need ScriptedScreens Vector 0.11.118 or newer.
+**Status:** release 4: the Power wall and Hydro farm starters keep their layers as a tree of named groups (each panel with its contents; each plant card, setting and light with its labels), and a game icon's name stays whole in its placeholder at any zoom. Release 3 showed the page's settings only when nothing is selected; release 2 added those three starters. Exports need ScriptedScreens Vector 0.11.118 or newer.
 
 ## What your game needs
 

@@ -9,7 +9,7 @@ import { initialState, reducer } from '../model/store'
 import { SHAPES } from '../model/shapes'
 import { themeOf } from '../theme'
 import { linked } from '../theme/links'
-import { allocUid, putWidget, sanitize } from '../widgets/core'
+import { allocUid, putWidget, sanitize, widgetOf } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
 import type { Params, WidgetEdit } from '../widgets/types'
 import POWER_LUA from './starters/power-wall.lua?raw'
@@ -40,7 +40,78 @@ function placer(p: Project) {
   }
 }
 
-const finish = (p: Project, logic: Partial<Logic>) => reducer(initialState(p), { type: 'setLogic', patch: logic }).project
+/** Starter-only Layers tree. Move the authored nodes themselves, leaving their markers and drawing untouched. */
+function grouped(p: Project, names: Record<string, string>, tails: Record<string, string[]>): Project {
+  const t = themeOf(p), reserved = new Set<string>()
+  // Both custom Lua blocks only read/write device roles and export data; neither names scene nodes.
+  // Their role names (including "larre") therefore do not reserve scene ids.
+  const stack = p.pages.flatMap(pg => [...pg.scene.defs, ...pg.scene.root])
+  for (const pg of p.pages) for (const n of pg.natives ?? []) reserved.add(n.uid)
+  while (stack.length) {
+    const n = stack.pop()!
+    if (typeof n.attrs.id === 'string') reserved.add(n.attrs.id)
+    const w = widgetOf(n, t)
+    if (w) reserved.add(w.uid)
+    stack.push(...n.c ?? [])
+  }
+  for (const pg of p.pages) {
+    const used = new Set(reserved), original = pg.scene.root
+    const refs = new Map(original.map(n => [n, widgetOf(n, t)]))
+    const claim = (base: string) => {
+      let id = base, suffix = 2
+      while (used.has(id)) id = `${base}_${suffix++}`
+      used.add(id)
+      return id
+    }
+    const name = (text: string, fallback: string) => {
+      // SceneText.ReadToken accepts ASCII letters, digits and underscores without quoting.
+      const base = text.replace(/^\$|^\{\$|:.*\}$|\}$/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || fallback
+      return claim(base)
+    }
+    const group = (id: string, c: SrcNode[]): SrcNode => ({ op: 'G', attrs: { id }, c })
+    const inside = (a: Params, b: Params) => Number(b.x) >= Number(a.x) - 0.01 && Number(b.y) >= Number(a.y) - 0.01
+      && Number(b.x) + Number(b.w) <= Number(a.x) + Number(a.w) + 0.01
+      && Number(b.y) + Number(b.h) <= Number(a.y) + Number(a.h) + 0.01
+    const consumed = new Set<SrcNode>()
+    pg.scene.root = original.flatMap(panel => {
+      if (consumed.has(panel)) return []
+      const frame = refs.get(panel)
+      if (frame?.type !== 'panel') return [panel]
+      const children = original.filter(n => n === panel || refs.get(n) && inside(frame.params, refs.get(n)!.params))
+      if (children.length < 2) return [panel]
+      children.forEach(n => consumed.add(n))
+      const tail = (tails[frame.uid] ?? []).map(id => original.find(n => n.attrs.id === id)!)
+      tail.forEach(n => consumed.add(n))
+      const id = names[frame.uid] ? claim(names[frame.uid]) : name(String(frame.params.title), `panel_${original.filter(n => refs.get(n)?.type === 'panel').indexOf(panel) + 1}`)
+      const claimed = new Set<SrcNode>(), contents = children.slice(1)
+      const subgroups = new Map<SrcNode, SrcNode>()
+      for (const [i, control] of contents.entries()) {
+        const w = refs.get(control)!
+        if (claimed.has(control) || w.type === 'text') continue
+        let members = [control]
+        // Cards and compound readings carry independently editable widgets on their faces.
+        if (['button', 'kvtable', 'gauge', 'repeater'].includes(w.type))
+          members.push(...contents.filter(n => n !== control && !claimed.has(n) && inside(w.params, refs.get(n)!.params)))
+        // These labels/notes sit outside the control box and are authored directly beside it.
+        const label = w.type === 'options' ? contents[i - 1] : ['stepper', 'light'].includes(w.type) ? contents[i + 1] : undefined
+        if (label && refs.get(label)?.type === 'text' && !claimed.has(label)) members.push(label)
+        if (members.length < 2) continue
+        members = contents.filter(n => members.includes(n))
+        const text = members.map(n => refs.get(n)!).find(r => r.type === 'text')
+        const title = w.type === 'stepper' ? String(w.params.name) : text ? String(text.params.text) : ''
+        const order = original.filter(n => refs.get(n)?.type === w.type).indexOf(control) + 1
+        const sub = group(names[w.uid] ? claim(names[w.uid]) : name(title, `${w.type}_${order}`), members)
+        subgroups.set(members[0], sub)
+        members.forEach(n => claimed.add(n))
+      }
+      return [group(id, [panel, ...contents.flatMap(n => subgroups.has(n) ? [subgroups.get(n)!] : claimed.has(n) ? [] : [n]), ...tail])]
+    })
+  }
+  return p
+}
+
+const finish = (p: Project, logic: Partial<Logic>, names: Record<string, string> = {}, tails: Record<string, string[]> = {}) =>
+  grouped(reducer(initialState(p), { type: 'setLogic', patch: logic }).project, names, tails)
 
 // ── Power wall ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -221,7 +292,7 @@ export function powerWall(p: Project, wide: boolean): Project {
       { id: 'devices', on: `${devices.uid}_hit`, do: [{ op: 'page', page: DEVICES_PAGE }] },
     ],
     bindings: b as Logic['bindings'], customLua: POWER_LUA, simDevices: POWER_SIMS,
-  })
+  }, { [readings.uid]: 'storage_table', [solarRows.uid]: 'solar_table', [genRows.uid]: 'coal_table' })
 }
 
 // ── Hydro farm ──────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -279,7 +350,7 @@ export function hydroFarm(p: Project): Project {
   p.pages.push(newPage(p)); shape(p, 1, '3x2', 'Plant picker')
   p.pages.push(newPage(p)); shape(p, 2, '3x2', 'Settings')
   const [MAIN, PICKER, SETTINGS] = p.pages.map(pg => pg.id)
-  const W = 1490, add = placer(p), b: Record<string, unknown> = {}
+  const W = 1490, add = placer(p), b: Record<string, unknown> = {}, layerNames: Record<string, string> = {}
   const bind = (key: string, v: unknown) => { b[key] = v }
   const actions: Logic['actions'] = []
   const act = (on: string, steps: Logic['actions'][number]['do'], page?: string) => actions.push({ id: `a${actions.length + 1}`, on, ...(page && { page }), do: steps })
@@ -349,7 +420,7 @@ export function hydroFarm(p: Project): Project {
 
   // Larre: status (its value inked by the state), pot, holding with the item's icon; PAUSE, SEND HOME, DUMP NOW.
   const [rx, ry, rw] = [x2, 408, cw], larreRowH = (304 - 50.9 - 15 - 54 - 6 - 12) / 3
-  panel(0, [rx, ry, rw, 304], 'LARRE')
+  const larrePanel = panel(0, [rx, ry, rw, 304], 'LARRE')
   const status = add(0, 'readoutrow', { x: rx + 15, y: ry + 50.9, w: rw - 30, h: larreRowH, name: 'Status', fmt1: '%.1f', w1: 220 })
   bind(status.slots.st, exp('larreSt')); bind(status.slots.r1, exp('larre'))
   const larreRows = add(0, 'kvtable', { x: rx + 15, y: ry + 50.9 + larreRowH + 6, w: rw - 30, rowH: larreRowH, gap: 6, valueW: 220,
@@ -375,7 +446,7 @@ export function hydroFarm(p: Project): Project {
 
   // Pots: the legend in the heading, 90 cells (30 to a row), the Larre's pot outlined.
   const [ox, oy, ow, oh] = [24, 728, W - 48, 208]
-  panel(0, [ox, oy, ow, oh], 'POTS')
+  const potsPanel = panel(0, [ox, oy, ow, oh], 'POTS')
   const t = themeOf(p), legend: [number, string, number][] = [[1, 'Healthy', 90], [2, 'Growing slowly', 170], [3, 'Damaged', 110], [0, 'Not visited this pass', 230], [-1, 'Larre', 70]]
   let lgx = ox + ow - 19 - legend.reduce((n, [, , w]) => n + 28 + w + 28, -28)
   const marks: SrcNode[] = []
@@ -383,7 +454,7 @@ export function hydroFarm(p: Project): Project {
     // The not-visited swatch at 35 %, as the pots it names.
     if (st >= 0) bind(add(0, 'light', { x: lgx, y: oy + 22, w: 18, h: 18 }, label === 'Not visited this pass' ? { v: 1, parts: {}, root: { o: 0.35 } } : undefined).slots.st, { from: 'const', value: st })
     // The Larre's swatch: the same outline as on its pot.
-    else marks.push(linked({ op: 'R', attrs: { x: lgx + 3, y: oy + 25, w: 12, h: 12, rx: 2, f: 'none', sw: 3 } }, 's', { role: 'text' }, t))
+    else marks.push(linked({ op: 'R', attrs: { id: 'larre_legend', x: lgx + 3, y: oy + 25, w: 12, h: 12, rx: 2, f: 'none', sw: 3 } }, 's', { role: 'text' }, t))
     text(0, lgx + 28, oy + 13, w, 'unit', label)
     lgx += 28 + w + 28
   }
@@ -392,7 +463,7 @@ export function hydroFarm(p: Project): Project {
   bind(pots.slots.n, exp('potN')); bind(pots.slots.lvl, exp('potG')); bind(pots.slots.st, exp('potSt')); bind(pots.slots.fade, exp('potFade'))
   // The Larre's pot: a plain outline around its cell, linked to the theme's text colour (the script's white outline).
   const dx = (ow - 30 + t.geo.space[3]) / cols, cellW = dx - t.geo.space[3]
-  const ring: SrcNode = linked({ op: 'R', attrs: { v: '=gte($potCur,0)', x: `=${x0 - 1.5}+mod($potCur,${cols})*${dx}`, y: `=${y0 - 1.5}+floor($potCur/${cols})*${rstep}`,
+  const ring: SrcNode = linked({ op: 'R', attrs: { id: 'larre_cursor', v: '=gte($potCur,0)', x: `=${x0 - 1.5}+mod($potCur,${cols})*${dx}`, y: `=${y0 - 1.5}+floor($potCur/${cols})*${rstep}`,
     w: cellW + 3, h: 33, rx: 5.5, f: 'none', sw: 3 } }, 's', { role: 'text' }, t)
   p.pages[0] = { ...p.pages[0], scene: { ...p.pages[0].scene, root: [...p.pages[0].scene.root, ...marks, ring] } }
   bind('potCur', exp('potCur'))
@@ -423,17 +494,22 @@ export function hydroFarm(p: Project): Project {
   const sw = (W - 64) / 2, sx2 = 24 + sw + 16
   const sp: [Rect, string, string][] = [[[24, 104, sw, 358], 'POTS', ''], [[sx2, 104, sw, 358], 'LIGHT PHASE', 's'],
     [[24, 478, sw, 358], 'HARVEST', ''], [[sx2, 478, sw, 358], 'DARK PHASE', 's']]
+  const stepLayers: Record<string, string> = {
+    lightLong: 'light_long_day', lightShort: 'light_short_day', lightMush: 'light_mushrooms',
+    darkLong: 'dark_long_day', darkShort: 'dark_short_day', darkMush: 'dark_mushrooms',
+  }
   for (const [r, title, unit] of sp) panel(2, r, title, unit)
   for (const [state, k, row, name, hint, by, min, max] of STEPS) {
     const [x, y, w, h] = sp[k][0], top = sp[k][2] ? 51.8 : 50.9, rh = (h - top - 15 - 12) / 3, ry0 = y + top + row * (rh + 6)
     const stepper = add(2, 'stepper', { x: x + 15, y: ry0 + 4, w: w - 30, h: 54, name, fmt: '%.0f', by, min: typeof min === 'number' ? min : 0, max: typeof max === 'number' ? max : 999 })
+    if (stepLayers[state]) layerNames[stepper.uid] = stepLayers[state]
     bind(stepper.slots.v, { from: 'state', state })
     text(2, x + 15, ry0 + 4 + 54 + 2, w - 30 - 2 * 54 - 2 * 10 - 110, 'unit', hint)
     act(`${stepper.uid}_dec`, [{ op: 'step', state, by: -by, min, max }], SETTINGS)
     act(`${stepper.uid}_inc`, [{ op: 'step', state, by, min, max }], SETTINGS)
   }
   const bbW = Math.round((W - 78 - 10) * 3 / 4)
-  panel(2, [24, 852, W - 48, 84], '')
+  const bottomBar = panel(2, [24, 852, W - 48, 84], '')
   const sBack = button(2, 39, 867, bbW, 54, ['BACK'])
   act(`${sBack.uid}_hit`, toPage(MAIN), SETTINGS)
   const devices = button(2, 39 + bbW + 10, 867, W - 78 - bbW - 10, 54, ['DEVICES'])
@@ -447,5 +523,6 @@ export function hydroFarm(p: Project): Project {
       ...STEPS.map(([name, , , , , , , , init]) => ({ name, type: 'number' as const, init })),
     ],
     actions, bindings: b as Logic['bindings'], customLua: FARM_LUA, simDevices: FARM_SIMS,
-  })
+  }, { ...layerNames, [tile.uid]: 'current_plant', [larrePanel.uid]: 'larre', [bottomBar.uid]: 'bottom_bar' },
+  { [potsPanel.uid]: ['larre_legend', 'larre_cursor'] })
 }

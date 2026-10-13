@@ -728,8 +728,12 @@ default texts, the removed Panel options, the rebuilt Flow duct and the cog's re
 separate, listed changes (E1 plan, Tasks 4–6). Its tokens are absolute design units
 and never scale with the console. Its starter template is "Overview" (M4), with no fidelity
 target to Vanilla +'s OverviewScreen (owner, 2026-10-12). M4's seven independent starter
-projects follow both provided themes; the plain-shape Needle gauge follows E1's raw-shape
-links and remains separate from E1's Gauge widget. The owner's consoles remain examples only.
+projects and the three rebuilt from the owner's consoles (Power wall (3×2), Power wall (2×3),
+Hydro farm (3×2); owner, 2026-10-13) follow both provided themes; the plain-shape Needle gauge
+follows E1's raw-shape links and remains separate from E1's Gauge widget. The three console
+starters keep their layers as a tree of named groups: each panel with what lies inside it, and
+inside a panel each card, setting or light with its labels; lone widgets stay at the top
+(owner, 2026-10-13). The owner's consoles remain examples only.
 
 Things in its README the vector layer cannot honour:
 - video;
@@ -1938,3 +1942,5 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-13 · Inspector (§4), owner: "yes" to moving the Page section (name, console size, background) to the top of the Design tab when nothing is selected; under a selection it stays last and collapsed. The same UI round: the console size opens from the frame label above the page, Snap and Source show their on state, dropdown lists are styled, and checkable menu items show a check.
 - 2026-10-13 · Starters (§5.2), owner: his Power and Hydro farm consoles become starters rebuilt from the builder's widgets, looks from the theme and behaviour from his scripts, at their own shapes and never resized ("do not resize them"): Power wall (3×2), Power wall (2×3) and Hydro farm (3×2); docs/templates-power-farm.md maps every device, read, write and page and lists what could not be built. The Data panel's recipes are rewritten in plain words (owner: "text like this mane no sense for regular users ... make it regular human readable pls").
 - 2026-10-13 · Inspector (§5.4), owner, asking "why is it the page option present on the design tb of every element": the Design tab leaves the Page section out under a selection, superseding the earlier entry's "under a selection it stays last and collapsed"; it still leads the tab when nothing is selected, and Custom in the frame label's console sizes clears the selection to open it. The same round centres a styled dropdown's value in its control.
+- 2026-10-13 · Starter layers (§5.2), owner: "can this be layers ande sublayers like a tree, now everithing on the page is the same zdepth layer and it is a mess :))": the three console starters are authored as trees of named groups (each panel with its contents; each card, setting or light with its labels; lone widgets at the top); ids, bindings, the custom Lua and the draw order of overlapping elements are unchanged. An icon placeholder's name now stays whole on one line at any zoom; a ten-digit prefab hash was cut.
+- 2026-10-13 · Game icons in groups (§5.1), owner, choosing "Inside their card" over a Layers section of their own or leaving them out of Layers: each game icon belongs to the layer group it sits on, shown inside it in the Layers panel, marked as drawn above the page, and moving the group moves it. Planned; not built yet.

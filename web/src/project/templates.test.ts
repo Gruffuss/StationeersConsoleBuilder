@@ -32,7 +32,7 @@ it('accepts provided Theme objects without storing them as imports', () => {
   expect(p.theme).toBe('vanilla-plus')
   expect(p.themes).toBeUndefined()
 })
-import { allocUid, expandRoot, putWidget, sanitize, widgetOf } from '../widgets/core'
+import { allocUid, expandRoot, putWidget, sanitize, widgetOf, widgetsIn } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
 import type { Params } from '../widgets/types'
 import { TEMPLATES, type TemplateId } from './templates'
@@ -307,9 +307,9 @@ describe('starter templates', () => {
         expect(pg.scene.defs.some(n => n.op.toUpperCase() === 'FONT')).toBe(false)
         expect((pg.natives ?? []).length > 0).toBe(id === 'hydro-farm' && pg.id !== 'p3')
         const roots = pg.scene.root.map(n => widgetOf(n, t))
-        // Plain shapes: the needle gauge's six, and the Hydro farm's outlines round the Larre's pot and its legend swatch.
-        expect(roots.filter(w => !w).length).toBe(id === 'needle-gauge' ? 6 : id === 'hydro-farm' && pg.id === 'p1' ? 2 : 0)
-        const widgets = roots.filter(w => w !== null)
+        // Plain root nodes include the console panels' groups; Hydro's outlines belong to Pots.
+        expect(roots.filter(w => !w).length).toBe(id === 'needle-gauge' ? 6 : id === 'hydro-farm' ? pg.id === 'p1' ? 6 : pg.id === 'p2' ? 1 : 5 : isConsole(id) ? 7 : 0)
+        const widgets = widgetsIn(pg.scene, t).map(w => w.ref)
         expect(widgets.length === 0).toBe(id === 'blank')
         uids.push(...widgets.map(w => w.uid), ...(pg.natives ?? []).map(n => n.uid))
         const boxes = [...widgets, ...pg.natives ?? []].map(w => {
@@ -396,6 +396,94 @@ describe('plain-shape needle gauge', () => {
 })
 
 describe('the Power wall and Hydro farm starters (docs/templates-power-farm.md)', () => {
+  it.each(CONSOLES)('%s organizes every panel and its contents in the Layers tree', id => {
+    for (const p of [authored(id), templateProject(id)]) {
+      const t = themeOf(p)
+      for (const pg of p.pages) {
+        const widgets = widgetsIn(pg.scene, t)
+        const inside = (a: Params, b: Params) => Number(b.x) >= Number(a.x) - 0.01 && Number(b.y) >= Number(a.y) - 0.01
+          && Number(b.x) + Number(b.w) <= Number(a.x) + Number(a.w) + 0.01
+          && Number(b.y) + Number(b.h) <= Number(a.y) + Number(a.h) + 0.01
+        const panels = widgets.filter(w => w.ref.type === 'panel')
+        for (const panel of panels) {
+          expect(panel.path, panel.ref.uid).toHaveLength(2)
+          expect(panel.path[1], panel.ref.uid).toBe(0)
+          const group = pg.scene.root[panel.path[0]]
+          expect(widgetOf(group, t)).toBeNull()
+          expect(group.op).toBe('G')
+          expect(group.c!.length).toBeGreaterThan(1)
+          for (const w of widgets.filter(w => w !== panel && inside(panel.ref.params, w.ref.params)))
+            expect(w.path[0], `${panel.ref.uid} contains ${w.ref.uid}`).toBe(panel.path[0])
+        }
+        for (const root of pg.scene.root) {
+          const w = widgetOf(root, t)
+          if (w) expect(panels.some(panel => inside(panel.ref.params, w.params)), w.uid).toBe(false)
+          else if (root.op === 'G') expect(widgetOf(root.c![0], t)?.type).toBe('panel')
+          else expect(root.op).toBe('R')
+        }
+      }
+    }
+  })
+  it.each(CONSOLES)('%s keeps named control groups distinct from existing scene ids and uids', id => {
+    const p = templateProject(id), t = themeOf(p)
+    const allWidgetIds = p.pages.flatMap(pg => [...widgetsIn(pg.scene, t).map(w => w.ref.uid), ...(pg.natives ?? []).map(n => n.uid)])
+    for (const pg of p.pages) {
+      const groups = new Map<string, SrcNode>(), nodeIds: string[] = [], stack = [...pg.scene.defs, ...pg.scene.root]
+      const identified = [...stack]
+      while (identified.length) {
+        const n = identified.pop()!
+        if (typeof n.attrs.id === 'string') nodeIds.push(n.attrs.id)
+        identified.push(...n.c ?? [])
+      }
+      while (stack.length) {
+        const n = stack.pop()!, w = widgetOf(n, t)
+        if (n.op === 'G' && !w) {
+          const id = String(n.attrs.id)
+          expect(id).toMatch(/^[a-z][a-z0-9_]*$/)
+          expect(n.c!.length, id).toBeGreaterThan(1)
+          expect(allWidgetIds).not.toContain(id)
+          groups.set(id, n)
+        }
+        if (w) expect(widgetsIn({ ...pg.scene, root: n.c ?? [] }, t)).toEqual([])
+        if (!w) stack.push(...n.c ?? [])
+      }
+      expect(new Set(nodeIds).size).toBe(nodeIds.length)
+      for (const { path, ref: w } of widgetsIn(pg.scene, t)) {
+        if (w.type === 'stepper' || w.type === 'light') {
+          expect(path).toHaveLength(3)
+          const pair = pg.scene.root[path[0]].c![path[1]]
+          expect(pair.c!.map(n => widgetOf(n, t)?.type)).toEqual([w.type, 'text'])
+          const label = w.type === 'stepper' ? String(w.params.name) : String(widgetOf(pair.c![1], t)!.params.text)
+          const base = label.toLowerCase().replace(/\s+/g, '_'), panel = pg.scene.root[path[0]].attrs.id
+          const prefix = panel === 'light_phase' ? 'light_' : panel === 'dark_phase' ? 'dark_' : ''
+          expect(pair.attrs.id).toBe(prefix + base)
+        }
+        if (id === 'hydro-farm' && pg.id === 'p2' && w.type === 'button' && w.params.states && !(w.params.states as Params[])[0].label) {
+          expect(path).toHaveLength(3)
+          const card = pg.scene.root[path[0]].c![path[1]]
+          expect(card.c!.map(n => widgetOf(n, t)?.type)).toEqual(['button', 'text', 'text', 'text'])
+          expect(card.attrs.id).toBe(String(widgetOf(card.c![1], t)!.params.text).toLowerCase().replace(/\s+/g, '_'))
+        }
+      }
+      if (id.startsWith('power-wall')) {
+        expect(groups.get('override')!.c!.map(n => widgetOf(n, t)?.type)).toEqual(['text', 'options'])
+        expect(groups.get('storage_table')!.c!.map(n => widgetOf(n, t)?.uid)).toEqual(['kv1', 'txt1'])
+        expect(groups.get('solar_table')!.c!.map(n => widgetOf(n, t)?.uid)).toEqual(['rep3', 'rep4', 'rep5', 'al1'])
+        expect(groups.get('coal_table')!.c!.map(n => widgetOf(n, t)?.uid)).toEqual(['rep6', 'rep7'])
+      }
+      if (id === 'hydro-farm' && pg.id === 'p1') {
+        expect(groups.get('lights')!.c!.map(n => widgetOf(n, t)?.type)).toEqual(['text', 'options'])
+        expect(groups.get('current_plant')!.c!.map(n => widgetOf(n, t)?.type)).toEqual(['button', 'text', 'text', 'button'])
+        expect(groups.get('larre')!.c![0].attrs.id).toBe('pnl4')
+        expect(pg.scene.root.at(-1)).toBe(groups.get('pots'))
+        expect(groups.get('pots')!.c!.slice(-2).map(n => [n.op, n.attrs.id])).toEqual([['R', 'larre_legend'], ['R', 'larre_cursor']])
+        expect(pg.scene.root.some(n => n.op === 'R')).toBe(false)
+      }
+      if (id === 'hydro-farm' && pg.id === 'p3') {
+        expect(groups.get('bottom_bar')!.c!.map(n => widgetOf(n, t)?.uid)).toEqual(['pnl12', 'btn26', 'btn27'])
+      }
+    }
+  })
   it.each(CONSOLES)('%s opens at its console shape and is never resized', id => {
     const p = templateProject(id)
     const want = id === 'power-wall-2x3' ? { shape: 'v3x2', px: { w: 460, h: 714 }, units: { w: 960, h: 1490 } } : { shape: '3x2', px: { w: 714, h: 460 }, units: { w: 1490, h: 960 } }
@@ -416,7 +504,7 @@ describe('the Power wall and Hydro farm starters (docs/templates-power-farm.md)'
     expect(p.actions.map(a => [a.id, a.do])).toEqual([
       ['mode0', [{ op: 'set', state: 'mode', value: '0' }]], ['mode1', [{ op: 'set', state: 'mode', value: '1' }]], ['mode2', [{ op: 'set', state: 'mode', value: '2' }]],
       ['park', [{ op: 'toggle', state: 'parked' }]], ['devices', [{ op: 'page', page: DEVICES_PAGE }]]])
-    const t = themeOf(p), widgets = p.pages[0].scene.root.map(n => widgetOf(n, t)!)
+    const t = themeOf(p), widgets = widgetsIn(p.pages[0].scene, t).map(w => w.ref)
     const labels = widgets.filter(w => w.type === 'button').map(w => (w.params.states as { label: string }[]).map(s => s.label))
     expect(labels).toEqual([['PARK PANELS', 'RESUME TRACKING'], ['DEVICES']])
     expect(widgets.filter(w => w.type === 'options').map(w => (w.params.options as { label: string }[]).map(o => o.label))).toEqual([['AUTO', 'ON', 'OFF']])
@@ -444,8 +532,8 @@ describe('the Power wall and Hydro farm starters (docs/templates-power-farm.md)'
     expect(stepping).toContainEqual({ op: 'step', state: 'last', by: -1, min: 'S.first', max: 999 })
     expect(stepping).toContainEqual({ op: 'step', state: 'darkMush', by: -15, min: 0, max: 2400 })
     expect(p.pages.map(pg => (widgetOf(pg.scene.root[0], t)!.params.title))).toEqual(['HYDRO FARM', 'HYDRO FARM', 'HYDRO FARM SETTINGS'])
-    expect(p.pages[1].scene.root.map(n => widgetOf(n, t)).filter(w => w?.type === 'button')).toHaveLength(18)
-    expect(p.pages[2].scene.root.map(n => widgetOf(n, t)).filter(w => w?.type === 'stepper')).toHaveLength(12)
+    expect(widgetsIn(p.pages[1].scene, t).filter(w => w.ref.type === 'button')).toHaveLength(18)
+    expect(widgetsIn(p.pages[2].scene, t).filter(w => w.ref.type === 'stepper')).toHaveLength(12)
     expect(p.pages[1].natives!.map(n => n.params.name)).toEqual(['1929046963', '-1057658015', '658916791', '1924673028', '258339687', '2044798572', '176446172',
       '-998592080', '1277828144', '892110467', '266654416', '2042955224', '-800947386', '851290561', '-1414203269', '-177792789', '1819167057'])
   })

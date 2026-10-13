@@ -147,2505 +147,2601 @@
           {
             "op": "G",
             "attrs": {
-              "id": "pnl1"
+              "id": "storage"
             },
             "c": [
               {
-                "op": "R",
+                "op": "G",
                 "attrs": {
-                  "x": 24.5,
-                  "y": 104.5,
-                  "w": 911,
-                  "h": 415.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 38,
-                  "y": 114,
-                  "w": 884,
-                  "h": 30.799999237060547,
-                  "text": "STORAGE",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl1 {\"x\":24,\"y\":104,\"w\":912,\"h\":416.5,\"title\":\"STORAGE\",\"unit\":\"\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "ro1"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 258,
-                  "w": 418,
-                  "h": 24,
-                  "rx": 3,
-                  "f": "#121212"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 43,
-                  "y": 262,
-                  "w": "=clamp($ro1_lvl,0,1)*410",
-                  "h": 16,
-                  "rx": 2,
-                  "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 39,
-                  "y": 124,
-                  "w": 362,
-                  "h": 144,
-                  "text": "{$ro1_v:%.0f}",
-                  "size": 120,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 409,
-                  "y": 187.36093139648438,
-                  "w": 48,
-                  "h": 67.19999694824219,
-                  "text": "%",
-                  "size": 48,
-                  "f": "#9A9A9A",
-                  "valign": "middle"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 39,
-                  "y": 292,
-                  "w": 418,
-                  "h": 33.599998474121094,
-                  "text": "$ro1_status",
-                  "size": 24,
-                  "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 39,
-                  "y": 292,
-                  "w": 418,
-                  "h": 33.599998474121094,
-                  "text": "{$ro1_sub:%.1f}",
-                  "size": 22,
-                  "f": "#C4C4C4",
-                  "align": "right",
-                  "valign": "middle"
-                }
-              }
-            ],
-            "comments": [
-              "widget readout ro1 {\"x\":39,\"y\":124,\"w\":418,\"h\":201.6,\"variant\":\"hero\",\"caption\":\"Label\",\"unit\":\"%\",\"fmt\":\"%.0f\",\"bar\":true,\"subFmt\":\"%.1f\",\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "kv1"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 154.89999389648438,
-                  "w": 418,
-                  "h": 50,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 154.89999389648438,
-                  "w": 200,
-                  "h": 50,
-                  "text": "Stored",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 154.89999389648438,
-                  "w": 180,
-                  "h": 50,
-                  "text": "$kv1_v0",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 210.89999389648438,
-                  "w": 418,
-                  "h": 50,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 210.89999389648438,
-                  "w": 200,
-                  "h": 50,
-                  "text": "Capacity",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 210.89999389648438,
-                  "w": 180,
-                  "h": 50,
-                  "text": "$kv1_v1",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 266.8999938964844,
-                  "w": 418,
-                  "h": 50,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 266.8999938964844,
-                  "w": 180,
-                  "h": 50,
-                  "text": "$kv1_v2",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 322.8999938964844,
-                  "w": 418,
-                  "h": 50,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 322.8999938964844,
-                  "w": 200,
-                  "h": 50,
-                  "text": "Batteries",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 322.8999938964844,
-                  "w": 180,
-                  "h": 50,
-                  "text": "{$kv1_v3:%.0f}",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget kvtable kv1 {\"x\":503,\"y\":154.9,\"w\":418,\"h\":218,\"rows\":[{\"caption\":\"Stored\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Capacity\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Batteries\",\"fmt\":\"%.0f\",\"state\":false,\"key\":3}],\"rowH\":50,\"gap\":6,\"valueW\":180,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt1"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 266.8999938964844,
-                  "w": 200,
-                  "h": 50,
-                  "text": "$timeCaption",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt1 {\"x\":517,\"y\":266.9,\"w\":200,\"h\":50,\"style\":\"value\",\"text\":\"$timeCaption\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep1"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 396,
-                  "w": 418,
-                  "h": 72
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 16
+                  "id": "pnl1"
                 },
                 "c": [
                   {
-                    "op": "G",
+                    "op": "R",
                     "attrs": {
-                      "v": "=lt(i,$rep1_n)"
-                    },
-                    "c": [
-                      {
-                        "op": "R",
-                        "attrs": {
-                          "x": "=39+mod(i,8)*53.5",
-                          "y": "=396+floor(i/8)*48",
-                          "w": 43.5,
-                          "h": 24,
-                          "rx": 3,
-                          "f": "#121212"
-                        }
-                      },
-                      {
-                        "op": "R",
-                        "attrs": {
-                          "x": "=39+mod(i,8)*53.5+4",
-                          "y": "=396+floor(i/8)*48+4",
-                          "w": "=clamp($rep1_lvl[i],0,1)*35.5",
-                          "h": 16,
-                          "rx": 2,
-                          "f": "=if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))"
-                        }
-                      }
-                    ]
+                      "x": 24.5,
+                      "y": 104.5,
+                      "w": 911,
+                      "h": 415.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 38,
+                      "y": 114,
+                      "w": 884,
+                      "h": 30.799999237060547,
+                      "text": "STORAGE",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
                   }
+                ],
+                "comments": [
+                  "widget panel pnl1 {\"x\":24,\"y\":104,\"w\":912,\"h\":416.5,\"title\":\"STORAGE\",\"unit\":\"\"}"
                 ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep1 {\"x\":39,\"y\":396,\"w\":418,\"h\":72,\"max\":16,\"layout\":\"grid\",\"cols\":8,\"pitch\":48,\"item\":\"bar\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep2"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 399.5,
-                  "w": 418,
-                  "h": 100
-                }
               },
               {
-                "op": "RP",
+                "op": "G",
                 "attrs": {
-                  "n": 2
+                  "id": "ro1"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 258,
+                      "w": 418,
+                      "h": 24,
+                      "rx": 3,
+                      "f": "#121212"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 43,
+                      "y": 262,
+                      "w": "=clamp($ro1_lvl,0,1)*410",
+                      "h": 16,
+                      "rx": 2,
+                      "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 39,
+                      "y": 124,
+                      "w": 362,
+                      "h": 144,
+                      "text": "{$ro1_v:%.0f}",
+                      "size": 120,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 409,
+                      "y": 187.36093139648438,
+                      "w": 48,
+                      "h": 67.19999694824219,
+                      "text": "%",
+                      "size": 48,
+                      "f": "#9A9A9A",
+                      "valign": "middle"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 39,
+                      "y": 292,
+                      "w": 418,
+                      "h": 33.599998474121094,
+                      "text": "$ro1_status",
+                      "size": 24,
+                      "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 39,
+                      "y": 292,
+                      "w": 418,
+                      "h": 33.599998474121094,
+                      "text": "{$ro1_sub:%.1f}",
+                      "size": 22,
+                      "f": "#C4C4C4",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget readout ro1 {\"x\":39,\"y\":124,\"w\":418,\"h\":201.6,\"variant\":\"hero\",\"caption\":\"Label\",\"unit\":\"%\",\"fmt\":\"%.0f\",\"bar\":true,\"subFmt\":\"%.1f\",\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "storage_table"
                 },
                 "c": [
                   {
                     "op": "G",
                     "attrs": {
-                      "v": "=lt(i,$rep2_n)"
+                      "id": "kv1"
                     },
                     "c": [
                       {
                         "op": "R",
                         "attrs": {
                           "x": 503,
-                          "y": "=399.5+i*56",
+                          "y": 154.89999389648438,
                           "w": 418,
-                          "h": 44,
+                          "h": 50,
                           "rx": 4,
                           "f": "#2C2C2C"
                         }
                       },
                       {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=1-eq($rep2_st[i],1)-eq($rep2_st[i],2)-eq($rep2_st[i],3)",
-                          "cx": 525,
-                          "cy": "=399.5+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#9A9A9A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep2_st[i],1)",
-                          "cx": 525,
-                          "cy": "=399.5+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#4CC38A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep2_st[i],2)",
-                          "cx": 525,
-                          "cy": "=399.5+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#F0B429"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep2_st[i],3)",
-                          "cx": 525,
-                          "cy": "=399.5+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#EF5350"
-                        }
-                      },
-                      {
                         "op": "T",
                         "attrs": {
-                          "x": 543,
-                          "y": "=399.5+i*56",
-                          "w": "=lerp(294,364,clamp(and($rep2_ready,eq($rep2_hasv[i],0)),0,1))",
-                          "h": 44,
-                          "text": "$rep2_name[i]",
+                          "x": 517,
+                          "y": 154.89999389648438,
+                          "w": 200,
+                          "h": 50,
+                          "text": "Stored",
                           "size": 24,
                           "f": "#F2F2F2",
                           "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
+                          "fit": "ellipsis"
                         }
                       },
                       {
                         "op": "T",
                         "attrs": {
-                          "v": "=not(and($rep2_ready,eq($rep2_hasv[i],0)))",
-                          "x": 847,
-                          "y": "=399.5+i*56",
-                          "w": 60,
-                          "h": 44,
-                          "text": "{$rep2_v[i]:%.0f}",
+                          "x": 727,
+                          "y": 154.89999389648438,
+                          "w": 180,
+                          "h": 50,
+                          "text": "$kv1_v0",
                           "size": 28,
                           "f": "#F2F2F2",
                           "align": "right",
-                          "valign": "middle"
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 503,
+                          "y": 210.89999389648438,
+                          "w": 418,
+                          "h": 50,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 517,
+                          "y": 210.89999389648438,
+                          "w": 200,
+                          "h": 50,
+                          "text": "Capacity",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 727,
+                          "y": 210.89999389648438,
+                          "w": 180,
+                          "h": 50,
+                          "text": "$kv1_v1",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 503,
+                          "y": 266.8999938964844,
+                          "w": 418,
+                          "h": 50,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 727,
+                          "y": 266.8999938964844,
+                          "w": 180,
+                          "h": 50,
+                          "text": "$kv1_v2",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 503,
+                          "y": 322.8999938964844,
+                          "w": 418,
+                          "h": 50,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 517,
+                          "y": 322.8999938964844,
+                          "w": 200,
+                          "h": 50,
+                          "text": "Batteries",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 727,
+                          "y": 322.8999938964844,
+                          "w": 180,
+                          "h": 50,
+                          "text": "{$kv1_v3:%.0f}",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle",
+                          "fit": "ellipsis"
                         }
                       }
+                    ],
+                    "comments": [
+                      "widget kvtable kv1 {\"x\":503,\"y\":154.9,\"w\":418,\"h\":218,\"rows\":[{\"caption\":\"Stored\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Capacity\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Batteries\",\"fmt\":\"%.0f\",\"state\":false,\"key\":3}],\"rowH\":50,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "txt1"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 517,
+                          "y": 266.8999938964844,
+                          "w": 200,
+                          "h": 50,
+                          "text": "$timeCaption",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      }
+                    ],
+                    "comments": [
+                      "widget text txt1 {\"x\":517,\"y\":266.9,\"w\":200,\"h\":50,\"style\":\"value\",\"text\":\"$timeCaption\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
                     ]
                   }
                 ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "rep1"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 396,
+                      "w": 418,
+                      "h": 72
+                    }
+                  },
+                  {
+                    "op": "RP",
+                    "attrs": {
+                      "n": 16
+                    },
+                    "c": [
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "v": "=lt(i,$rep1_n)"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": "=39+mod(i,8)*53.5",
+                              "y": "=396+floor(i/8)*48",
+                              "w": 43.5,
+                              "h": 24,
+                              "rx": 3,
+                              "f": "#121212"
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": "=39+mod(i,8)*53.5+4",
+                              "y": "=396+floor(i/8)*48+4",
+                              "w": "=clamp($rep1_lvl[i],0,1)*35.5",
+                              "h": 16,
+                              "rx": 2,
+                              "f": "=if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "comments": [
+                  "widget repeater rep1 {\"x\":39,\"y\":396,\"w\":418,\"h\":72,\"max\":16,\"layout\":\"grid\",\"cols\":8,\"pitch\":48,\"item\":\"bar\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "rep2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 399.5,
+                      "w": 418,
+                      "h": 100
+                    }
+                  },
+                  {
+                    "op": "RP",
+                    "attrs": {
+                      "n": 2
+                    },
+                    "c": [
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "v": "=lt(i,$rep2_n)"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": 503,
+                              "y": "=399.5+i*56",
+                              "w": 418,
+                              "h": 44,
+                              "rx": 4,
+                              "f": "#2C2C2C"
+                            }
+                          },
+                          {
+                            "op": "C",
+                            "attrs": {
+                              "v": "=1-eq($rep2_st[i],1)-eq($rep2_st[i],2)-eq($rep2_st[i],3)",
+                              "cx": 525,
+                              "cy": "=399.5+i*56+22",
+                              "rx": 8,
+                              "ry": 8,
+                              "f": "#9A9A9A"
+                            }
+                          },
+                          {
+                            "op": "C",
+                            "attrs": {
+                              "v": "=eq($rep2_st[i],1)",
+                              "cx": 525,
+                              "cy": "=399.5+i*56+22",
+                              "rx": 8,
+                              "ry": 8,
+                              "f": "#4CC38A"
+                            }
+                          },
+                          {
+                            "op": "C",
+                            "attrs": {
+                              "v": "=eq($rep2_st[i],2)",
+                              "cx": 525,
+                              "cy": "=399.5+i*56+22",
+                              "rx": 8,
+                              "ry": 8,
+                              "f": "#F0B429"
+                            }
+                          },
+                          {
+                            "op": "C",
+                            "attrs": {
+                              "v": "=eq($rep2_st[i],3)",
+                              "cx": 525,
+                              "cy": "=399.5+i*56+22",
+                              "rx": 8,
+                              "ry": 8,
+                              "f": "#EF5350"
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "x": 543,
+                              "y": "=399.5+i*56",
+                              "w": "=lerp(294,364,clamp(and($rep2_ready,eq($rep2_hasv[i],0)),0,1))",
+                              "h": 44,
+                              "text": "$rep2_name[i]",
+                              "size": 24,
+                              "f": "#F2F2F2",
+                              "valign": "middle",
+                              "fit": "ellipsis",
+                              "missing": ""
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "v": "=not(and($rep2_ready,eq($rep2_hasv[i],0)))",
+                              "x": 847,
+                              "y": "=399.5+i*56",
+                              "w": 60,
+                              "h": 44,
+                              "text": "{$rep2_v[i]:%.0f}",
+                              "size": 28,
+                              "f": "#F2F2F2",
+                              "align": "right",
+                              "valign": "middle"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "comments": [
+                  "widget repeater rep2 {\"x\":503,\"y\":399.5,\"w\":418,\"h\":100,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":60,\"click\":false,\"fade\":false,\"keys\":{}}"
+                ]
               }
-            ],
-            "comments": [
-              "widget repeater rep2 {\"x\":503,\"y\":399.5,\"w\":418,\"h\":100,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":60,\"click\":false,\"fade\":false,\"keys\":{}}"
             ]
           },
           {
             "op": "G",
             "attrs": {
-              "id": "pnl2"
+              "id": "now"
             },
             "c": [
               {
-                "op": "R",
+                "op": "G",
                 "attrs": {
-                  "x": 24.5,
-                  "y": 537,
-                  "w": 447,
-                  "h": 297.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
+                  "id": "pnl2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 24.5,
+                      "y": 537,
+                      "w": 447,
+                      "h": 297.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 38,
+                      "y": 546.5,
+                      "w": 346,
+                      "h": 30.799999237060547,
+                      "text": "NOW",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 394,
+                      "y": 547.9000244140625,
+                      "w": 64,
+                      "h": 28,
+                      "text": "kW",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl2 {\"x\":24,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"NOW\",\"unit\":\"kW\"}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 38,
-                  "y": 546.5,
-                  "w": 346,
-                  "h": 30.799999237060547,
-                  "text": "NOW",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 394,
-                  "y": 547.9000244140625,
-                  "w": 64,
-                  "h": 28,
-                  "text": "kW",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "align": "right",
-                  "valign": "middle"
-                }
+                  "id": "kv2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 588.2999877929688,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 53,
+                      "y": 588.2999877929688,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Solar",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 263,
+                      "y": 588.2999877929688,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv2_v0",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 647.7249755859375,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 53,
+                      "y": 647.7249755859375,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Coal",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 263,
+                      "y": 647.7249755859375,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv2_v1",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 707.1499633789062,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 53,
+                      "y": 707.1499633789062,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Using",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 263,
+                      "y": 707.1499633789062,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv2_v2",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 766.5750122070312,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 53,
+                      "y": 766.5750122070312,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Net",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 263,
+                      "y": 766.5750122070312,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv2_v3",
+                      "size": 28,
+                      "f": "=if(eq($kv2_s3,2),#F0B429,if(eq($kv2_s3,3),#EF5350,#F2F2F2))",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget kvtable kv2 {\"x\":39,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Using\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+                ]
               }
-            ],
-            "comments": [
-              "widget panel pnl2 {\"x\":24,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"NOW\",\"unit\":\"kW\"}"
             ]
           },
           {
             "op": "G",
             "attrs": {
-              "id": "kv2"
+              "id": "yesterday"
             },
             "c": [
               {
-                "op": "R",
+                "op": "G",
                 "attrs": {
-                  "x": 39,
-                  "y": 588.2999877929688,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
+                  "id": "pnl3"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 488.5,
+                      "y": 537,
+                      "w": 447,
+                      "h": 297.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 502,
+                      "y": 546.5,
+                      "w": 346,
+                      "h": 30.799999237060547,
+                      "text": "YESTERDAY",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 858,
+                      "y": 547.9000244140625,
+                      "w": 64,
+                      "h": 28,
+                      "text": "MJ",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl3 {\"x\":488,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"YESTERDAY\",\"unit\":\"MJ\"}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 53,
-                  "y": 588.2999877929688,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Solar",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 263,
-                  "y": 588.2999877929688,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv2_v0",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 647.7249755859375,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 53,
-                  "y": 647.7249755859375,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Coal",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 263,
-                  "y": 647.7249755859375,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv2_v1",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 707.1499633789062,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 53,
-                  "y": 707.1499633789062,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Using",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 263,
-                  "y": 707.1499633789062,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv2_v2",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 766.5750122070312,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 53,
-                  "y": 766.5750122070312,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Net",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 263,
-                  "y": 766.5750122070312,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv2_v3",
-                  "size": 28,
-                  "f": "=if(eq($kv2_s3,2),#F0B429,if(eq($kv2_s3,3),#EF5350,#F2F2F2))",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
+                  "id": "kv3"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 588.2999877929688,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 588.2999877929688,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Solar",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 588.2999877929688,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv3_v0",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 647.7249755859375,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 647.7249755859375,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Coal",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 647.7249755859375,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv3_v1",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 707.1499633789062,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 707.1499633789062,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Used",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 707.1499633789062,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv3_v2",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 766.5750122070312,
+                      "w": 418,
+                      "h": 53.42499923706055,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 766.5750122070312,
+                      "w": 200,
+                      "h": 53.42499923706055,
+                      "text": "Net",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 766.5750122070312,
+                      "w": 180,
+                      "h": 53.42499923706055,
+                      "text": "$kv3_v3",
+                      "size": 28,
+                      "f": "=if(eq($kv3_s3,2),#F0B429,if(eq($kv3_s3,3),#EF5350,#F2F2F2))",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget kvtable kv3 {\"x\":503,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Used\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+                ]
               }
-            ],
-            "comments": [
-              "widget kvtable kv2 {\"x\":39,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Using\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
             ]
           },
           {
             "op": "G",
             "attrs": {
-              "id": "pnl3"
+              "id": "solar_panels"
             },
             "c": [
               {
-                "op": "R",
+                "op": "G",
                 "attrs": {
-                  "x": 488.5,
-                  "y": 537,
-                  "w": 447,
-                  "h": 297.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
+                  "id": "pnl4"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 24.5,
+                      "y": 851.5,
+                      "w": 447,
+                      "h": 299.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 38,
+                      "y": 861,
+                      "w": 420,
+                      "h": 30.799999237060547,
+                      "text": "SOLAR PANELS",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl4 {\"x\":24,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SOLAR PANELS\",\"unit\":\"\"}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 502,
-                  "y": 546.5,
-                  "w": 346,
-                  "h": 30.799999237060547,
-                  "text": "YESTERDAY",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
+                  "id": "txt2"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 228,
+                      "y": 866,
+                      "w": 50,
+                      "h": 33.599998474121094,
+                      "text": "Qty",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt2 {\"x\":228,\"y\":866,\"w\":50,\"h\":33.6,\"style\":\"unit\",\"text\":\"Qty\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 858,
-                  "y": 547.9000244140625,
-                  "w": 64,
-                  "h": 28,
-                  "text": "MJ",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "align": "right",
-                  "valign": "middle"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl3 {\"x\":488,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"YESTERDAY\",\"unit\":\"MJ\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "kv3"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 588.2999877929688,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
+                  "id": "txt3"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 288,
+                      "y": 866,
+                      "w": 74,
+                      "h": 33.599998474121094,
+                      "text": "kW",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt3 {\"x\":288,\"y\":866,\"w\":74,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 517,
-                  "y": 588.2999877929688,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Solar",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
+                  "id": "txt4"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 372,
+                      "y": 866,
+                      "w": 70,
+                      "h": 33.599998474121094,
+                      "text": "Eff %",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt4 {\"x\":372,\"y\":866,\"w\":70,\"h\":33.6,\"style\":\"unit\",\"text\":\"Eff %\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
+                ]
               },
               {
-                "op": "T",
+                "op": "G",
                 "attrs": {
-                  "x": 727,
-                  "y": 588.2999877929688,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv3_v0",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 647.7249755859375,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 647.7249755859375,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Coal",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 647.7249755859375,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv3_v1",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 707.1499633789062,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 707.1499633789062,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Used",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 707.1499633789062,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv3_v2",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 766.5750122070312,
-                  "w": 418,
-                  "h": 53.42499923706055,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 766.5750122070312,
-                  "w": 200,
-                  "h": 53.42499923706055,
-                  "text": "Net",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 766.5750122070312,
-                  "w": 180,
-                  "h": 53.42499923706055,
-                  "text": "$kv3_v3",
-                  "size": 28,
-                  "f": "=if(eq($kv3_s3,2),#F0B429,if(eq($kv3_s3,3),#EF5350,#F2F2F2))",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget kvtable kv3 {\"x\":503,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Used\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "pnl4"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 24.5,
-                  "y": 851.5,
-                  "w": 447,
-                  "h": 299.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 38,
-                  "y": 861,
-                  "w": 420,
-                  "h": 30.799999237060547,
-                  "text": "SOLAR PANELS",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl4 {\"x\":24,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SOLAR PANELS\",\"unit\":\"\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt2"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 228,
-                  "y": 866,
-                  "w": 50,
-                  "h": 33.599998474121094,
-                  "text": "Qty",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt2 {\"x\":228,\"y\":866,\"w\":50,\"h\":33.6,\"style\":\"unit\",\"text\":\"Qty\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt3"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 288,
-                  "y": 866,
-                  "w": 74,
-                  "h": 33.599998474121094,
-                  "text": "kW",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt3 {\"x\":288,\"y\":866,\"w\":74,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt4"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 372,
-                  "y": 866,
-                  "w": 70,
-                  "h": 33.599998474121094,
-                  "text": "Eff %",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt4 {\"x\":372,\"y\":866,\"w\":70,\"h\":33.6,\"style\":\"unit\",\"text\":\"Eff %\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep3"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 904.7999877929688,
-                  "w": 418,
-                  "h": 156
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 3
+                  "id": "solar_table"
                 },
                 "c": [
                   {
                     "op": "G",
                     "attrs": {
-                      "v": "=lt(i,$rep3_n)"
+                      "id": "rep3"
                     },
                     "c": [
                       {
                         "op": "R",
                         "attrs": {
                           "x": 39,
-                          "y": "=904.8+i*56",
+                          "y": 904.7999877929688,
                           "w": 418,
-                          "h": 44,
-                          "rx": 4,
-                          "f": "#2C2C2C"
+                          "h": 156
                         }
                       },
                       {
-                        "op": "C",
+                        "op": "RP",
                         "attrs": {
-                          "v": "=1-eq($rep3_st[i],1)-eq($rep3_st[i],2)-eq($rep3_st[i],3)",
-                          "cx": 61,
-                          "cy": "=904.8+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#9A9A9A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep3_st[i],1)",
-                          "cx": 61,
-                          "cy": "=904.8+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#4CC38A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep3_st[i],2)",
-                          "cx": 61,
-                          "cy": "=904.8+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#F0B429"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep3_st[i],3)",
-                          "cx": 61,
-                          "cy": "=904.8+i*56+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#EF5350"
-                        }
-                      },
-                      {
-                        "op": "T",
-                        "attrs": {
-                          "x": 79,
-                          "y": "=904.8+i*56",
-                          "w": "=lerp(244,364,clamp(and($rep3_ready,eq($rep3_hasv[i],0)),0,1))",
-                          "h": 44,
-                          "text": "$rep3_name[i]",
-                          "size": 24,
-                          "f": "#F2F2F2",
-                          "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
-                        }
-                      },
-                      {
-                        "op": "T",
-                        "attrs": {
-                          "v": "=not(and($rep3_ready,eq($rep3_hasv[i],0)))",
-                          "x": 333,
-                          "y": "=904.8+i*56",
-                          "w": 110,
-                          "h": 44,
-                          "text": "{$rep3_v[i]:%.0f}",
-                          "size": 28,
-                          "f": "#F2F2F2",
-                          "align": "right",
-                          "valign": "middle"
-                        }
+                          "n": 3
+                        },
+                        "c": [
+                          {
+                            "op": "G",
+                            "attrs": {
+                              "v": "=lt(i,$rep3_n)"
+                            },
+                            "c": [
+                              {
+                                "op": "R",
+                                "attrs": {
+                                  "x": 39,
+                                  "y": "=904.8+i*56",
+                                  "w": 418,
+                                  "h": 44,
+                                  "rx": 4,
+                                  "f": "#2C2C2C"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=1-eq($rep3_st[i],1)-eq($rep3_st[i],2)-eq($rep3_st[i],3)",
+                                  "cx": 61,
+                                  "cy": "=904.8+i*56+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#9A9A9A"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep3_st[i],1)",
+                                  "cx": 61,
+                                  "cy": "=904.8+i*56+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#4CC38A"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep3_st[i],2)",
+                                  "cx": 61,
+                                  "cy": "=904.8+i*56+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#F0B429"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep3_st[i],3)",
+                                  "cx": 61,
+                                  "cy": "=904.8+i*56+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#EF5350"
+                                }
+                              },
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "x": 79,
+                                  "y": "=904.8+i*56",
+                                  "w": "=lerp(244,364,clamp(and($rep3_ready,eq($rep3_hasv[i],0)),0,1))",
+                                  "h": 44,
+                                  "text": "$rep3_name[i]",
+                                  "size": 24,
+                                  "f": "#F2F2F2",
+                                  "valign": "middle",
+                                  "fit": "ellipsis",
+                                  "missing": ""
+                                }
+                              },
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "v": "=not(and($rep3_ready,eq($rep3_hasv[i],0)))",
+                                  "x": 333,
+                                  "y": "=904.8+i*56",
+                                  "w": 110,
+                                  "h": 44,
+                                  "text": "{$rep3_v[i]:%.0f}",
+                                  "size": 28,
+                                  "f": "#F2F2F2",
+                                  "align": "right",
+                                  "valign": "middle"
+                                }
+                              }
+                            ]
+                          }
+                        ]
                       }
+                    ],
+                    "comments": [
+                      "widget repeater rep3 {\"x\":39,\"y\":904.8,\"w\":418,\"h\":156,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
                     ]
-                  }
-                ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep3 {\"x\":39,\"y\":904.8,\"w\":418,\"h\":156,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep4"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 228,
-                  "y": 909.7999877929688,
-                  "w": 50,
-                  "h": 145.60000610351562
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 3
-                },
-                "c": [
+                  },
                   {
                     "op": "G",
                     "attrs": {
-                      "v": "=lt(i,$rep4_n)"
+                      "id": "rep4"
                     },
                     "c": [
                       {
-                        "op": "T",
+                        "op": "R",
                         "attrs": {
                           "x": 228,
-                          "y": "=909.8+i*56",
+                          "y": 909.7999877929688,
                           "w": 50,
-                          "h": 33.599998474121094,
-                          "text": "$rep4_t[i]",
-                          "size": 24,
-                          "f": "#F2F2F2",
-                          "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
+                          "h": 145.60000610351562
                         }
+                      },
+                      {
+                        "op": "RP",
+                        "attrs": {
+                          "n": 3
+                        },
+                        "c": [
+                          {
+                            "op": "G",
+                            "attrs": {
+                              "v": "=lt(i,$rep4_n)"
+                            },
+                            "c": [
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "x": 228,
+                                  "y": "=909.8+i*56",
+                                  "w": 50,
+                                  "h": 33.599998474121094,
+                                  "text": "$rep4_t[i]",
+                                  "size": 24,
+                                  "f": "#F2F2F2",
+                                  "valign": "middle",
+                                  "fit": "ellipsis",
+                                  "missing": ""
+                                }
+                              }
+                            ]
+                          }
+                        ]
                       }
+                    ],
+                    "comments": [
+                      "widget repeater rep4 {\"x\":228,\"y\":909.8,\"w\":50,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
                     ]
-                  }
-                ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep4 {\"x\":228,\"y\":909.8,\"w\":50,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep5"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 288,
-                  "y": 909.7999877929688,
-                  "w": 74,
-                  "h": 145.60000610351562
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 3
-                },
-                "c": [
+                  },
                   {
                     "op": "G",
                     "attrs": {
-                      "v": "=lt(i,$rep5_n)"
+                      "id": "rep5"
                     },
                     "c": [
                       {
-                        "op": "T",
+                        "op": "R",
                         "attrs": {
                           "x": 288,
-                          "y": "=909.8+i*56",
+                          "y": 909.7999877929688,
                           "w": 74,
-                          "h": 33.599998474121094,
-                          "text": "$rep5_t[i]",
-                          "size": 24,
-                          "f": "#F2F2F2",
-                          "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
+                          "h": 145.60000610351562
                         }
+                      },
+                      {
+                        "op": "RP",
+                        "attrs": {
+                          "n": 3
+                        },
+                        "c": [
+                          {
+                            "op": "G",
+                            "attrs": {
+                              "v": "=lt(i,$rep5_n)"
+                            },
+                            "c": [
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "x": 288,
+                                  "y": "=909.8+i*56",
+                                  "w": 74,
+                                  "h": 33.599998474121094,
+                                  "text": "$rep5_t[i]",
+                                  "size": 24,
+                                  "f": "#F2F2F2",
+                                  "valign": "middle",
+                                  "fit": "ellipsis",
+                                  "missing": ""
+                                }
+                              }
+                            ]
+                          }
+                        ]
                       }
+                    ],
+                    "comments": [
+                      "widget repeater rep5 {\"x\":288,\"y\":909.8,\"w\":74,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "al1"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": 1021.4000244140625,
+                          "w": 418,
+                          "h": 36.400001525878906
+                        }
+                      },
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "v": "=gt($al1_st,0)"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": 53,
+                              "y": 1025.5999755859375,
+                              "w": 72,
+                              "h": 28,
+                              "rx": 3,
+                              "f": "=if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))"
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "v": "=eq($al1_st,1)",
+                              "x": 53,
+                              "y": 1025.5999755859375,
+                              "w": 72,
+                              "h": 28,
+                              "text": "OK",
+                              "size": 20,
+                              "weight": "bold",
+                              "f": "#111111",
+                              "align": "center",
+                              "valign": "middle"
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "v": "=eq($al1_st,2)",
+                              "x": 53,
+                              "y": 1025.5999755859375,
+                              "w": 72,
+                              "h": 28,
+                              "text": "WARN",
+                              "size": 20,
+                              "weight": "bold",
+                              "f": "#111111",
+                              "align": "center",
+                              "valign": "middle"
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "v": "=eq($al1_st,3)",
+                              "x": 53,
+                              "y": 1025.5999755859375,
+                              "w": 72,
+                              "h": 28,
+                              "text": "CRIT",
+                              "size": 20,
+                              "weight": "bold",
+                              "f": "#111111",
+                              "align": "center",
+                              "valign": "middle"
+                            }
+                          },
+                          {
+                            "op": "T",
+                            "attrs": {
+                              "x": 139,
+                              "y": 1024.0999755859375,
+                              "w": 304,
+                              "h": 31,
+                              "text": "$al1_msg",
+                              "size": 22,
+                              "f": "#F2F2F2",
+                              "valign": "middle",
+                              "fit": "ellipsis"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "comments": [
+                      "widget alert al1 {\"x\":39,\"y\":1021.4,\"w\":418,\"h\":36.4,\"row\":false,\"keys\":{}}"
                     ]
                   }
                 ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep5 {\"x\":288,\"y\":909.8,\"w\":74,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "al1"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 1021.4000244140625,
-                  "w": 418,
-                  "h": 36.400001525878906
-                }
               },
               {
                 "op": "G",
                 "attrs": {
-                  "v": "=gt($al1_st,0)"
+                  "id": "btn1"
                 },
                 "c": [
                   {
                     "op": "R",
                     "attrs": {
-                      "x": 53,
-                      "y": 1025.5999755859375,
-                      "w": 72,
-                      "h": 28,
-                      "rx": 3,
-                      "f": "=if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))"
+                      "id": "btn1_hit",
+                      "click": 1,
+                      "x": 39,
+                      "y": 1082.5,
+                      "w": 248,
+                      "h": 54
                     }
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=eq($btn1_state,0)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": 1082.5,
+                          "w": 248,
+                          "h": 54,
+                          "rx": 4,
+                          "f": "#2A64BD",
+                          "fo": "=1-0.25*down"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=eq($btn1_state,1)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": 1082.5,
+                          "w": 248,
+                          "h": 54,
+                          "rx": 4,
+                          "f": "#2A64BD",
+                          "fo": "=1-0.25*down"
+                        }
+                      }
+                    ]
                   },
                   {
                     "op": "T",
                     "attrs": {
-                      "v": "=eq($al1_st,1)",
-                      "x": 53,
-                      "y": 1025.5999755859375,
-                      "w": 72,
-                      "h": 28,
-                      "text": "OK",
-                      "size": 20,
-                      "weight": "bold",
-                      "f": "#111111",
-                      "align": "center",
-                      "valign": "middle"
-                    }
-                  },
-                  {
-                    "op": "T",
-                    "attrs": {
-                      "v": "=eq($al1_st,2)",
-                      "x": 53,
-                      "y": 1025.5999755859375,
-                      "w": 72,
-                      "h": 28,
-                      "text": "WARN",
-                      "size": 20,
-                      "weight": "bold",
-                      "f": "#111111",
-                      "align": "center",
-                      "valign": "middle"
-                    }
-                  },
-                  {
-                    "op": "T",
-                    "attrs": {
-                      "v": "=eq($al1_st,3)",
-                      "x": 53,
-                      "y": 1025.5999755859375,
-                      "w": 72,
-                      "h": 28,
-                      "text": "CRIT",
-                      "size": 20,
-                      "weight": "bold",
-                      "f": "#111111",
-                      "align": "center",
-                      "valign": "middle"
-                    }
-                  },
-                  {
-                    "op": "T",
-                    "attrs": {
-                      "x": 139,
-                      "y": 1024.0999755859375,
-                      "w": 304,
-                      "h": 31,
-                      "text": "$al1_msg",
+                      "v": "=eq($btn1_state,0)",
+                      "x": 57,
+                      "y": 1082.5,
+                      "w": 212,
+                      "h": 54,
+                      "text": "PARK PANELS",
                       "size": 22,
+                      "weight": "bold",
+                      "f": "#FFFFFF",
+                      "align": "center",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "v": "=eq($btn1_state,1)",
+                      "x": 57,
+                      "y": 1082.5,
+                      "w": 212,
+                      "h": 54,
+                      "text": "RESUME TRACKING",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#FFFFFF",
+                      "align": "center",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget button btn1 {\"x\":39,\"y\":1082.5,\"w\":248,\"h\":54,\"states\":[{\"label\":\"PARK PANELS\",\"variant\":\"primary\",\"key\":0},{\"label\":\"RESUME TRACKING\",\"variant\":\"primary\",\"key\":1}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "btn2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "btn2_hit",
+                      "click": 1,
+                      "x": 297,
+                      "y": 1082.5,
+                      "w": 160,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 297.5,
+                      "y": 1083,
+                      "w": 159,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 315,
+                      "y": 1082.5,
+                      "w": 124,
+                      "h": 54,
+                      "text": "DEVICES",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#F2F2F2",
+                      "align": "center",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget button btn2 {\"x\":297,\"y\":1082.5,\"w\":160,\"h\":54,\"states\":[{\"label\":\"DEVICES\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+                ]
+              }
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "coal_generators"
+            },
+            "c": [
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "pnl5"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 24.5,
+                      "y": 1168,
+                      "w": 447,
+                      "h": 297.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 38,
+                      "y": 1177.5,
+                      "w": 420,
+                      "h": 30.799999237060547,
+                      "text": "COAL GENERATORS",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl5 {\"x\":24,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL GENERATORS\",\"unit\":\"\"}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt5"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 272,
+                      "y": 1182.5,
+                      "w": 80,
+                      "h": 33.599998474121094,
+                      "text": "kW",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt5 {\"x\":272,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt6"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 362,
+                      "y": 1182.5,
+                      "w": 80,
+                      "h": 33.599998474121094,
+                      "text": "Coal",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt6 {\"x\":362,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"Coal\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "coal_table"
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "rep6"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": 1221.300048828125,
+                          "w": 418,
+                          "h": 111.44999694824219
+                        }
+                      },
+                      {
+                        "op": "RP",
+                        "attrs": {
+                          "n": 2
+                        },
+                        "c": [
+                          {
+                            "op": "G",
+                            "attrs": {
+                              "v": "=lt(i,$rep6_n)"
+                            },
+                            "c": [
+                              {
+                                "op": "R",
+                                "attrs": {
+                                  "x": 39,
+                                  "y": "=1221.3+i*67.45",
+                                  "w": 418,
+                                  "h": 44,
+                                  "rx": 4,
+                                  "f": "#2C2C2C"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=1-eq($rep6_st[i],1)-eq($rep6_st[i],2)-eq($rep6_st[i],3)",
+                                  "cx": 61,
+                                  "cy": "=1221.3+i*67.45+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#9A9A9A"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep6_st[i],1)",
+                                  "cx": 61,
+                                  "cy": "=1221.3+i*67.45+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#4CC38A"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep6_st[i],2)",
+                                  "cx": 61,
+                                  "cy": "=1221.3+i*67.45+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#F0B429"
+                                }
+                              },
+                              {
+                                "op": "C",
+                                "attrs": {
+                                  "v": "=eq($rep6_st[i],3)",
+                                  "cx": 61,
+                                  "cy": "=1221.3+i*67.45+22",
+                                  "rx": 8,
+                                  "ry": 8,
+                                  "f": "#EF5350"
+                                }
+                              },
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "x": 79,
+                                  "y": "=1221.3+i*67.45",
+                                  "w": "=lerp(244,364,clamp(and($rep6_ready,eq($rep6_hasv[i],0)),0,1))",
+                                  "h": 44,
+                                  "text": "$rep6_name[i]",
+                                  "size": 24,
+                                  "f": "#F2F2F2",
+                                  "valign": "middle",
+                                  "fit": "ellipsis",
+                                  "missing": ""
+                                }
+                              },
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "v": "=not(and($rep6_ready,eq($rep6_hasv[i],0)))",
+                                  "x": 333,
+                                  "y": "=1221.3+i*67.45",
+                                  "w": 110,
+                                  "h": 44,
+                                  "text": "{$rep6_v[i]:%.0f}",
+                                  "size": 28,
+                                  "f": "#F2F2F2",
+                                  "align": "right",
+                                  "valign": "middle"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "comments": [
+                      "widget repeater rep6 {\"x\":39,\"y\":1221.3,\"w\":418,\"h\":111.45,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "rep7"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 272,
+                          "y": 1226.300048828125,
+                          "w": 80,
+                          "h": 101.04999542236328
+                        }
+                      },
+                      {
+                        "op": "RP",
+                        "attrs": {
+                          "n": 2
+                        },
+                        "c": [
+                          {
+                            "op": "G",
+                            "attrs": {
+                              "v": "=lt(i,$rep7_n)"
+                            },
+                            "c": [
+                              {
+                                "op": "T",
+                                "attrs": {
+                                  "x": 272,
+                                  "y": "=1226.3+i*67.45",
+                                  "w": 80,
+                                  "h": 33.599998474121094,
+                                  "text": "$rep7_t[i]",
+                                  "size": 24,
+                                  "f": "#F2F2F2",
+                                  "valign": "middle",
+                                  "fit": "ellipsis",
+                                  "missing": ""
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "comments": [
+                      "widget repeater rep7 {\"x\":272,\"y\":1226.3,\"w\":80,\"h\":101.049995,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "override"
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "txt7"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 43,
+                          "y": 1353.199951171875,
+                          "w": 200,
+                          "h": 33.599998474121094,
+                          "text": "Override",
+                          "size": 20,
+                          "f": "#9A9A9A",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      }
+                    ],
+                    "comments": [
+                      "widget text txt7 {\"x\":43,\"y\":1353.2,\"w\":200,\"h\":33.6,\"style\":\"unit\",\"text\":\"Override\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "og1"
+                    },
+                    "c": [
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "id": "og1_g0"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "id": "og1_o0",
+                              "click": 1,
+                              "x": 42,
+                              "y": 1394,
+                              "w": 130.6666717529297,
+                              "h": 54
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "v": "=eq($og1_sel,0)",
+                              "x": 41,
+                              "y": 1393,
+                              "w": 132.6666717529297,
+                              "h": 56,
+                              "rx": 5,
+                              "f": "none",
+                              "s": "#3D8BFD",
+                              "sw": 2
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": 42.5,
+                              "y": 1394.5,
+                              "w": 129.6666717529297,
+                              "h": 53,
+                              "rx": 3.5,
+                              "f": "#2C2C2C",
+                              "s": "#4A4A4A",
+                              "sw": 1,
+                              "fo": "=1-0.25*down"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "id": "og1_g1"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "id": "og1_o1",
+                              "click": 1,
+                              "x": 182.6666717529297,
+                              "y": 1394,
+                              "w": 130.6666717529297,
+                              "h": 54
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "v": "=eq($og1_sel,1)",
+                              "x": 181.6666717529297,
+                              "y": 1393,
+                              "w": 132.6666717529297,
+                              "h": 56,
+                              "rx": 5,
+                              "f": "none",
+                              "s": "#3D8BFD",
+                              "sw": 2
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": 183.1666717529297,
+                              "y": 1394.5,
+                              "w": 129.6666717529297,
+                              "h": 53,
+                              "rx": 3.5,
+                              "f": "#2C2C2C",
+                              "s": "#4A4A4A",
+                              "sw": 1,
+                              "fo": "=1-0.25*down"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "id": "og1_g2"
+                        },
+                        "c": [
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "id": "og1_o2",
+                              "click": 1,
+                              "x": 323.3333435058594,
+                              "y": 1394,
+                              "w": 130.6666717529297,
+                              "h": 54
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "v": "=eq($og1_sel,2)",
+                              "x": 322.3333435058594,
+                              "y": 1393,
+                              "w": 132.6666717529297,
+                              "h": 56,
+                              "rx": 5,
+                              "f": "none",
+                              "s": "#3D8BFD",
+                              "sw": 2
+                            }
+                          },
+                          {
+                            "op": "R",
+                            "attrs": {
+                              "x": 323.8333435058594,
+                              "y": 1394.5,
+                              "w": 129.6666717529297,
+                              "h": 53,
+                              "rx": 3.5,
+                              "f": "#2C2C2C",
+                              "s": "#4A4A4A",
+                              "sw": 1,
+                              "fo": "=1-0.25*down"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 42,
+                          "y": 1394,
+                          "w": 130.6666717529297,
+                          "h": 54,
+                          "text": "AUTO",
+                          "size": 22,
+                          "weight": "bold",
+                          "f": "#F2F2F2",
+                          "align": "center",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 182.6666717529297,
+                          "y": 1394,
+                          "w": 130.6666717529297,
+                          "h": 54,
+                          "text": "ON",
+                          "size": 22,
+                          "weight": "bold",
+                          "f": "#F2F2F2",
+                          "align": "center",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 323.3333435058594,
+                          "y": 1394,
+                          "w": 130.6666717529297,
+                          "h": 54,
+                          "text": "OFF",
+                          "size": 22,
+                          "weight": "bold",
+                          "f": "#F2F2F2",
+                          "align": "center",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      }
+                    ],
+                    "comments": [
+                      "widget options og1 {\"x\":42,\"y\":1394,\"w\":412,\"h\":54,\"options\":[{\"label\":\"AUTO\",\"value\":0,\"key\":0},{\"label\":\"ON\",\"value\":1,\"key\":1},{\"label\":\"OFF\",\"value\":2,\"key\":2}],\"gap\":10,\"keys\":{}}"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "sun"
+            },
+            "c": [
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "pnl6"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 488.5,
+                      "y": 851.5,
+                      "w": 447,
+                      "h": 299.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 502,
+                      "y": 861,
+                      "w": 420,
+                      "h": 30.799999237060547,
+                      "text": "SUN",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl6 {\"x\":488,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SUN\",\"unit\":\"\"}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "sunangle"
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "gauge1"
+                    },
+                    "c": [
+                      {
+                        "op": "P",
+                        "attrs": {
+                          "d": "M518.7 1005.2 A99.3 99.3 0 0 1 618 905.9 A99.3 99.3 0 0 1 717.3 1005.2",
+                          "s": "#7A7A7A",
+                          "sw": 4
+                        }
+                      },
+                      {
+                        "op": "G",
+                        "attrs": {
+                          "a": [
+                            618,
+                            1005.2000122070312
+                          ],
+                          "r": "=-90+clamp(($gauge1_v-0)/1,0,1)*180"
+                        },
+                        "c": [
+                          {
+                            "op": "L",
+                            "attrs": {
+                              "p": [
+                                618,
+                                1005.2000122070312,
+                                618,
+                                915.8300170898438
+                              ],
+                              "s": "=if(eq($gauge1_st,1),#4CC38A,if(eq($gauge1_st,2),#F0B429,if(eq($gauge1_st,3),#EF5350,#9A9A9A)))",
+                              "sw": 3
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "cx": 618,
+                          "cy": 1005.2000122070312,
+                          "rx": 4.5,
+                          "ry": 4.5,
+                          "f": "#F2F2F2"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 503,
+                          "y": 1108.5,
+                          "w": 230,
+                          "h": 28,
+                          "text": "Sun angle",
+                          "size": 20,
+                          "f": "#9A9A9A",
+                          "align": "center",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      }
+                    ],
+                    "comments": [
+                      "widget gauge gauge1 {\"x\":503,\"y\":901.9,\"w\":230,\"h\":234.6,\"label\":\"Sun angle\",\"unit\":\"\",\"min\":0,\"max\":1,\"start\":-90,\"end\":90,\"ticks\":0,\"fmt\":\"\",\"value\":false,\"state\":true,\"keys\":{}}"
+                    ]
+                  },
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "id": "txt8"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 503,
+                          "y": 1010.4000244140625,
+                          "w": 230,
+                          "h": 47.599998474121094,
+                          "text": "$sunAngle",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "center",
+                          "valign": "middle",
+                          "fit": "ellipsis"
+                        }
+                      }
+                    ],
+                    "comments": [
+                      "widget text txt8 {\"x\":503,\"y\":1010.4,\"w\":230,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunAngle\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt9"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 903,
+                      "w": 178,
+                      "h": 33.599998474121094,
+                      "text": "Sunset in",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt9 {\"x\":743,\"y\":903,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunset in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt10"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 931,
+                      "w": 178,
+                      "h": 47.599998474121094,
+                      "text": "$sunset",
+                      "size": 28,
                       "f": "#F2F2F2",
                       "valign": "middle",
                       "fit": "ellipsis"
                     }
                   }
+                ],
+                "comments": [
+                  "widget text txt10 {\"x\":743,\"y\":931,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunset\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt11"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 983.2000122070312,
+                      "w": 178,
+                      "h": 33.599998474121094,
+                      "text": "Sunrise in",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt11 {\"x\":743,\"y\":983.2,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunrise in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt12"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 1011.2000122070312,
+                      "w": 178,
+                      "h": 47.599998474121094,
+                      "text": "$sunrise",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt12 {\"x\":743,\"y\":1011.2,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunrise\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt13"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 1063.4000244140625,
+                      "w": 178,
+                      "h": 33.599998474121094,
+                      "text": "Night lasts",
+                      "size": 20,
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt13 {\"x\":743,\"y\":1063.4,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Night lasts\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "txt14"
+                },
+                "c": [
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 743,
+                      "y": 1091.4000244140625,
+                      "w": 178,
+                      "h": 47.599998474121094,
+                      "text": "$night",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget text txt14 {\"x\":743,\"y\":1091.4,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$night\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
                 ]
               }
-            ],
-            "comments": [
-              "widget alert al1 {\"x\":39,\"y\":1021.4,\"w\":418,\"h\":36.4,\"row\":false,\"keys\":{}}"
             ]
           },
           {
             "op": "G",
             "attrs": {
-              "id": "btn1"
+              "id": "coal_reserve"
             },
             "c": [
               {
-                "op": "R",
-                "attrs": {
-                  "id": "btn1_hit",
-                  "click": 1,
-                  "x": 39,
-                  "y": 1082.5,
-                  "w": 248,
-                  "h": 54
-                }
-              },
-              {
                 "op": "G",
                 "attrs": {
-                  "v": "=eq($btn1_state,0)"
+                  "id": "pnl7"
                 },
                 "c": [
                   {
                     "op": "R",
                     "attrs": {
-                      "x": 39,
-                      "y": 1082.5,
-                      "w": 248,
-                      "h": 54,
+                      "x": 488.5,
+                      "y": 1168,
+                      "w": 447,
+                      "h": 297.5,
+                      "rx": 5.5,
+                      "f": "#1A1A1A",
+                      "s": "#4A4A4A",
+                      "sw": 1
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 502,
+                      "y": 1177.5,
+                      "w": 420,
+                      "h": 30.799999237060547,
+                      "text": "COAL RESERVE",
+                      "size": 22,
+                      "weight": "bold",
+                      "f": "#9A9A9A",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ],
+                "comments": [
+                  "widget panel pnl7 {\"x\":488,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL RESERVE\",\"unit\":\"\"}"
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "kv4"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 503,
+                      "y": 1218.4000244140625,
+                      "w": 418,
+                      "h": 53.650001525878906,
                       "rx": 4,
-                      "f": "#2A64BD",
-                      "fo": "=1-0.25*down"
+                      "f": "#2C2C2C"
                     }
-                  }
-                ]
-              },
-              {
-                "op": "G",
-                "attrs": {
-                  "v": "=eq($btn1_state,1)"
-                },
-                "c": [
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 1218.4000244140625,
+                      "w": 200,
+                      "h": 53.650001525878906,
+                      "text": "Coal left",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 1218.4000244140625,
+                      "w": 180,
+                      "h": 53.650001525878906,
+                      "text": "$kv4_v0",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
                   {
                     "op": "R",
                     "attrs": {
-                      "x": 39,
-                      "y": 1082.5,
-                      "w": 248,
-                      "h": 54,
+                      "x": 503,
+                      "y": 1278.050048828125,
+                      "w": 418,
+                      "h": 53.650001525878906,
                       "rx": 4,
-                      "f": "#2A64BD",
-                      "fo": "=1-0.25*down"
+                      "f": "#2C2C2C"
                     }
-                  }
-                ]
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "v": "=eq($btn1_state,0)",
-                  "x": 57,
-                  "y": 1082.5,
-                  "w": 212,
-                  "h": 54,
-                  "text": "PARK PANELS",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#FFFFFF",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "v": "=eq($btn1_state,1)",
-                  "x": 57,
-                  "y": 1082.5,
-                  "w": 212,
-                  "h": 54,
-                  "text": "RESUME TRACKING",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#FFFFFF",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget button btn1 {\"x\":39,\"y\":1082.5,\"w\":248,\"h\":54,\"states\":[{\"label\":\"PARK PANELS\",\"variant\":\"primary\",\"key\":0},{\"label\":\"RESUME TRACKING\",\"variant\":\"primary\",\"key\":1}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "btn2"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "id": "btn2_hit",
-                  "click": 1,
-                  "x": 297,
-                  "y": 1082.5,
-                  "w": 160,
-                  "h": 54
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 297.5,
-                  "y": 1083,
-                  "w": 159,
-                  "h": 53,
-                  "rx": 3.5,
-                  "f": "#2C2C2C",
-                  "s": "#4A4A4A",
-                  "sw": 1,
-                  "fo": "=1-0.25*down"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 315,
-                  "y": 1082.5,
-                  "w": 124,
-                  "h": 54,
-                  "text": "DEVICES",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#F2F2F2",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget button btn2 {\"x\":297,\"y\":1082.5,\"w\":160,\"h\":54,\"states\":[{\"label\":\"DEVICES\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "pnl5"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 24.5,
-                  "y": 1168,
-                  "w": 447,
-                  "h": 297.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 38,
-                  "y": 1177.5,
-                  "w": 420,
-                  "h": 30.799999237060547,
-                  "text": "COAL GENERATORS",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl5 {\"x\":24,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL GENERATORS\",\"unit\":\"\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt5"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 272,
-                  "y": 1182.5,
-                  "w": 80,
-                  "h": 33.599998474121094,
-                  "text": "kW",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt5 {\"x\":272,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt6"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 362,
-                  "y": 1182.5,
-                  "w": 80,
-                  "h": 33.599998474121094,
-                  "text": "Coal",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt6 {\"x\":362,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"Coal\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep6"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 39,
-                  "y": 1221.300048828125,
-                  "w": 418,
-                  "h": 111.44999694824219
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 2
-                },
-                "c": [
+                  },
                   {
-                    "op": "G",
+                    "op": "T",
                     "attrs": {
-                      "v": "=lt(i,$rep6_n)"
-                    },
-                    "c": [
-                      {
-                        "op": "R",
-                        "attrs": {
-                          "x": 39,
-                          "y": "=1221.3+i*67.45",
-                          "w": 418,
-                          "h": 44,
-                          "rx": 4,
-                          "f": "#2C2C2C"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=1-eq($rep6_st[i],1)-eq($rep6_st[i],2)-eq($rep6_st[i],3)",
-                          "cx": 61,
-                          "cy": "=1221.3+i*67.45+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#9A9A9A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep6_st[i],1)",
-                          "cx": 61,
-                          "cy": "=1221.3+i*67.45+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#4CC38A"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep6_st[i],2)",
-                          "cx": 61,
-                          "cy": "=1221.3+i*67.45+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#F0B429"
-                        }
-                      },
-                      {
-                        "op": "C",
-                        "attrs": {
-                          "v": "=eq($rep6_st[i],3)",
-                          "cx": 61,
-                          "cy": "=1221.3+i*67.45+22",
-                          "rx": 8,
-                          "ry": 8,
-                          "f": "#EF5350"
-                        }
-                      },
-                      {
-                        "op": "T",
-                        "attrs": {
-                          "x": 79,
-                          "y": "=1221.3+i*67.45",
-                          "w": "=lerp(244,364,clamp(and($rep6_ready,eq($rep6_hasv[i],0)),0,1))",
-                          "h": 44,
-                          "text": "$rep6_name[i]",
-                          "size": 24,
-                          "f": "#F2F2F2",
-                          "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
-                        }
-                      },
-                      {
-                        "op": "T",
-                        "attrs": {
-                          "v": "=not(and($rep6_ready,eq($rep6_hasv[i],0)))",
-                          "x": 333,
-                          "y": "=1221.3+i*67.45",
-                          "w": 110,
-                          "h": 44,
-                          "text": "{$rep6_v[i]:%.0f}",
-                          "size": 28,
-                          "f": "#F2F2F2",
-                          "align": "right",
-                          "valign": "middle"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep6 {\"x\":39,\"y\":1221.3,\"w\":418,\"h\":111.45,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "rep7"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 272,
-                  "y": 1226.300048828125,
-                  "w": 80,
-                  "h": 101.04999542236328
-                }
-              },
-              {
-                "op": "RP",
-                "attrs": {
-                  "n": 2
-                },
-                "c": [
+                      "x": 517,
+                      "y": 1278.050048828125,
+                      "w": 200,
+                      "h": 53.650001525878906,
+                      "text": "Coal energy",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
                   {
-                    "op": "G",
+                    "op": "T",
                     "attrs": {
-                      "v": "=lt(i,$rep7_n)"
-                    },
-                    "c": [
-                      {
-                        "op": "T",
-                        "attrs": {
-                          "x": 272,
-                          "y": "=1226.3+i*67.45",
-                          "w": 80,
-                          "h": 33.599998474121094,
-                          "text": "$rep7_t[i]",
-                          "size": 24,
-                          "f": "#F2F2F2",
-                          "valign": "middle",
-                          "fit": "ellipsis",
-                          "missing": ""
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "comments": [
-              "widget repeater rep7 {\"x\":272,\"y\":1226.3,\"w\":80,\"h\":101.049995,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt7"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 43,
-                  "y": 1353.199951171875,
-                  "w": 200,
-                  "h": 33.599998474121094,
-                  "text": "Override",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt7 {\"x\":43,\"y\":1353.2,\"w\":200,\"h\":33.6,\"style\":\"unit\",\"text\":\"Override\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "og1"
-            },
-            "c": [
-              {
-                "op": "G",
-                "attrs": {
-                  "id": "og1_g0"
-                },
-                "c": [
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "id": "og1_o0",
-                      "click": 1,
-                      "x": 42,
-                      "y": 1394,
-                      "w": 130.6666717529297,
-                      "h": 54
+                      "x": 727,
+                      "y": 1278.050048828125,
+                      "w": 180,
+                      "h": 53.650001525878906,
+                      "text": "$kv4_v1",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
                     }
                   },
                   {
                     "op": "R",
                     "attrs": {
-                      "v": "=eq($og1_sel,0)",
-                      "x": 41,
-                      "y": 1393,
-                      "w": 132.6666717529297,
-                      "h": 56,
-                      "rx": 5,
-                      "f": "none",
-                      "s": "#3D8BFD",
-                      "sw": 2
+                      "x": 503,
+                      "y": 1337.7000732421875,
+                      "w": 418,
+                      "h": 53.650001525878906,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 1337.7000732421875,
+                      "w": 200,
+                      "h": 53.650001525878906,
+                      "text": "Coal lasts",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 1337.7000732421875,
+                      "w": 180,
+                      "h": 53.650001525878906,
+                      "text": "$kv4_v2",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
                     }
                   },
                   {
                     "op": "R",
                     "attrs": {
-                      "x": 42.5,
-                      "y": 1394.5,
-                      "w": 129.6666717529297,
-                      "h": 53,
-                      "rx": 3.5,
-                      "f": "#2C2C2C",
-                      "s": "#4A4A4A",
-                      "sw": 1,
-                      "fo": "=1-0.25*down"
+                      "x": 503,
+                      "y": 1397.3499755859375,
+                      "w": 418,
+                      "h": 53.650001525878906,
+                      "rx": 4,
+                      "f": "#2C2C2C"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 517,
+                      "y": 1397.3499755859375,
+                      "w": 200,
+                      "h": 53.650001525878906,
+                      "text": "Producing",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 727,
+                      "y": 1397.3499755859375,
+                      "w": 180,
+                      "h": 53.650001525878906,
+                      "text": "$kv4_v3",
+                      "size": 28,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle",
+                      "fit": "ellipsis"
                     }
                   }
+                ],
+                "comments": [
+                  "widget kvtable kv4 {\"x\":503,\"y\":1218.4,\"w\":418,\"h\":232.6,\"rows\":[{\"caption\":\"Coal left\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal energy\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Coal lasts\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Producing\",\"fmt\":\"\",\"state\":false,\"key\":3}],\"rowH\":53.65,\"gap\":6,\"valueW\":180,\"keys\":{}}"
                 ]
-              },
-              {
-                "op": "G",
-                "attrs": {
-                  "id": "og1_g1"
-                },
-                "c": [
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "id": "og1_o1",
-                      "click": 1,
-                      "x": 182.6666717529297,
-                      "y": 1394,
-                      "w": 130.6666717529297,
-                      "h": 54
-                    }
-                  },
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "v": "=eq($og1_sel,1)",
-                      "x": 181.6666717529297,
-                      "y": 1393,
-                      "w": 132.6666717529297,
-                      "h": 56,
-                      "rx": 5,
-                      "f": "none",
-                      "s": "#3D8BFD",
-                      "sw": 2
-                    }
-                  },
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "x": 183.1666717529297,
-                      "y": 1394.5,
-                      "w": 129.6666717529297,
-                      "h": 53,
-                      "rx": 3.5,
-                      "f": "#2C2C2C",
-                      "s": "#4A4A4A",
-                      "sw": 1,
-                      "fo": "=1-0.25*down"
-                    }
-                  }
-                ]
-              },
-              {
-                "op": "G",
-                "attrs": {
-                  "id": "og1_g2"
-                },
-                "c": [
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "id": "og1_o2",
-                      "click": 1,
-                      "x": 323.3333435058594,
-                      "y": 1394,
-                      "w": 130.6666717529297,
-                      "h": 54
-                    }
-                  },
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "v": "=eq($og1_sel,2)",
-                      "x": 322.3333435058594,
-                      "y": 1393,
-                      "w": 132.6666717529297,
-                      "h": 56,
-                      "rx": 5,
-                      "f": "none",
-                      "s": "#3D8BFD",
-                      "sw": 2
-                    }
-                  },
-                  {
-                    "op": "R",
-                    "attrs": {
-                      "x": 323.8333435058594,
-                      "y": 1394.5,
-                      "w": 129.6666717529297,
-                      "h": 53,
-                      "rx": 3.5,
-                      "f": "#2C2C2C",
-                      "s": "#4A4A4A",
-                      "sw": 1,
-                      "fo": "=1-0.25*down"
-                    }
-                  }
-                ]
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 42,
-                  "y": 1394,
-                  "w": 130.6666717529297,
-                  "h": 54,
-                  "text": "AUTO",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#F2F2F2",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 182.6666717529297,
-                  "y": 1394,
-                  "w": 130.6666717529297,
-                  "h": 54,
-                  "text": "ON",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#F2F2F2",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 323.3333435058594,
-                  "y": 1394,
-                  "w": 130.6666717529297,
-                  "h": 54,
-                  "text": "OFF",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#F2F2F2",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
               }
-            ],
-            "comments": [
-              "widget options og1 {\"x\":42,\"y\":1394,\"w\":412,\"h\":54,\"options\":[{\"label\":\"AUTO\",\"value\":0,\"key\":0},{\"label\":\"ON\",\"value\":1,\"key\":1},{\"label\":\"OFF\",\"value\":2,\"key\":2}],\"gap\":10,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "pnl6"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 488.5,
-                  "y": 851.5,
-                  "w": 447,
-                  "h": 299.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 502,
-                  "y": 861,
-                  "w": 420,
-                  "h": 30.799999237060547,
-                  "text": "SUN",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl6 {\"x\":488,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SUN\",\"unit\":\"\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "gauge1"
-            },
-            "c": [
-              {
-                "op": "P",
-                "attrs": {
-                  "d": "M518.7 1005.2 A99.3 99.3 0 0 1 618 905.9 A99.3 99.3 0 0 1 717.3 1005.2",
-                  "s": "#7A7A7A",
-                  "sw": 4
-                }
-              },
-              {
-                "op": "G",
-                "attrs": {
-                  "a": [
-                    618,
-                    1005.2000122070312
-                  ],
-                  "r": "=-90+clamp(($gauge1_v-0)/1,0,1)*180"
-                },
-                "c": [
-                  {
-                    "op": "L",
-                    "attrs": {
-                      "p": [
-                        618,
-                        1005.2000122070312,
-                        618,
-                        915.8300170898438
-                      ],
-                      "s": "=if(eq($gauge1_st,1),#4CC38A,if(eq($gauge1_st,2),#F0B429,if(eq($gauge1_st,3),#EF5350,#9A9A9A)))",
-                      "sw": 3
-                    }
-                  }
-                ]
-              },
-              {
-                "op": "C",
-                "attrs": {
-                  "cx": 618,
-                  "cy": 1005.2000122070312,
-                  "rx": 4.5,
-                  "ry": 4.5,
-                  "f": "#F2F2F2"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 503,
-                  "y": 1108.5,
-                  "w": 230,
-                  "h": 28,
-                  "text": "Sun angle",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget gauge gauge1 {\"x\":503,\"y\":901.9,\"w\":230,\"h\":234.6,\"label\":\"Sun angle\",\"unit\":\"\",\"min\":0,\"max\":1,\"start\":-90,\"end\":90,\"ticks\":0,\"fmt\":\"\",\"value\":false,\"state\":true,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt8"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 503,
-                  "y": 1010.4000244140625,
-                  "w": 230,
-                  "h": 47.599998474121094,
-                  "text": "$sunAngle",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "center",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt8 {\"x\":503,\"y\":1010.4,\"w\":230,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunAngle\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt9"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 903,
-                  "w": 178,
-                  "h": 33.599998474121094,
-                  "text": "Sunset in",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt9 {\"x\":743,\"y\":903,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunset in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt10"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 931,
-                  "w": 178,
-                  "h": 47.599998474121094,
-                  "text": "$sunset",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt10 {\"x\":743,\"y\":931,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunset\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt11"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 983.2000122070312,
-                  "w": 178,
-                  "h": 33.599998474121094,
-                  "text": "Sunrise in",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt11 {\"x\":743,\"y\":983.2,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunrise in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt12"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 1011.2000122070312,
-                  "w": 178,
-                  "h": 47.599998474121094,
-                  "text": "$sunrise",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt12 {\"x\":743,\"y\":1011.2,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunrise\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt13"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 1063.4000244140625,
-                  "w": 178,
-                  "h": 33.599998474121094,
-                  "text": "Night lasts",
-                  "size": 20,
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt13 {\"x\":743,\"y\":1063.4,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Night lasts\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "txt14"
-            },
-            "c": [
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 743,
-                  "y": 1091.4000244140625,
-                  "w": 178,
-                  "h": 47.599998474121094,
-                  "text": "$night",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget text txt14 {\"x\":743,\"y\":1091.4,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$night\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "pnl7"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 488.5,
-                  "y": 1168,
-                  "w": 447,
-                  "h": 297.5,
-                  "rx": 5.5,
-                  "f": "#1A1A1A",
-                  "s": "#4A4A4A",
-                  "sw": 1
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 502,
-                  "y": 1177.5,
-                  "w": 420,
-                  "h": 30.799999237060547,
-                  "text": "COAL RESERVE",
-                  "size": 22,
-                  "weight": "bold",
-                  "f": "#9A9A9A",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget panel pnl7 {\"x\":488,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL RESERVE\",\"unit\":\"\"}"
-            ]
-          },
-          {
-            "op": "G",
-            "attrs": {
-              "id": "kv4"
-            },
-            "c": [
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 1218.4000244140625,
-                  "w": 418,
-                  "h": 53.650001525878906,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 1218.4000244140625,
-                  "w": 200,
-                  "h": 53.650001525878906,
-                  "text": "Coal left",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 1218.4000244140625,
-                  "w": 180,
-                  "h": 53.650001525878906,
-                  "text": "$kv4_v0",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 1278.050048828125,
-                  "w": 418,
-                  "h": 53.650001525878906,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 1278.050048828125,
-                  "w": 200,
-                  "h": 53.650001525878906,
-                  "text": "Coal energy",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 1278.050048828125,
-                  "w": 180,
-                  "h": 53.650001525878906,
-                  "text": "$kv4_v1",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 1337.7000732421875,
-                  "w": 418,
-                  "h": 53.650001525878906,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 1337.7000732421875,
-                  "w": 200,
-                  "h": 53.650001525878906,
-                  "text": "Coal lasts",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 1337.7000732421875,
-                  "w": 180,
-                  "h": 53.650001525878906,
-                  "text": "$kv4_v2",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "R",
-                "attrs": {
-                  "x": 503,
-                  "y": 1397.3499755859375,
-                  "w": 418,
-                  "h": 53.650001525878906,
-                  "rx": 4,
-                  "f": "#2C2C2C"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 517,
-                  "y": 1397.3499755859375,
-                  "w": 200,
-                  "h": 53.650001525878906,
-                  "text": "Producing",
-                  "size": 24,
-                  "f": "#F2F2F2",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              },
-              {
-                "op": "T",
-                "attrs": {
-                  "x": 727,
-                  "y": 1397.3499755859375,
-                  "w": 180,
-                  "h": 53.650001525878906,
-                  "text": "$kv4_v3",
-                  "size": 28,
-                  "f": "#F2F2F2",
-                  "align": "right",
-                  "valign": "middle",
-                  "fit": "ellipsis"
-                }
-              }
-            ],
-            "comments": [
-              "widget kvtable kv4 {\"x\":503,\"y\":1218.4,\"w\":418,\"h\":232.6,\"rows\":[{\"caption\":\"Coal left\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal energy\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Coal lasts\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Producing\",\"fmt\":\"\",\"state\":false,\"key\":3}],\"rowH\":53.65,\"gap\":6,\"valueW\":180,\"keys\":{}}"
             ]
           }
         ]

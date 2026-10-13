@@ -1104,293 +1104,317 @@ G id=hdr1 {
     T x=42 y=28 w=1122 h=56 text=POWER size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
     T x=1348 y=28 w=100 h=56 text=$hdr1_clock size=24 f=#C4C4C4 align=right valign=middle fit=ellipsis
 }
-# widget panel pnl1 {"x":24,"y":104,"w":1442,"h":284,"title":"STORAGE","unit":""}
-G id=pnl1 {
-    R x=24.5 y=104.5 w=1441 h=283 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=114 w=1414 h=30.8 text=STORAGE size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget readout ro1 {"x":39,"y":124,"w":440,"h":201.6,"variant":"hero","caption":"Label","unit":"%","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
-G id=ro1 {
-    R x=39 y=258 w=440 h=24 rx=3 f=#121212
-    R x=43 y=262 w==clamp($ro1_lvl,0,1)*432 h=16 rx=2 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))
-    T x=39 y=124 w=384 h=144 text="{$ro1_v:%.0f}" size=120 f=#F2F2F2 align=right valign=middle
-    T x=431 y=187.36093 w=48 h=67.2 text=% size=48 f=#9A9A9A valign=middle
-    T x=39 y=292 w=440 h=33.6 text=$ro1_status size=24 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A))) valign=middle fit=ellipsis
-    T x=39 y=292 w=440 h=33.6 text="{$ro1_sub:%.1f}" size=22 f=#C4C4C4 align=right valign=middle
-}
-# widget kvtable kv1 {"x":525,"y":154.9,"w":440,"h":218,"rows":[{"caption":"Stored","fmt":"","state":false,"key":0},{"caption":"Capacity","fmt":"","state":false,"key":1},{"caption":"","fmt":"","state":false,"key":2},{"caption":"Batteries","fmt":"%.0f","state":false,"key":3}],"rowH":50,"gap":6,"valueW":180,"keys":{}}
-G id=kv1 {
-    R x=525 y=154.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=539 y=154.9 w=222 h=50 text=Stored size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=771 y=154.9 w=180 h=50 text=$kv1_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=525 y=210.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=539 y=210.9 w=222 h=50 text=Capacity size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=771 y=210.9 w=180 h=50 text=$kv1_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=525 y=266.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=771 y=266.9 w=180 h=50 text=$kv1_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=525 y=322.9 w=440 h=50 rx=4 f=#2C2C2C
-    T x=539 y=322.9 w=222 h=50 text=Batteries size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=771 y=322.9 w=180 h=50 text="{$kv1_v3:%.0f}" size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-}
-# widget text txt1 {"x":539,"y":266.9,"w":222,"h":50,"style":"value","text":"$timeCaption","align":"left","state":false,"keys":{}}
-G id=txt1 {
-    T x=539 y=266.9 w=222 h=50 text=$timeCaption size=24 f=#F2F2F2 valign=middle fit=ellipsis
-}
-# widget repeater rep1 {"x":1011,"y":154.9,"w":440,"h":72,"max":16,"layout":"grid","cols":8,"pitch":48,"item":"bar","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep1 {
-    R x=1011 y=154.9 w=440 h=72
-    RP n=16 {
-        G v==lt(i,$rep1_n) {
-            R x==1011+mod(i,8)*56.25 y==154.9+floor(i/8)*48 w=46.25 h=24 rx=3 f=#121212
-            R x==1011+mod(i,8)*56.25+4 y==154.9+floor(i/8)*48+4 w==clamp($rep1_lvl[i],0,1)*38.25 h=16 rx=2 f==if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))
+G id=storage {
+    # widget panel pnl1 {"x":24,"y":104,"w":1442,"h":284,"title":"STORAGE","unit":""}
+    G id=pnl1 {
+        R x=24.5 y=104.5 w=1441 h=283 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=114 w=1414 h=30.8 text=STORAGE size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget readout ro1 {"x":39,"y":124,"w":440,"h":201.6,"variant":"hero","caption":"Label","unit":"%","fmt":"%.0f","bar":true,"subFmt":"%.1f","keys":{}}
+    G id=ro1 {
+        R x=39 y=258 w=440 h=24 rx=3 f=#121212
+        R x=43 y=262 w==clamp($ro1_lvl,0,1)*432 h=16 rx=2 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))
+        T x=39 y=124 w=384 h=144 text="{$ro1_v:%.0f}" size=120 f=#F2F2F2 align=right valign=middle
+        T x=431 y=187.36093 w=48 h=67.2 text=% size=48 f=#9A9A9A valign=middle
+        T x=39 y=292 w=440 h=33.6 text=$ro1_status size=24 f==if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A))) valign=middle fit=ellipsis
+        T x=39 y=292 w=440 h=33.6 text="{$ro1_sub:%.1f}" size=22 f=#C4C4C4 align=right valign=middle
+    }
+    G id=storage_table {
+        # widget kvtable kv1 {"x":525,"y":154.9,"w":440,"h":218,"rows":[{"caption":"Stored","fmt":"","state":false,"key":0},{"caption":"Capacity","fmt":"","state":false,"key":1},{"caption":"","fmt":"","state":false,"key":2},{"caption":"Batteries","fmt":"%.0f","state":false,"key":3}],"rowH":50,"gap":6,"valueW":180,"keys":{}}
+        G id=kv1 {
+            R x=525 y=154.9 w=440 h=50 rx=4 f=#2C2C2C
+            T x=539 y=154.9 w=222 h=50 text=Stored size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=771 y=154.9 w=180 h=50 text=$kv1_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+            R x=525 y=210.9 w=440 h=50 rx=4 f=#2C2C2C
+            T x=539 y=210.9 w=222 h=50 text=Capacity size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=771 y=210.9 w=180 h=50 text=$kv1_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+            R x=525 y=266.9 w=440 h=50 rx=4 f=#2C2C2C
+            T x=771 y=266.9 w=180 h=50 text=$kv1_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+            R x=525 y=322.9 w=440 h=50 rx=4 f=#2C2C2C
+            T x=539 y=322.9 w=222 h=50 text=Batteries size=24 f=#F2F2F2 valign=middle fit=ellipsis
+            T x=771 y=322.9 w=180 h=50 text="{$kv1_v3:%.0f}" size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        }
+        # widget text txt1 {"x":539,"y":266.9,"w":222,"h":50,"style":"value","text":"$timeCaption","align":"left","state":false,"keys":{}}
+        G id=txt1 {
+            T x=539 y=266.9 w=222 h=50 text=$timeCaption size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        }
+    }
+    # widget repeater rep1 {"x":1011,"y":154.9,"w":440,"h":72,"max":16,"layout":"grid","cols":8,"pitch":48,"item":"bar","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
+    G id=rep1 {
+        R x=1011 y=154.9 w=440 h=72
+        RP n=16 {
+            G v==lt(i,$rep1_n) {
+                R x==1011+mod(i,8)*56.25 y==154.9+floor(i/8)*48 w=46.25 h=24 rx=3 f=#121212
+                R x==1011+mod(i,8)*56.25+4 y==154.9+floor(i/8)*48+4 w==clamp($rep1_lvl[i],0,1)*38.25 h=16 rx=2 f==if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))
+            }
+        }
+    }
+    # widget repeater rep2 {"x":1011,"y":267,"w":440,"h":100,"max":2,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.0f","valueW":60,"click":false,"fade":false,"keys":{}}
+    G id=rep2 {
+        R x=1011 y=267 w=440 h=100
+        RP n=2 {
+            G v==lt(i,$rep2_n) {
+                R x=1011 y==267+i*56 w=440 h=44 rx=4 f=#2C2C2C
+                C v==1-eq($rep2_st[i],1)-eq($rep2_st[i],2)-eq($rep2_st[i],3) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#9A9A9A
+                C v==eq($rep2_st[i],1) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#4CC38A
+                C v==eq($rep2_st[i],2) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#F0B429
+                C v==eq($rep2_st[i],3) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#EF5350
+                T x=1051 y==267+i*56 w==lerp(316,386,clamp(and($rep2_ready,eq($rep2_hasv[i],0)),0,1)) h=44 text="$rep2_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                T v==not(and($rep2_ready,eq($rep2_hasv[i],0))) x=1377 y==267+i*56 w=60 h=44 text="{$rep2_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
+            }
         }
     }
 }
-# widget repeater rep2 {"x":1011,"y":267,"w":440,"h":100,"max":2,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.0f","valueW":60,"click":false,"fade":false,"keys":{}}
-G id=rep2 {
-    R x=1011 y=267 w=440 h=100
-    RP n=2 {
-        G v==lt(i,$rep2_n) {
-            R x=1011 y==267+i*56 w=440 h=44 rx=4 f=#2C2C2C
-            C v==1-eq($rep2_st[i],1)-eq($rep2_st[i],2)-eq($rep2_st[i],3) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#9A9A9A
-            C v==eq($rep2_st[i],1) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#4CC38A
-            C v==eq($rep2_st[i],2) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#F0B429
-            C v==eq($rep2_st[i],3) cx=1033 cy==267+i*56+22 rx=8 ry=8 f=#EF5350
-            T x=1051 y==267+i*56 w==lerp(316,386,clamp(and($rep2_ready,eq($rep2_hasv[i],0)),0,1)) h=44 text="$rep2_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-            T v==not(and($rep2_ready,eq($rep2_hasv[i],0))) x=1377 y==267+i*56 w=60 h=44 text="{$rep2_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
+G id=now {
+    # widget panel pnl2 {"x":24,"y":404,"w":470,"h":288,"title":"NOW","unit":"kW"}
+    G id=pnl2 {
+        R x=24.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=414 w=368 h=30.8 text=NOW size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+        T x=416 y=415.4 w=64 h=28 text=kW size=20 f=#9A9A9A align=right valign=middle
+    }
+    # widget kvtable kv2 {"x":39,"y":455.8,"w":440,"h":221.2,"rows":[{"caption":"Solar","fmt":"","state":false,"key":0},{"caption":"Coal","fmt":"","state":false,"key":1},{"caption":"Using","fmt":"","state":false,"key":2},{"caption":"Net","fmt":"","state":true,"key":3}],"rowH":50.8,"gap":6,"valueW":180,"keys":{}}
+    G id=kv2 {
+        R x=39 y=455.8 w=440 h=50.8 rx=4 f=#2C2C2C
+        T x=53 y=455.8 w=222 h=50.8 text=Solar size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=455.8 w=180 h=50.8 text=$kv2_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=512.6 w=440 h=50.8 rx=4 f=#2C2C2C
+        T x=53 y=512.6 w=222 h=50.8 text=Coal size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=512.6 w=180 h=50.8 text=$kv2_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=569.39996 w=440 h=50.8 rx=4 f=#2C2C2C
+        T x=53 y=569.39996 w=222 h=50.8 text=Using size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=569.39996 w=180 h=50.8 text=$kv2_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=626.2 w=440 h=50.8 rx=4 f=#2C2C2C
+        T x=53 y=626.2 w=222 h=50.8 text=Net size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=626.2 w=180 h=50.8 text=$kv2_v3 size=28 f==if(eq($kv2_s3,2),#F0B429,if(eq($kv2_s3,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+}
+G id=yesterday {
+    # widget panel pnl3 {"x":24,"y":708,"w":470,"h":228,"title":"YESTERDAY","unit":"MJ"}
+    G id=pnl3 {
+        R x=24.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=38 y=718 w=368 h=30.8 text=YESTERDAY size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+        T x=416 y=719.4 w=64 h=28 text=MJ size=20 f=#9A9A9A align=right valign=middle
+    }
+    # widget kvtable kv3 {"x":39,"y":759.8,"w":440,"h":161.2,"rows":[{"caption":"Produced","fmt":"","state":false,"key":0},{"caption":"Used","fmt":"","state":false,"key":1},{"caption":"Net","fmt":"","state":true,"key":2}],"rowH":49.733334,"gap":6,"valueW":180,"keys":{}}
+    G id=kv3 {
+        R x=39 y=759.8 w=440 h=49.733334 rx=4 f=#2C2C2C
+        T x=53 y=759.8 w=222 h=49.733334 text=Produced size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=759.8 w=180 h=49.733334 text=$kv3_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=815.5333 w=440 h=49.733334 rx=4 f=#2C2C2C
+        T x=53 y=815.5333 w=222 h=49.733334 text=Used size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=815.5333 w=180 h=49.733334 text=$kv3_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=39 y=871.26666 w=440 h=49.733334 rx=4 f=#2C2C2C
+        T x=53 y=871.26666 w=222 h=49.733334 text=Net size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=285 y=871.26666 w=180 h=49.733334 text=$kv3_v2 size=28 f==if(eq($kv3_s2,2),#F0B429,if(eq($kv3_s2,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
+    }
+}
+G id=solar_panels {
+    # widget panel pnl4 {"x":510,"y":404,"w":470,"h":288,"title":"SOLAR PANELS","unit":""}
+    G id=pnl4 {
+        R x=510.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=524 y=414 w=442 h=30.8 text="SOLAR PANELS" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt2 {"x":736,"y":419,"w":50,"h":33.6,"style":"unit","text":"Qty","align":"left","state":false,"keys":{}}
+    G id=txt2 {
+        T x=736 y=419 w=50 h=33.6 text=Qty size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt3 {"x":796,"y":419,"w":74,"h":33.6,"style":"unit","text":"kW","align":"left","state":false,"keys":{}}
+    G id=txt3 {
+        T x=796 y=419 w=74 h=33.6 text=kW size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt4 {"x":880,"y":419,"w":70,"h":33.6,"style":"unit","text":"Eff %","align":"right","state":false,"keys":{}}
+    G id=txt4 {
+        T x=880 y=419 w=70 h=33.6 text="Eff %" size=20 f=#9A9A9A align=right valign=middle fit=ellipsis
+    }
+    G id=solar_table {
+        # widget repeater rep3 {"x":525,"y":457.8,"w":440,"h":156,"max":3,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.0f","valueW":0,"click":false,"fade":false,"keys":{}}
+        G id=rep3 {
+            R x=525 y=457.8 w=440 h=156
+            RP n=3 {
+                G v==lt(i,$rep3_n) {
+                    R x=525 y==457.8+i*56 w=440 h=44 rx=4 f=#2C2C2C
+                    C v==1-eq($rep3_st[i],1)-eq($rep3_st[i],2)-eq($rep3_st[i],3) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#9A9A9A
+                    C v==eq($rep3_st[i],1) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#4CC38A
+                    C v==eq($rep3_st[i],2) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#F0B429
+                    C v==eq($rep3_st[i],3) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#EF5350
+                    T x=565 y==457.8+i*56 w==lerp(266,386,clamp(and($rep3_ready,eq($rep3_hasv[i],0)),0,1)) h=44 text="$rep3_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                    T v==not(and($rep3_ready,eq($rep3_hasv[i],0))) x=841 y==457.8+i*56 w=110 h=44 text="{$rep3_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
+                }
+            }
+        }
+        # widget repeater rep4 {"x":736,"y":462.8,"w":50,"h":145.6,"max":3,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
+        G id=rep4 {
+            R x=736 y=462.8 w=50 h=145.6
+            RP n=3 {
+                G v==lt(i,$rep4_n) {
+                    T x=736 y==462.8+i*56 w=50 h=33.6 text="$rep4_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                }
+            }
+        }
+        # widget repeater rep5 {"x":796,"y":462.8,"w":74,"h":145.6,"max":3,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
+        G id=rep5 {
+            R x=796 y=462.8 w=74 h=145.6
+            RP n=3 {
+                G v==lt(i,$rep5_n) {
+                    T x=796 y==462.8+i*56 w=74 h=33.6 text="$rep5_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                }
+            }
+        }
+        # widget alert al1 {"x":525,"y":574.4,"w":440,"h":36.4,"row":false,"keys":{}}
+        G id=al1 {
+            R x=525 y=574.4 w=440 h=36.4
+            G v==gt($al1_st,0) {
+                R x=539 y=578.60004 w=72 h=28 rx=3 f==if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))
+                T v==eq($al1_st,1) x=539 y=578.60004 w=72 h=28 text=OK size=20 weight=bold f=#111111 align=center valign=middle
+                T v==eq($al1_st,2) x=539 y=578.60004 w=72 h=28 text=WARN size=20 weight=bold f=#111111 align=center valign=middle
+                T v==eq($al1_st,3) x=539 y=578.60004 w=72 h=28 text=CRIT size=20 weight=bold f=#111111 align=center valign=middle
+                T x=625 y=577.10004 w=326 h=31 text=$al1_msg size=22 f=#F2F2F2 valign=middle fit=ellipsis
+            }
+        }
+    }
+    # widget button btn1 {"x":525,"y":623,"w":270,"h":54,"states":[{"label":"PARK PANELS","variant":"primary","key":0},{"label":"RESUME TRACKING","variant":"primary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn1 {
+        R id=btn1_hit click=1 x=525 y=623 w=270 h=54
+        G v==eq($btn1_state,0) {
+            R x=525 y=623 w=270 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+        }
+        G v==eq($btn1_state,1) {
+            R x=525 y=623 w=270 h=54 rx=4 f=#2A64BD fo==1-0.25*down
+        }
+        T v==eq($btn1_state,0) x=543 y=623 w=234 h=54 text="PARK PANELS" size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
+        T v==eq($btn1_state,1) x=543 y=623 w=234 h=54 text="RESUME TRACKING" size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
+    }
+    # widget button btn2 {"x":805,"y":623,"w":160,"h":54,"states":[{"label":"DEVICES","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
+    G id=btn2 {
+        R id=btn2_hit click=1 x=805 y=623 w=160 h=54
+        R x=805.5 y=623.5 w=159 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+        T x=823 y=623 w=124 h=54 text=DEVICES size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+    }
+}
+G id=coal_generators {
+    # widget panel pnl5 {"x":996,"y":404,"w":470,"h":288,"title":"COAL GENERATORS","unit":""}
+    G id=pnl5 {
+        R x=996.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=1010 y=414 w=442 h=30.8 text="COAL GENERATORS" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt5 {"x":1266,"y":419,"w":80,"h":33.6,"style":"unit","text":"kW","align":"left","state":false,"keys":{}}
+    G id=txt5 {
+        T x=1266 y=419 w=80 h=33.6 text=kW size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt6 {"x":1356,"y":419,"w":80,"h":33.6,"style":"unit","text":"Coal","align":"right","state":false,"keys":{}}
+    G id=txt6 {
+        T x=1356 y=419 w=80 h=33.6 text=Coal size=20 f=#9A9A9A align=right valign=middle fit=ellipsis
+    }
+    G id=coal_table {
+        # widget repeater rep6 {"x":1011,"y":457.8,"w":440,"h":106.2,"max":2,"layout":"list","cols":2,"pitch":62.2,"item":"row","fmt":"%.0f","valueW":0,"click":false,"fade":false,"keys":{}}
+        G id=rep6 {
+            R x=1011 y=457.8 w=440 h=106.2
+            RP n=2 {
+                G v==lt(i,$rep6_n) {
+                    R x=1011 y==457.8+i*62.2 w=440 h=44 rx=4 f=#2C2C2C
+                    C v==1-eq($rep6_st[i],1)-eq($rep6_st[i],2)-eq($rep6_st[i],3) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#9A9A9A
+                    C v==eq($rep6_st[i],1) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#4CC38A
+                    C v==eq($rep6_st[i],2) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#F0B429
+                    C v==eq($rep6_st[i],3) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#EF5350
+                    T x=1051 y==457.8+i*62.2 w==lerp(266,386,clamp(and($rep6_ready,eq($rep6_hasv[i],0)),0,1)) h=44 text="$rep6_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                    T v==not(and($rep6_ready,eq($rep6_hasv[i],0))) x=1327 y==457.8+i*62.2 w=110 h=44 text="{$rep6_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
+                }
+            }
+        }
+        # widget repeater rep7 {"x":1266,"y":462.8,"w":80,"h":95.8,"max":2,"layout":"list","cols":2,"pitch":62.2,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
+        G id=rep7 {
+            R x=1266 y=462.8 w=80 h=95.8
+            RP n=2 {
+                G v==lt(i,$rep7_n) {
+                    T x=1266 y==462.8+i*62.2 w=80 h=33.6 text="$rep7_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+                }
+            }
+        }
+    }
+    G id=override {
+        # widget text txt7 {"x":1015,"y":579.2,"w":200,"h":33.6,"style":"unit","text":"Override","align":"left","state":false,"keys":{}}
+        G id=txt7 {
+            T x=1015 y=579.2 w=200 h=33.6 text=Override size=20 f=#9A9A9A valign=middle fit=ellipsis
+        }
+        # widget options og1 {"x":1014,"y":620,"w":434,"h":54,"options":[{"label":"AUTO","value":0,"key":0},{"label":"ON","value":1,"key":1},{"label":"OFF","value":2,"key":2}],"gap":10,"keys":{}}
+        G id=og1 {
+            G id=og1_g0 {
+                R id=og1_o0 click=1 x=1014 y=620 w=138 h=54
+                R v==eq($og1_sel,0) x=1013 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=1014.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=og1_g1 {
+                R id=og1_o1 click=1 x=1162 y=620 w=138 h=54
+                R v==eq($og1_sel,1) x=1161 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=1162.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            G id=og1_g2 {
+                R id=og1_o2 click=1 x=1310 y=620 w=138 h=54
+                R v==eq($og1_sel,2) x=1309 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
+                R x=1310.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+            }
+            T x=1014 y=620 w=138 h=54 text=AUTO size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+            T x=1162 y=620 w=138 h=54 text=ON size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
+            T x=1310 y=620 w=138 h=54 text=OFF size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
         }
     }
 }
-# widget panel pnl2 {"x":24,"y":404,"w":470,"h":288,"title":"NOW","unit":"kW"}
-G id=pnl2 {
-    R x=24.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=414 w=368 h=30.8 text=NOW size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-    T x=416 y=415.4 w=64 h=28 text=kW size=20 f=#9A9A9A align=right valign=middle
-}
-# widget kvtable kv2 {"x":39,"y":455.8,"w":440,"h":221.2,"rows":[{"caption":"Solar","fmt":"","state":false,"key":0},{"caption":"Coal","fmt":"","state":false,"key":1},{"caption":"Using","fmt":"","state":false,"key":2},{"caption":"Net","fmt":"","state":true,"key":3}],"rowH":50.8,"gap":6,"valueW":180,"keys":{}}
-G id=kv2 {
-    R x=39 y=455.8 w=440 h=50.8 rx=4 f=#2C2C2C
-    T x=53 y=455.8 w=222 h=50.8 text=Solar size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=455.8 w=180 h=50.8 text=$kv2_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=512.6 w=440 h=50.8 rx=4 f=#2C2C2C
-    T x=53 y=512.6 w=222 h=50.8 text=Coal size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=512.6 w=180 h=50.8 text=$kv2_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=569.39996 w=440 h=50.8 rx=4 f=#2C2C2C
-    T x=53 y=569.39996 w=222 h=50.8 text=Using size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=569.39996 w=180 h=50.8 text=$kv2_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=626.2 w=440 h=50.8 rx=4 f=#2C2C2C
-    T x=53 y=626.2 w=222 h=50.8 text=Net size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=626.2 w=180 h=50.8 text=$kv2_v3 size=28 f==if(eq($kv2_s3,2),#F0B429,if(eq($kv2_s3,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget panel pnl3 {"x":24,"y":708,"w":470,"h":228,"title":"YESTERDAY","unit":"MJ"}
-G id=pnl3 {
-    R x=24.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=38 y=718 w=368 h=30.8 text=YESTERDAY size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-    T x=416 y=719.4 w=64 h=28 text=MJ size=20 f=#9A9A9A align=right valign=middle
-}
-# widget kvtable kv3 {"x":39,"y":759.8,"w":440,"h":161.2,"rows":[{"caption":"Produced","fmt":"","state":false,"key":0},{"caption":"Used","fmt":"","state":false,"key":1},{"caption":"Net","fmt":"","state":true,"key":2}],"rowH":49.733334,"gap":6,"valueW":180,"keys":{}}
-G id=kv3 {
-    R x=39 y=759.8 w=440 h=49.733334 rx=4 f=#2C2C2C
-    T x=53 y=759.8 w=222 h=49.733334 text=Produced size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=759.8 w=180 h=49.733334 text=$kv3_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=815.5333 w=440 h=49.733334 rx=4 f=#2C2C2C
-    T x=53 y=815.5333 w=222 h=49.733334 text=Used size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=815.5333 w=180 h=49.733334 text=$kv3_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=39 y=871.26666 w=440 h=49.733334 rx=4 f=#2C2C2C
-    T x=53 y=871.26666 w=222 h=49.733334 text=Net size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=285 y=871.26666 w=180 h=49.733334 text=$kv3_v2 size=28 f==if(eq($kv3_s2,2),#F0B429,if(eq($kv3_s2,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
-}
-# widget panel pnl4 {"x":510,"y":404,"w":470,"h":288,"title":"SOLAR PANELS","unit":""}
-G id=pnl4 {
-    R x=510.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=524 y=414 w=442 h=30.8 text="SOLAR PANELS" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt2 {"x":736,"y":419,"w":50,"h":33.6,"style":"unit","text":"Qty","align":"left","state":false,"keys":{}}
-G id=txt2 {
-    T x=736 y=419 w=50 h=33.6 text=Qty size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt3 {"x":796,"y":419,"w":74,"h":33.6,"style":"unit","text":"kW","align":"left","state":false,"keys":{}}
-G id=txt3 {
-    T x=796 y=419 w=74 h=33.6 text=kW size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt4 {"x":880,"y":419,"w":70,"h":33.6,"style":"unit","text":"Eff %","align":"right","state":false,"keys":{}}
-G id=txt4 {
-    T x=880 y=419 w=70 h=33.6 text="Eff %" size=20 f=#9A9A9A align=right valign=middle fit=ellipsis
-}
-# widget repeater rep3 {"x":525,"y":457.8,"w":440,"h":156,"max":3,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.0f","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep3 {
-    R x=525 y=457.8 w=440 h=156
-    RP n=3 {
-        G v==lt(i,$rep3_n) {
-            R x=525 y==457.8+i*56 w=440 h=44 rx=4 f=#2C2C2C
-            C v==1-eq($rep3_st[i],1)-eq($rep3_st[i],2)-eq($rep3_st[i],3) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#9A9A9A
-            C v==eq($rep3_st[i],1) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#4CC38A
-            C v==eq($rep3_st[i],2) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#F0B429
-            C v==eq($rep3_st[i],3) cx=547 cy==457.8+i*56+22 rx=8 ry=8 f=#EF5350
-            T x=565 y==457.8+i*56 w==lerp(266,386,clamp(and($rep3_ready,eq($rep3_hasv[i],0)),0,1)) h=44 text="$rep3_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-            T v==not(and($rep3_ready,eq($rep3_hasv[i],0))) x=841 y==457.8+i*56 w=110 h=44 text="{$rep3_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
+G id=sun {
+    # widget panel pnl6 {"x":510,"y":708,"w":470,"h":228,"title":"SUN","unit":""}
+    G id=pnl6 {
+        R x=510.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=524 y=718 w=442 h=30.8 text=SUN size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
+    }
+    G id=sunangle {
+        # widget gauge gauge1 {"x":525,"y":758.9,"w":210,"h":162.1,"label":"Sun angle","unit":"","min":0,"max":1,"start":-90,"end":90,"ticks":0,"fmt":"","value":false,"state":true,"keys":{}}
+        G id=gauge1 {
+            P d="M566.95 825.95 A63.050003 63.050003 0 0 1 630 762.9 A63.050003 63.050003 0 0 1 693.05 825.95" s=#7A7A7A sw=4
+            G a=[630,825.95] r==-90+clamp(($gauge1_v-0)/1,0,1)*180 {
+                L p=[630,825.95,630,769.205] s==if(eq($gauge1_st,1),#4CC38A,if(eq($gauge1_st,2),#F0B429,if(eq($gauge1_st,3),#EF5350,#9A9A9A))) sw=3
+            }
+            C cx=630 cy=825.95 rx=4.5 ry=4.5 f=#F2F2F2
+            T x=525 y=893 w=210 h=28 text="Sun angle" size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+        }
+        # widget text txt8 {"x":525,"y":831.15,"w":210,"h":47.6,"style":"value-lg","text":"$sunAngle","align":"center","state":false,"keys":{}}
+        G id=txt8 {
+            T x=525 y=831.15 w=210 h=47.6 text=$sunAngle size=28 f=#F2F2F2 align=center valign=middle fit=ellipsis
         }
     }
-}
-# widget repeater rep4 {"x":736,"y":462.8,"w":50,"h":145.6,"max":3,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep4 {
-    R x=736 y=462.8 w=50 h=145.6
-    RP n=3 {
-        G v==lt(i,$rep4_n) {
-            T x=736 y==462.8+i*56 w=50 h=33.6 text="$rep4_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-        }
+    # widget text txt9 {"x":745,"y":761.925,"w":220,"h":33.6,"style":"unit","text":"Sunset in","align":"left","state":false,"keys":{}}
+    G id=txt9 {
+        T x=745 y=761.925 w=220 h=33.6 text="Sunset in" size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt10 {"x":745,"y":789.925,"w":220,"h":47.6,"style":"value-lg","text":"$sunset","align":"left","state":false,"keys":{}}
+    G id=txt10 {
+        T x=745 y=789.925 w=220 h=47.6 text=$sunset size=28 f=#F2F2F2 valign=middle fit=ellipsis
+    }
+    # widget text txt11 {"x":745,"y":845.975,"w":220,"h":33.6,"style":"unit","text":"Sunrise in","align":"left","state":false,"keys":{}}
+    G id=txt11 {
+        T x=745 y=845.975 w=220 h=33.6 text="Sunrise in" size=20 f=#9A9A9A valign=middle fit=ellipsis
+    }
+    # widget text txt12 {"x":745,"y":873.975,"w":220,"h":47.6,"style":"value-lg","text":"$sunrise","align":"left","state":false,"keys":{}}
+    G id=txt12 {
+        T x=745 y=873.975 w=220 h=47.6 text=$sunrise size=28 f=#F2F2F2 valign=middle fit=ellipsis
     }
 }
-# widget repeater rep5 {"x":796,"y":462.8,"w":74,"h":145.6,"max":3,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep5 {
-    R x=796 y=462.8 w=74 h=145.6
-    RP n=3 {
-        G v==lt(i,$rep5_n) {
-            T x=796 y==462.8+i*56 w=74 h=33.6 text="$rep5_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-        }
+G id=coal_reserve {
+    # widget panel pnl7 {"x":996,"y":708,"w":470,"h":228,"title":"COAL RESERVE","unit":""}
+    G id=pnl7 {
+        R x=996.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
+        T x=1010 y=718 w=442 h=30.8 text="COAL RESERVE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
     }
-}
-# widget alert al1 {"x":525,"y":574.4,"w":440,"h":36.4,"row":false,"keys":{}}
-G id=al1 {
-    R x=525 y=574.4 w=440 h=36.4
-    G v==gt($al1_st,0) {
-        R x=539 y=578.60004 w=72 h=28 rx=3 f==if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))
-        T v==eq($al1_st,1) x=539 y=578.60004 w=72 h=28 text=OK size=20 weight=bold f=#111111 align=center valign=middle
-        T v==eq($al1_st,2) x=539 y=578.60004 w=72 h=28 text=WARN size=20 weight=bold f=#111111 align=center valign=middle
-        T v==eq($al1_st,3) x=539 y=578.60004 w=72 h=28 text=CRIT size=20 weight=bold f=#111111 align=center valign=middle
-        T x=625 y=577.10004 w=326 h=31 text=$al1_msg size=22 f=#F2F2F2 valign=middle fit=ellipsis
+    # widget kvtable kv4 {"x":1011,"y":758.9,"w":440,"h":162.1,"rows":[{"caption":"Coal left","fmt":"","state":false,"key":0},{"caption":"Coal energy","fmt":"","state":false,"key":1},{"caption":"Coal lasts","fmt":"","state":false,"key":2}],"rowH":50.033333,"gap":6,"valueW":180,"keys":{}}
+    G id=kv4 {
+        R x=1011 y=758.9 w=440 h=50.033333 rx=4 f=#2C2C2C
+        T x=1025 y=758.9 w=222 h=50.033333 text="Coal left" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1257 y=758.9 w=180 h=50.033333 text=$kv4_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=1011 y=814.93335 w=440 h=50.033333 rx=4 f=#2C2C2C
+        T x=1025 y=814.93335 w=222 h=50.033333 text="Coal energy" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1257 y=814.93335 w=180 h=50.033333 text=$kv4_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
+        R x=1011 y=870.9667 w=440 h=50.033333 rx=4 f=#2C2C2C
+        T x=1025 y=870.9667 w=222 h=50.033333 text="Coal lasts" size=24 f=#F2F2F2 valign=middle fit=ellipsis
+        T x=1257 y=870.9667 w=180 h=50.033333 text=$kv4_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
     }
-}
-# widget button btn1 {"x":525,"y":623,"w":270,"h":54,"states":[{"label":"PARK PANELS","variant":"primary","key":0},{"label":"RESUME TRACKING","variant":"primary","key":1}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn1 {
-    R id=btn1_hit click=1 x=525 y=623 w=270 h=54
-    G v==eq($btn1_state,0) {
-        R x=525 y=623 w=270 h=54 rx=4 f=#2A64BD fo==1-0.25*down
-    }
-    G v==eq($btn1_state,1) {
-        R x=525 y=623 w=270 h=54 rx=4 f=#2A64BD fo==1-0.25*down
-    }
-    T v==eq($btn1_state,0) x=543 y=623 w=234 h=54 text="PARK PANELS" size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
-    T v==eq($btn1_state,1) x=543 y=623 w=234 h=54 text="RESUME TRACKING" size=22 weight=bold f=#FFFFFF align=center valign=middle fit=ellipsis
-}
-# widget button btn2 {"x":805,"y":623,"w":160,"h":54,"states":[{"label":"DEVICES","variant":"secondary","key":0}],"canDisable":false,"canSelect":false,"keys":{}}
-G id=btn2 {
-    R id=btn2_hit click=1 x=805 y=623 w=160 h=54
-    R x=805.5 y=623.5 w=159 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=823 y=623 w=124 h=54 text=DEVICES size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget panel pnl5 {"x":996,"y":404,"w":470,"h":288,"title":"COAL GENERATORS","unit":""}
-G id=pnl5 {
-    R x=996.5 y=404.5 w=469 h=287 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=1010 y=414 w=442 h=30.8 text="COAL GENERATORS" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt5 {"x":1266,"y":419,"w":80,"h":33.6,"style":"unit","text":"kW","align":"left","state":false,"keys":{}}
-G id=txt5 {
-    T x=1266 y=419 w=80 h=33.6 text=kW size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt6 {"x":1356,"y":419,"w":80,"h":33.6,"style":"unit","text":"Coal","align":"right","state":false,"keys":{}}
-G id=txt6 {
-    T x=1356 y=419 w=80 h=33.6 text=Coal size=20 f=#9A9A9A align=right valign=middle fit=ellipsis
-}
-# widget repeater rep6 {"x":1011,"y":457.8,"w":440,"h":106.2,"max":2,"layout":"list","cols":2,"pitch":62.2,"item":"row","fmt":"%.0f","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep6 {
-    R x=1011 y=457.8 w=440 h=106.2
-    RP n=2 {
-        G v==lt(i,$rep6_n) {
-            R x=1011 y==457.8+i*62.2 w=440 h=44 rx=4 f=#2C2C2C
-            C v==1-eq($rep6_st[i],1)-eq($rep6_st[i],2)-eq($rep6_st[i],3) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#9A9A9A
-            C v==eq($rep6_st[i],1) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#4CC38A
-            C v==eq($rep6_st[i],2) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#F0B429
-            C v==eq($rep6_st[i],3) cx=1033 cy==457.8+i*62.2+22 rx=8 ry=8 f=#EF5350
-            T x=1051 y==457.8+i*62.2 w==lerp(266,386,clamp(and($rep6_ready,eq($rep6_hasv[i],0)),0,1)) h=44 text="$rep6_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-            T v==not(and($rep6_ready,eq($rep6_hasv[i],0))) x=1327 y==457.8+i*62.2 w=110 h=44 text="{$rep6_v[i]:%.0f}" size=28 f=#F2F2F2 align=right valign=middle
-        }
-    }
-}
-# widget repeater rep7 {"x":1266,"y":462.8,"w":80,"h":95.8,"max":2,"layout":"list","cols":2,"pitch":62.2,"item":"text","fmt":"","valueW":0,"click":false,"fade":false,"keys":{}}
-G id=rep7 {
-    R x=1266 y=462.8 w=80 h=95.8
-    RP n=2 {
-        G v==lt(i,$rep7_n) {
-            T x=1266 y==462.8+i*62.2 w=80 h=33.6 text="$rep7_t[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-        }
-    }
-}
-# widget text txt7 {"x":1015,"y":579.2,"w":200,"h":33.6,"style":"unit","text":"Override","align":"left","state":false,"keys":{}}
-G id=txt7 {
-    T x=1015 y=579.2 w=200 h=33.6 text=Override size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget options og1 {"x":1014,"y":620,"w":434,"h":54,"options":[{"label":"AUTO","value":0,"key":0},{"label":"ON","value":1,"key":1},{"label":"OFF","value":2,"key":2}],"gap":10,"keys":{}}
-G id=og1 {
-    G id=og1_g0 {
-        R id=og1_o0 click=1 x=1014 y=620 w=138 h=54
-        R v==eq($og1_sel,0) x=1013 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=1014.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    G id=og1_g1 {
-        R id=og1_o1 click=1 x=1162 y=620 w=138 h=54
-        R v==eq($og1_sel,1) x=1161 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=1162.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    G id=og1_g2 {
-        R id=og1_o2 click=1 x=1310 y=620 w=138 h=54
-        R v==eq($og1_sel,2) x=1309 y=619 w=140 h=56 rx=5 f=none s=#3D8BFD sw=2
-        R x=1310.5 y=620.5 w=137 h=53 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    }
-    T x=1014 y=620 w=138 h=54 text=AUTO size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-    T x=1162 y=620 w=138 h=54 text=ON size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-    T x=1310 y=620 w=138 h=54 text=OFF size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget panel pnl6 {"x":510,"y":708,"w":470,"h":228,"title":"SUN","unit":""}
-G id=pnl6 {
-    R x=510.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=524 y=718 w=442 h=30.8 text=SUN size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget gauge gauge1 {"x":525,"y":758.9,"w":210,"h":162.1,"label":"Sun angle","unit":"","min":0,"max":1,"start":-90,"end":90,"ticks":0,"fmt":"","value":false,"state":true,"keys":{}}
-G id=gauge1 {
-    P d="M566.95 825.95 A63.050003 63.050003 0 0 1 630 762.9 A63.050003 63.050003 0 0 1 693.05 825.95" s=#7A7A7A sw=4
-    G a=[630,825.95] r==-90+clamp(($gauge1_v-0)/1,0,1)*180 {
-        L p=[630,825.95,630,769.205] s==if(eq($gauge1_st,1),#4CC38A,if(eq($gauge1_st,2),#F0B429,if(eq($gauge1_st,3),#EF5350,#9A9A9A))) sw=3
-    }
-    C cx=630 cy=825.95 rx=4.5 ry=4.5 f=#F2F2F2
-    T x=525 y=893 w=210 h=28 text="Sun angle" size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
-}
-# widget text txt8 {"x":525,"y":831.15,"w":210,"h":47.6,"style":"value-lg","text":"$sunAngle","align":"center","state":false,"keys":{}}
-G id=txt8 {
-    T x=525 y=831.15 w=210 h=47.6 text=$sunAngle size=28 f=#F2F2F2 align=center valign=middle fit=ellipsis
-}
-# widget text txt9 {"x":745,"y":761.925,"w":220,"h":33.6,"style":"unit","text":"Sunset in","align":"left","state":false,"keys":{}}
-G id=txt9 {
-    T x=745 y=761.925 w=220 h=33.6 text="Sunset in" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt10 {"x":745,"y":789.925,"w":220,"h":47.6,"style":"value-lg","text":"$sunset","align":"left","state":false,"keys":{}}
-G id=txt10 {
-    T x=745 y=789.925 w=220 h=47.6 text=$sunset size=28 f=#F2F2F2 valign=middle fit=ellipsis
-}
-# widget text txt11 {"x":745,"y":845.975,"w":220,"h":33.6,"style":"unit","text":"Sunrise in","align":"left","state":false,"keys":{}}
-G id=txt11 {
-    T x=745 y=845.975 w=220 h=33.6 text="Sunrise in" size=20 f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget text txt12 {"x":745,"y":873.975,"w":220,"h":47.6,"style":"value-lg","text":"$sunrise","align":"left","state":false,"keys":{}}
-G id=txt12 {
-    T x=745 y=873.975 w=220 h=47.6 text=$sunrise size=28 f=#F2F2F2 valign=middle fit=ellipsis
-}
-# widget panel pnl7 {"x":996,"y":708,"w":470,"h":228,"title":"COAL RESERVE","unit":""}
-G id=pnl7 {
-    R x=996.5 y=708.5 w=469 h=227 rx=5.5 f=#1A1A1A s=#4A4A4A sw=1
-    T x=1010 y=718 w=442 h=30.8 text="COAL RESERVE" size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
-}
-# widget kvtable kv4 {"x":1011,"y":758.9,"w":440,"h":162.1,"rows":[{"caption":"Coal left","fmt":"","state":false,"key":0},{"caption":"Coal energy","fmt":"","state":false,"key":1},{"caption":"Coal lasts","fmt":"","state":false,"key":2}],"rowH":50.033333,"gap":6,"valueW":180,"keys":{}}
-G id=kv4 {
-    R x=1011 y=758.9 w=440 h=50.033333 rx=4 f=#2C2C2C
-    T x=1025 y=758.9 w=222 h=50.033333 text="Coal left" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1257 y=758.9 w=180 h=50.033333 text=$kv4_v0 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=1011 y=814.93335 w=440 h=50.033333 rx=4 f=#2C2C2C
-    T x=1025 y=814.93335 w=222 h=50.033333 text="Coal energy" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1257 y=814.93335 w=180 h=50.033333 text=$kv4_v1 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
-    R x=1011 y=870.9667 w=440 h=50.033333 rx=4 f=#2C2C2C
-    T x=1025 y=870.9667 w=222 h=50.033333 text="Coal lasts" size=24 f=#F2F2F2 valign=middle fit=ellipsis
-    T x=1257 y=870.9667 w=180 h=50.033333 text=$kv4_v2 size=28 f=#F2F2F2 align=right valign=middle fit=ellipsis
 }
 G v==lt(ver,11118) {
     R x=0 y=0 w=1490 h=115 f=#000000CC
