@@ -11,7 +11,7 @@ import { defKey } from '../../schema/duplicateIds'
 import type { Theme } from '../../theme'
 import { linksOf, resolveLinks, unlinked } from '../../theme/links'
 import { themeDefs, widgetRootOf } from '../../widgets/core'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
 import { applyNamed, fits, namedOf, pasteStyle, styleOf } from '../style'
 import { editAt } from '../tree'
 import { defaultOf, defaultKey } from '../settings'
@@ -60,7 +60,8 @@ function restyle(ctx: Ctx, style: (n: SrcNode) => { node: SrcNode; overwrote: nu
     return r.node
   })
   const defs = topUp(page.scene.defs, styled, t)
-  const said = [widgets && `${widgets} skipped: ${LOOK}`, unfit && `${unfit} skipped: this style does not fit ${unfit > 1 ? 'them' : 'it'}`,
+  const natives = nativeMembersOf(ctx).length
+  const said = [natives && `${natives} skipped: natives take no style`, widgets && `${widgets} skipped: ${LOOK}`, unfit && `${unfit} skipped: this style does not fit ${unfit > 1 ? 'them' : 'it'}`,
     overwrote && `${overwrote} expression or data value${overwrote > 1 ? 's' : ''} replaced`].filter(Boolean).join('; ')
   if (!changed && defs === page.scene.defs) { ctx.note(said || (styled.length ? 'the style is already there' : 'no selected shapes fit this style')); return }
   if (said) ctx.note(said)
@@ -68,12 +69,12 @@ function restyle(ctx: Ctx, style: (n: SrcNode) => { node: SrcNode; overwrote: nu
 }
 
 const pasteStyleTo: Command = { kind: 'command', id: 'style.paste', label: 'Paste style', menu: 'style', order: 1, keys: ['Mod+Alt+V'],
-  when: ctx => ctx.clip.style !== null && membersOf(ctx).length > 0,
+  when: ctx => ctx.clip.style !== null && membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) { const style = ctx.clip.style!; return restyle(ctx, n => pasteStyle(n, style, ctx.theme())) } }
 
 // The named styles, one click each from the Style menu (no key).
 export const namedCommands = (ctx: Ctx): Command[] => namedOf(ctx.theme()).map((s, k) => ({ kind: 'command', id: `style.${s.id}`, label: s.label, menu: 'style', order: 10 + k,
-  when: ctx => membersOf(ctx).length > 0 && namedOf(ctx.theme()).some(x => x.id === s.id),
+  when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0 && namedOf(ctx.theme()).some(x => x.id === s.id),
   run(ctx) {
     const t = ctx.theme(), current = namedOf(t).find(x => x.id === s.id)
     if (current) return restyle(ctx, n => fits(current, n, t) ? applyNamed(n, current, t) : null)

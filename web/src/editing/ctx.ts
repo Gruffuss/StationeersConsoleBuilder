@@ -14,7 +14,8 @@ import { first, foldKey } from '../srctext/props'
 import { themeOf } from '../theme'
 import { widgetAt } from '../widgets/core'
 import { worldOf } from './bounds'
-import { enterable, pickAt } from './depth'
+import { enterable, enterablePath, nativeTarget, pickAt } from './depth'
+import { holderOf, nativeHitAt } from './natives'
 import { loadDrawDefaults, loadSettings, saveDrawDefaults, saveSettings, withSettings } from './settings'
 import type { Ctx, Pt } from './types'
 import type { Viewport } from './view'
@@ -106,6 +107,12 @@ export const selectionOf = (s?: readonly Selection[]) =>
 export const membersOf = (ctx: Ctx): Selection[] => selected(ctx.get()).filter(x => x.pageId === ctx.page().id && !x.inDefs && x.native === undefined
   && nodeAt(ctx.page().scene.root, x.path))
 
+/** The active page's selected native uids; scene readers keep using membersOf. */
+export const nativeMembersOf = (ctx: Ctx): Selection[] => {
+  const page = ctx.page(), uids = new Set((page.natives ?? []).map(n => n.uid))
+  return selected(ctx.get()).filter(x => x.pageId === page.id && !x.inDefs && x.native !== undefined && uids.has(x.native))
+}
+
 const SNAP_PX = 8   // CSS px: the object-snap distance (spec §4)
 
 export function makeCtx(d: CtxDeps): EditorCtx {
@@ -129,8 +136,23 @@ export function makeCtx(d: CtxDeps): EditorCtx {
         threshold: k > 0 ? SNAP_PX / k : 0,
       }
     },
-    pick(px, deep = false) {
+    pick(px, deep = false, o = {}) {
+      const state = d.get(), page = ctx.page(), t = ctx.theme(), native = o.natives === false ? null : nativeHitAt(page, t, px)
+      if (native) {
+        const P = holderOf(page.scene, native, t) ?? [], E = state.entered?.pageId === page.id ? state.entered.path : []
+        let target: Selection = { pageId: page.id, ...nativeTarget(native.uid, P, E, deep) }
+        if (!deep) {
+          const own = selected(state).find(x => x.pageId === page.id && !x.inDefs && x.native === native.uid)
+          const depth = target.native === undefined ? target.path.length : P.length + 1
+          const member = selected(state).find(x => x.pageId === page.id && !x.inDefs && x.native === undefined
+            && x.path.length > depth && x.path.every((k, i) => P[i] === k))
+          if (own || member) target = own ?? member!
+        }
+        const path = deep ? enterablePath(page.scene, P, t) : E.every((k, i) => P[i] === k) ? E : []
+        return { target, ...(path.join() !== E.join() && { enter: { type: 'enter' as const, pageId: page.id, path } }) }
+      }
       const s = d.get(), hit = snap(s, d.pick(px))
+      if (o.natives === false && hit?.native !== undefined) return { target: null }
       if (!hit || hit.inDefs || hit.native !== undefined) return { target: hit }
       const entered = s.entered?.pageId === hit.pageId ? s.entered.path : []
       const picked = pickAt(hit, entered, deep, ctx.page().scene, ctx.theme())
@@ -170,7 +192,7 @@ export function makeCtx(d: CtxDeps): EditorCtx {
     },
     async apply(e, o = {}) {
       const page = ctx.page(), base = page.scene
-      const land = () => { d.dispatch({ type: 'editScene', pageId: page.id, scene: e.scene, ...selectionOf(e.selection) }); return null }
+      const land = () => { d.dispatch({ type: 'editScene', pageId: page.id, scene: e.scene, ...(e.natives !== undefined && { natives: e.natives }), ...selectionOf(e.selection) }); return null }
       if (!o.check) return land()
       const say = (why: string) => { d.note(why); return why }
       const checker = d.checker()
@@ -179,6 +201,7 @@ export function makeCtx(d: CtxDeps): EditorCtx {
       // A scene of the same content is no change: a nudge burst that nets to nothing hands back the project it began from.
       const now = ctx.page()
       if (now.id !== page.id || now.scene !== base && !sameData(now.scene, base)) return say('the scene changed while this was checked; not applied')
+      if (e.natives !== undefined && now.natives !== page.natives && !sameData(now.natives ?? [], page.natives ?? [])) return say('the natives changed while this was checked; not applied')
       // Too large to check here is no verdict on the scene: it lands, its reason said as information (M2b final-wave
       // ruling 1); the preview keeps the last scene it showed.
       if (c.tooLarge) d.note(c.errors[0].message)

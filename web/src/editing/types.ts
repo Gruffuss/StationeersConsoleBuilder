@@ -11,6 +11,7 @@ import type { Action, Selection, State } from '../model/store'
 import type { Frame } from '../runtime/frame'
 import type { SceneChecker } from '../srctext/checker'
 import type { Theme } from '../theme'
+import type { NativeRef } from '../widgets/types'
 
 /** A point in design units (the page scene's root frame, SCENE w x h), unless a field says surface px. */
 export type Pt = { x: number; y: number }
@@ -40,13 +41,14 @@ export type View = {
   threshold: number                 // 8 CSS px in design units: the snap distance
 }
 /** What a tool or command writes: the active page's next scene and, when it decides, the next selection (last = primary;
- *  [] = nothing; omitted = unchanged). */
-export type Edit = { scene: Scene; selection?: Selection[] }
+ *  [] = nothing; omitted = unchanged). Natives is the whole next page list; preserve untouched refs so their holders
+ *  can carry them, while changed and added refs stay as given. */
+export type Edit = { scene: Scene; natives?: NativeRef[]; selection?: Selection[] }
 export type OverlayCtx = { zoom: number; frame: Frame | null; view: View }
 /** Editor state that is not undoable: the copied nodes as src text, the page they came from and how often they were
  *  pasted there (pastes that landed), the page's scene each of those landed on (`at`: an undo back to one takes the count
  *  back with it), whether one sat inside a group (a paste lands at the top level); a copied style. */
-export type Clip = { text: string | null; page: string; pasted: number; at: Scene[]; nested?: boolean
+export type Clip = { text: string | null; page: string; pasted: number; at: Scene[]; nested?: boolean; natives?: { ref: NativeRef; frame: Mat | null }[]
   style: { op: string; attrs: Record<string, Value>; links?: Record<string, import('../theme/links').StyleLink> } | null }
 
 export interface Ctx {
@@ -56,8 +58,9 @@ export interface Ctx {
   theme(): Theme
   view(): View
   frame(): Frame | null              // the frame on the canvas (one frame late: picking only)
-  /** Pure: keeps a selected member, else entered depth; innermost when deep. The caller applies enter intent. */
-  pick(px: Pt, deep?: boolean): { target: Selection | null; enter?: Extract<Action, { type: 'enter' }> }
+    /** Pure: keeps a selected member, else entered depth; innermost when deep. `natives: false` picks vector nodes only.
+     *  The caller applies enter intent. */
+    pick(px: Pt, deep?: boolean, o?: { natives?: boolean }): { target: Selection | null; enter?: Extract<Action, { type: 'enter' }> }
   /** The active page's numbering when it fits the page's scene; undefined after a structural edit until its check lands. */
   order(): Order | undefined
   settings(): Settings

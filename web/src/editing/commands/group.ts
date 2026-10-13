@@ -7,7 +7,9 @@ import { fieldOf, GROUP_PAINT_DEFAULTS } from '../../schema'
 import { foldKey } from '../../srctext/props'
 import { widgetAt, widgetOf } from '../../widgets/core'
 import { DEFAULT_THEME, THEMES } from '../../theme'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { holderFor, holderOf } from '../natives'
+import { answersTo } from '../scope'
 import { moveBy, pairOf } from '../transform'
 import { editList, first, isLock, LOCK } from '../tree'
 import type { Command } from '../types'
@@ -17,15 +19,25 @@ import type { Command } from '../types'
 const DEFAULTS = new Set(GROUP_PAINT_DEFAULTS)
 
 const group: Command = { kind: 'command', id: 'group', label: 'Group', menu: 'arrange', order: 0, keys: ['Mod+G'], once: true,
-  when: ctx => membersOf(ctx).length > 0,
+  when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) {
-    const page = ctx.page(), set = membersOf(ctx), parent = set[0].path.slice(0, -1)
+    const page = ctx.page(), set = membersOf(ctx), nativeSet = nativeMembersOf(ctx)
+    if (!set.length) { ctx.note('a group needs a shape: a group of natives alone has no vector content'); return }
+    const parent = set[0].path.slice(0, -1)
     if (set.some(x => x.path.length !== parent.length + 1 || parent.some((k, i) => x.path[i] !== k))) { ctx.note('group: the nodes must share one parent'); return }
     const idx = set.map(x => x.path[x.path.length - 1]).sort((a, b) => a - b), chosen = new Set(idx)
     const list = parent.length ? nodeAt(page.scene.root, parent)!.c! : page.scene.root
     const g: SrcNode = { op: 'G', attrs: {}, c: idx.map(i => list[i]) }, slot = idx[idx.length - 1] - (idx.length - 1)
     const root = editList(page.scene.root, parent, l => { const rest = l.filter((_, i) => !chosen.has(i)); return [...rest.slice(0, slot), g, ...rest.slice(slot)] })!
-    return ctx.apply({ scene: { ...page.scene, root }, selection: [{ pageId: page.id, path: [...parent, slot] }] }, { check: true })
+    let scene = { ...page.scene, root }, natives = page.natives
+    if (nativeSet.length) {
+      const holder = holderFor(ctx.get().project, page.id, scene, [...parent, slot], ctx.theme())
+      if ('refused' in holder) { ctx.note(holder.refused); return }
+      scene = holder.scene
+      const uids = new Set(nativeSet.map(s => s.native))
+      natives = page.natives!.map(n => uids.has(n.uid) ? { ...n, group: holder.id } : n)
+    }
+    return ctx.apply({ scene, ...(nativeSet.length && { natives }), selection: [{ pageId: page.id, path: [...parent, slot] }] }, { check: true })
   } }
 
 /** n given a default it inherited from the group: as its own key where its op reads it (`s_` is a shape's `s`; a G's `s`
@@ -36,37 +48,6 @@ function inherit(n: SrcNode, k: string, v: Value): SrcNode {
   if (!(own === 's' && foldKey(n.op) === 'G') && fieldOf(n.op, own) && first(n, foldKey(own)) === undefined) n = withAttr(n, own, v)
   if (n.c && first(n, foldKey(k)) === undefined) n = withAttr(n, k, v)
   return n
-}
-
-// `hover` or `down` read by an expression: an `=` value or a `{=...}` placeholder (Expression.cs names them so; `$hover`
-// is data, `downs` another name).
-const POINTER = /(?<![\w$.])(?:hover|down)(?![\w(])/
-function readsPointer(attrs: Record<string, Value>): boolean {
-  const stack: Value[] = Object.values(attrs)
-  for (let v = stack.pop(); v !== undefined; v = stack.pop()) {
-    if (Array.isArray(v)) for (const x of v) stack.push(x)
-    else if (typeof v === 'string' && (v[0] === '=' || v.includes('{=')) && POINTER.test(v)) return true
-  }
-  return false
-}
-
-/** Whether a node answers to the group's id for `hover` and `down` (REFERENCE.md: the nearest node with an id is their
- *  scope; Tessellator.cs Visit): one without an id of its own, outside every node with one, that reads either, the
- *  nodes of a symbol a USE without an id draws included. Explicit stack. */
-function answersTo(kids: readonly SrcNode[], defs: readonly SrcNode[]): boolean {
-  const seen = new Set<string>(), stack = [...kids]
-  for (let n = stack.pop(); n; n = stack.pop()) {
-    const id = first(n, 'ID')
-    if (typeof id === 'string' && id) continue
-    if (readsPointer(n.attrs)) return true
-    const ref = foldKey(n.op) === 'USE' ? first(n, 'REF') : undefined
-    if (typeof ref === 'string' && !seen.has(ref)) {
-      seen.add(ref)
-      for (const d of defs) if (first(d, 'ID') === ref) for (const c of d.c ?? []) stack.push(c)
-    }
-    for (const c of n.c ?? []) stack.push(c)
-  }
-  return false
 }
 
 const IDENTITY_M = [1, 0, 0, 1, 0, 0]
@@ -126,9 +107,24 @@ const ungroup: Command = { kind: 'command', id: 'ungroup', label: 'Ungroup', men
   run(ctx) {
     const page = ctx.page(), sel = ctx.get().selection!, out = ungrouped(nodeAt(page.scene.root, sel.path)!, page.scene.defs)
     if (typeof out === 'string') { ctx.note(out); return }
-    if (out.note) ctx.note(out.note)
     const parent = sel.path.slice(0, -1), k = sel.path[sel.path.length - 1], kids = out.nodes
-    const root = editList(page.scene.root, parent, l => [...l.slice(0, k), ...kids, ...l.slice(k + 1)])!
-    return ctx.apply({ scene: { ...page.scene, root }, selection: kids.map((_, i) => ({ pageId: page.id, path: [...parent, k + i] })) }, { check: true })
+    let scene = page.scene, group: string | undefined
+    const held = new Set((page.natives ?? []).filter(n => holderOf(scene, n, ctx.theme())?.join() === sel.path.join()).map(n => n.uid))
+    if (held.size) {
+      let path = parent
+      while (path.length) {
+        const holder = holderFor(ctx.get().project, page.id, scene, path, ctx.theme())
+        if (!('refused' in holder)) { scene = holder.scene; group = holder.id; break }
+        path = path.slice(0, -1)
+      }
+    }
+    const natives = (page.natives ?? []).map(n => {
+      if (!held.has(n.uid)) return n
+      const { group: _, ...rest } = n
+      return group ? { ...rest, group } : rest
+    })
+    const root = editList(scene.root, parent, l => [...l.slice(0, k), ...kids, ...l.slice(k + 1)])!
+    if (out.note || held.size) ctx.note([out.note, held.size ? `${[...held].join(', ')} joined ${group ? 'group ' + group : 'the page'}` : ''].filter(Boolean).join('; '))
+    return ctx.apply({ scene: { ...scene, root }, ...(held.size && { natives }), selection: kids.map((_, i) => ({ pageId: page.id, path: [...parent, k + i] })) }, { check: true })
   } }
 export default [group, ungroup]

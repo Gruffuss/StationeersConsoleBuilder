@@ -3,13 +3,39 @@ import type { Scene } from '../model/scene'
 import { initialState } from '../model/store'
 import { node } from '../model/testing'
 import { invalid, tooLarge, type Checked } from '../srctext/check'
-import { makeCtx, membersOf, paramsOf, sameShape, selectionOf } from './ctx'
+import { makeCtx, membersOf, nativeMembersOf, paramsOf, sameShape, selectionOf } from './ctx'
 import { DEFAULTS } from './settings'
 import { harness } from './testing'
 
 const R = node('R', { x: 1, y: 1, w: 2, h: 2 })
 const scene = (root = [R], w = 460): Scene => ({ header: { w, h: w, fit: 'contain' }, defs: [], root })
 const clean = (): Checked => ({ errors: [], warnings: [], src: 'R', order: { ops: [], nodes: [] } })
+
+it('nativeMembersOf returns active-page selected native selections while membersOf stays scene-only', () => {
+  const ref = { type: 'icon', uid: 'ico1', params: { x: 10, y: 20, w: 30, h: 30, kind: 'gas', name: 'Oxygen' } }
+  const native = { pageId: 'p1', path: [], native: 'ico1' }, r = { pageId: 'p1', path: [0] }
+  const h = harness(scene(), { natives: [ref], sel: native, also: [r, { ...native, pageId: 'p2' }, { ...native, native: 'missing' }] })
+  expect(nativeMembersOf(h.ctx)).toEqual([native])
+  expect(membersOf(h.ctx)).toEqual([r])
+})
+
+it('apply carries an explicit native list through a native-only edit', async () => {
+  const ref = { type: 'icon', uid: 'ico1', params: { x: 10, y: 20, w: 30, h: 30, kind: 'gas', name: 'Oxygen' } }
+  const h = harness(scene(), { natives: [ref] }), refs = [{ ...ref, hidden: true as const }]
+  expect(await h.ctx.apply({ scene: h.scene(), natives: refs })).toBeNull()
+  expect(h.ctx.page().natives).toEqual(refs)
+  expect(h.state().past).toHaveLength(1)
+})
+it('checked apply refuses an explicit native list when the natives changed during its check', async () => {
+  const ref = { type: 'icon', uid: 'ico1', params: { x: 10, y: 20, w: 30, h: 30, kind: 'gas', name: 'Oxygen' } }
+  const h = harness(scene(), { natives: [ref] }), before = h.scene()
+  const late = h.ctx.apply({ scene: before, natives: [] }, { check: true })
+  h.ctx.dispatch({ type: 'setWidget', pageId: 'p1', ref: { ...ref, params: { ...ref.params, x: 40 } } })
+  expect(await late).toBe('the natives changed while this was checked; not applied')
+  expect(h.ctx.page().natives?.[0].params.x).toBe(40)
+  expect(h.notes).toContain('the natives changed while this was checked; not applied')
+  expect(h.state().past).toHaveLength(1)
+})
 
 describe('sameShape', () => {
   it('compares ops and child counts at every level, skipping identical objects', () => {

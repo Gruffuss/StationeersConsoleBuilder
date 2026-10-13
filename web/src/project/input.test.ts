@@ -201,3 +201,15 @@ it('reports a JSON parse engine failure as larger than this browser can hold as 
   vi.spyOn(JSON, 'parse').mockImplementation(() => { throw new RangeError('Invalid string length') })
   expect(() => readProject('original text')).toThrow('larger than this browser can hold as text')
 })
+it('keeps native membership and true flags, while still reporting foreign native fields', () => {
+  const p = reducer(initialState(), { type: 'insertWidget', pageId: 'p1', widget: 'icon' }).project
+  p.pages[0].scene.root = [{ op: 'G', attrs: { id: 'potato' }, c: [] }]
+  Object.assign(p.pages[0].natives![0], { group: 'potato', hidden: true, lock: true })
+  const clean = readProject(JSON.stringify(p))
+  expect(clean.project.pages[0].natives).toEqual(p.pages[0].natives)
+  expect(clean.notice).not.toContain('Ignored non-project fields')
+  Object.assign(p.pages[0].natives![0], { foo: 1 })
+  const foreign = readProject(JSON.stringify(p))
+  expect(foreign.notice).toContain('Ignored non-project fields: foo')
+  expect(foreign.notice).not.toContain('group, hidden, lock')
+})

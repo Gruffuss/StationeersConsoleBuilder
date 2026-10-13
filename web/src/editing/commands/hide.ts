@@ -6,7 +6,8 @@ import type { SrcNode } from '../../model/scene'
 import { nodeAt } from '../../model/store'
 import { widgetOf } from '../../widgets/core'
 import { hidden } from '../bounds'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { withFlag } from '../natives'
 import { editAt, first, mapTree } from '../tree'
 import type { Command } from '../types'
 
@@ -23,7 +24,7 @@ function anyShown(root: readonly SrcNode[]): boolean {
 }
 
 const hide: Command = { kind: 'command', id: 'hide', label: 'Hide / show', menu: 'arrange', order: 20, keys: ['Mod+Shift+H'], once: true,
-  when: ctx => membersOf(ctx).length > 0,
+  when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) {
     const page = ctx.page()
     let skipped = 0
@@ -40,11 +41,14 @@ const hide: Command = { kind: 'command', id: 'hide', label: 'Hide / show', menu:
     const said = [skipped ? `${skipped} skipped: v is an expression` : '',
       root !== page.scene.root && !anyShown(root) ? 'nothing on this page is shown now: the mod draws its magenta empty-scene marker' : '']
     if (said.some(Boolean)) ctx.note(said.filter(Boolean).join('; '))
-    return ctx.apply({ scene: { ...page.scene, root } })
+    const uids = new Set(nativeMembersOf(ctx).map(s => s.native))
+    const natives = (page.natives ?? []).map(n => uids.has(n.uid) ? withFlag([n], [n.uid], 'hidden', !n.hidden)[0] : n)
+    return ctx.apply({ scene: { ...page.scene, root }, ...(uids.size && { natives }) })
   } }
 const showAll: Command = { kind: 'command', id: 'showAll', label: 'Show all hidden', menu: 'arrange', order: 21, when: () => true,
   run(ctx) {
     const page = ctx.page(), t = ctx.theme()
-    return ctx.apply({ scene: { ...page.scene, root: mapTree(page.scene.root, n => hidden(n) ? withAttr(n, 'v', undefined) : n, n => !!widgetOf(n, t)) } })
+    return ctx.apply({ scene: { ...page.scene, root: mapTree(page.scene.root, n => hidden(n) ? withAttr(n, 'v', undefined) : n, n => !!widgetOf(n, t)) },
+      ...(page.natives && { natives: withFlag(page.natives, page.natives.map(n => n.uid), 'hidden', false) }) })
   } }
 export default [hide, showAll]

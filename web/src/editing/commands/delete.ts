@@ -8,13 +8,13 @@ import { nodeAt, selected, type Selection } from '../../model/store'
 import { first } from '../../srctext/props'
 import { dropWidget, widgetsIn } from '../../widgets/core'
 import { removeAt } from '../tree'
+import { nativesUnder } from '../natives'
 import type { Command } from '../types'
 
 const del: Command = { kind: 'command', id: 'delete', label: 'Delete', menu: 'edit', order: 10, keys: ['Delete', 'Backspace'],
   when: ctx => selected(ctx.get()).some(x => x.pageId === ctx.page().id),
   run(ctx) {
     const page = ctx.page(), t = ctx.theme(), all = selected(ctx.get()).filter(x => x.pageId === page.id)
-    for (const x of all) if (x.native !== undefined) ctx.dispatch({ type: 'deleteWidget', pageId: page.id, uid: x.native })
     const widgets = widgetsIn(page.scene, t), uids = widgets.map(w => w.ref.uid)
     const owned = (x: Selection) => {
       const d = x.inDefs ? page.scene.defs[x.path[0]] : undefined, k = d && first(d, 'ID')
@@ -22,12 +22,13 @@ const del: Command = { kind: 'command', id: 'delete', label: 'Delete', menu: 'ed
     }
     const set = all.filter(x => x.native === undefined && !owned(x)), kept = all.filter(owned).length
     if (kept) ctx.note(`${kept} skipped: a widget's own def goes with its widget`)
-    if (!set.length) return
+    if (!set.length && !all.some(x => x.native !== undefined)) return
     const ws = widgets.filter(w => set.some(x => !x.inDefs && x.path.length <= w.path.length && x.path.every((k, i) => w.path[i] === k)))
     const defs = set.filter(x => x.inDefs).map(x => x.path), nodes = set.filter(x => !x.inDefs).map(x => x.path)
     let scene = { ...page.scene, root: removeAt(page.scene.root, nodes), defs: defs.length ? removeAt(page.scene.defs, defs) : page.scene.defs }
     // Give dropWidget each deleted root so its shared def cleanup sees only the nodes that remain.
     for (const { path, ref } of ws) scene = dropWidget({ ...scene, root: [...scene.root, nodeAt(page.scene.root, path)!] }, ref.uid, t)
-    return ctx.apply({ scene, selection: [] })
+    const gone = new Set([...all.flatMap(x => x.native ? [x.native] : []), ...nativesUnder(page.scene, page.natives ?? [], nodes, t).map(n => n.uid)])
+    return ctx.apply({ scene, ...(gone.size && { natives: (page.natives ?? []).filter(n => !gone.has(n.uid)) }), selection: [] })
   } }
 export default del

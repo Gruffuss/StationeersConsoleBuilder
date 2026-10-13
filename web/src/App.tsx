@@ -23,7 +23,8 @@ import { CustomLuaPane } from './editor/CustomLuaPane'
 import { SimPanel } from './editor/SimPanel'
 import { NamesList } from './editor/logicUi'
 import { makeCtx, shownOrder } from './editing/ctx'
-import { worldBox } from './editing/bounds'
+import { unitsOf } from './editing/units'
+import { shownNatives } from './editing/natives'
 import { Header } from './editor/shell/Header'
 import { ThemeMenu } from './editor/shell/ThemeMenu'
 import { ToolRail } from './editor/shell/ToolRail'
@@ -92,7 +93,7 @@ import { GameLinkStatus } from './editor/GameLinkStatus'
 import { DevicePicker } from './editor/DevicePicker'
 import { SendSection } from './editor/SendSection'
 import { THEMES, themeOf, themesOf } from './theme'
-import { nativeAt, widgetAt, nativesOf } from './widgets/core'
+import { nativeAt, widgetAt } from './widgets/core'
 
 const defaultWorker = () => new Worker(new URL('./runtime/core.worker.ts', import.meta.url), { type: 'module' })
 const defaultCheck = () => new Worker(new URL('./srctext/check.worker.ts', import.meta.url), { type: 'module' })
@@ -730,9 +731,12 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
     patchError, ...(scripts ? [] : [...issues, ...(fontNote ? [`Preview fonts: ${fontNote}`] : []), ...(ready && !issues.length ? gen.problems.map(p => `${p.level}: ${p.message}`) : []),
       ...traps.map(p => `${p.level}: ${p.message}`), ...hostNotes.map(n => `info: ${n}`)]), problems])
   const fitKey = JSON.stringify(selected(state))
-  const fitBoxes = useMemo(() => selected(state).filter(s => s.pageId === page.id && !s.inDefs).map(s => ({ s,
-    b: s.native ? nativesOf(page, theme).find(n => n.uid === s.native)?.el.box : worldBox(page.scene, s.path),
-  })), [page.scene, page.id, page.natives, theme, fitKey])
+  const fitBoxes = useMemo(() => {
+    const set = selected(state).filter(s => s.pageId === page.id && !s.inDefs)
+    const boxes = new Map(unitsOf(page.scene, set, theme, page.natives).map(u => [u.sel, u.box]))
+    const natives = new Map(shownNatives(page, theme).map(n => [n.uid, n.el.box]))
+    return set.map(s => ({ s, b: s.native ? natives.get(s.native) : boxes.get(s) }))
+  }, [page.scene, page.id, page.natives, theme, fitKey])
   const selectionBox = useMemo(() => {
     const fitPoints: number[] = [], unit = viewbox(page.scene.header, page.size)
     for (const { s, b } of fitBoxes) {
@@ -849,10 +853,10 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
           : play ? undefined : ({ zoom, pan, frame }) => {
             const o = shownOrder(frame, page, order)   // the frame the canvas shows
             return <>
-              {/* the placeholders under the selection: its handles stay on top, and a press on one selects it, not the canvas */}
-              <NativeLayer page={page} theme={theme} zoom={zoom} selected={selection?.native}
+              {/* Placeholders leave presses to the canvas router; handles stay above them. */}
+              <NativeLayer page={page} theme={theme} zoom={zoom} selected={new Set(selected(state).flatMap(s => s.pageId === page.id && s.native ? [s.native] : []))}
                 onSelect={uid => dispatch({ type: 'select', selection: { pageId: page.id, path: [], native: uid } })} />
-              <Selection frame={frame} zoom={zoom} scene={page.scene} selection={selection}
+              <Selection frame={frame} zoom={zoom} scene={page.scene} natives={page.natives} theme={theme} selection={selection}
                 node={selection && !selection.inDefs && o ? indexOfPath(o, page.scene.root, selection.path) : null}
                 rect={page.size} handles={!!TOOLS.find(t => t.id === editor.ctx.tool())?.handles && !state.also.length}
                 widget={widgetBox(page.scene, selection && !selection.inDefs ? selection.path : undefined, theme)} />
@@ -865,7 +869,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
           setProblems(f.problems.map(p => `problem: ${p.message}`).join('\n'))
         }} /></div>}
       {!scripts && play && <div className="vb-play-banner raised"><span>Playing: pointer and wheel go to the chip. Press Play again to edit.</span><span className="unit">{project.pages.find(p => p.surface === active)?.name ?? active} · {active}</span></div>}
-      {!scripts && <Breadcrumb scene={page.scene} selection={selection} entered={state.entered} dispatch={dispatch} />}
+      {!scripts && <Breadcrumb scene={page.scene} natives={page.natives} theme={theme} selection={selection} entered={state.entered} dispatch={dispatch} />}
       </div>
       {!scripts && <SourcePane name={page.name} open={sourceOpen} onClose={() => setSourceOpen(false)} counts={diagnostics}>{started && checker && <CodePane scene={page.scene} pageId={page.id} selection={state.selection} dispatch={dispatch} checker={checker} onDiagnostics={setDiagnostics} />}</SourcePane>}
       </div>

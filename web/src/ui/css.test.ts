@@ -57,3 +57,10 @@ it('has no sub-12px text or preview family names in chrome CSS', () => {
 it('keeps native modal dialogs fixed even when the page scrolls', () => {
   expect(read('./base.css')).toMatch(/dialog\.dlg\s*\{[^}]*position:\s*fixed/)
 })
+it('positions the shell scroll areas, so visually hidden labels scroll inside them instead of stretching the page', () => {
+  // A .vh label is position: absolute; with an unpositioned scroll area it is placed against a box outside it and
+  // escapes its scrolling (a long Layers tree made the whole page scroll, 2026-10-13).
+  const rules = [...read('../app.css').matchAll(/([^{}]+)\{([^}]*)\}/g)].map(m => ({ selectors: m[1].split(',').map(s => s.trim()), body: m[2] }))
+  for (const area of ['.vb-sidebar', '.vb-inspector', '.vb-statusbar'])
+    expect(rules.some(r => r.selectors.includes(area) && /position:\s*relative/.test(r.body)), area).toBe(true)
+})

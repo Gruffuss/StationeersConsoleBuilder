@@ -1,7 +1,6 @@
 import { round } from '../../editor/geometry'
-import { widgetBoxes } from '../../editor/Handles'
 import { flattenPath, printPath, type PathSeg } from '../../srctext/path'
-import { allBoxes } from '../bounds'
+import { canvasTargets } from '../select'
 import { dressed, drawingFrame, newNode } from '../draw'
 import { SLOP, snapOn, snapOpts } from '../gesture'
 import { noteCrossing } from '../points'
@@ -26,7 +25,7 @@ const pen: Tool = {
     const frame = drawingFrame(ctx, p.at)
     if (!frame) return null
     const page = ctx.page(), theme = ctx.theme(), defaults = ctx.drawDefaults()
-    const seen = targetsOf(allBoxes(page.scene, new Set(), widgetBoxes(page.scene, theme)), ctx.view().size)
+    const seen = targetsOf(canvasTargets(page, theme), ctx.view().size)
     const snap = (at: Pt, mods: typeof p.mods) => snapOn(ctx, mods) ? snapPoint(at, seen, snapOpts(ctx)).p : at
     const pts: Anchor[] = [{ at: snap(p.at, p.mods) }]
     let held = true, done = false, band: Pt | null = null

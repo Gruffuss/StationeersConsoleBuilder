@@ -396,6 +396,19 @@ describe('plain-shape needle gauge', () => {
 })
 
 describe('the Power wall and Hydro farm starters (docs/templates-power-farm.md)', () => {
+  it.each(Object.keys(THEMES))('hydro-farm seats every native in its deepest ordinary group under %s', theme => {
+    const plants = ['potato', 'wheat', 'rice', 'soybean', 'corn', 'mushroom', 'alien_mushroom', 'tomato', 'pumpkin', 'fern',
+      'darga_fern', 'peace_lily', 'tropical_lily', 'winterspawn_a', 'winterspawn_b', 'hades_flower_a', 'hades_flower_b']
+    for (const p of [authored('hydro-farm'), templateProject('hydro-farm', theme)]) {
+      expect(p.pages.map(pg => (pg.natives ?? []).map(n => [n.uid, n.group]))).toEqual([
+        [['ico1', 'current_plant'], ['ico2', 'larre']], plants.map((group, k) => [`ico${k + 3}`, group]), [],
+      ])
+      expect(p.pages.flatMap(pg => pg.natives ?? []).every(n => Boolean(n.group))).toBe(true)
+    }
+  })
+  it.each(['power-wall-3x2', 'power-wall-2x3'] as const)('%s has no natives to seat', id => {
+    for (const p of [authored(id), templateProject(id)]) expect(p.pages.flatMap(pg => pg.natives ?? [])).toEqual([])
+  })
   it.each(CONSOLES)('%s organizes every panel and its contents in the Layers tree', id => {
     for (const p of [authored(id), templateProject(id)]) {
       const t = themeOf(p)

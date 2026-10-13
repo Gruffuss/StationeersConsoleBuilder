@@ -8,12 +8,72 @@ import { vbf1 } from '../runtime/testing'
 import { vanillaPlus } from '../theme/vanillaPlus'
 import { putWidget } from '../widgets/core'
 import { instance } from '../widgets/testing'
-import { cornersOf, handleAt, marqueeHits, setFrame, SetOutlines } from './select'
+import { cornersOf, handleAt, handleFrame, marqueeHits, setFrame, SetOutlines } from './select'
+import * as canvasSelect from './select'
 import { harness } from './testing'
 import { unitsOf } from './units'
 
 const scene: Scene = { header: { w: 460, h: 460 }, defs: [], root: [node('R', { x: 100, y: 100, w: 40, h: 20 }), node('USE', { ref: 's' })] }
 const rect = { w: 460, h: 460 }, sel = (...path: number[]) => ({ pageId: 'p1', path })
+
+describe('native selection geometry', () => {
+  it('leaves hidden native members out of the set frame and its outlines', () => {
+    const hidden = { ...instance('icon', { x: 300, y: 300, w: 20, h: 20 }), hidden: true as const }
+    const h = harness(scene, { sel: sel(0), also: [{ ...sel(), native: 'ico1' }], natives: [hidden] })
+    expect(setFrame(h.ctx)?.box).toEqual({ x: 100, y: 100, w: 40, h: 20 })
+    const html = renderToStaticMarkup(<SetOutlines ctx={h.ctx} o={{ zoom: 1, frame: h.ctx.frame(), view: h.ctx.view() }} />)
+    expect(html).not.toContain('300,300')
+  })
+  const native = { ...instance('icon', { x: 80, y: 20, w: 20, h: 30 }), group: 'card' }
+  const group: Scene = { header: { w: 460, h: 460 }, defs: [], root: [node('G', { id: 'card', t: [10, 0], s: [2, 2] },
+    [node('R', { x: 0, y: 0, w: 10, h: 10 })])] }
+  it('maps held native corners back into the group frame for its outline and handles', () => {
+    const f = handleFrame(group, [0], rect, vanillaPlus, [native])
+    expect(f?.box).toEqual({ x: 0, y: 0, w: 45, h: 25 })
+    expect(cornersOf(group, [0], rect, vanillaPlus, [native])).toEqual([[10, 0], [100, 0], [100, 50], [10, 50]])
+    expect(handleAt(group, sel(0), rect, 1, { x: 100, y: 50 }, vanillaPlus, [native])).toBe('se')
+  })
+  it('offers a lone native eight handles in page space with no knob', () => {
+    const s = { ...sel(), native: 'ico1' }
+    expect(handleAt(group, s, rect, 1, { x: 100, y: 35 }, vanillaPlus, [native])).toBe('e')
+    expect(handleAt(group, s, rect, 1, { x: 90, y: 74 }, vanillaPlus, [native])).toBeNull()
+  })
+  it('includes native members in the set union, outlines and resize handles, with no native-only knob', () => {
+    const n2 = { ...instance('icon', { x: 140, y: 20, w: 20, h: 30 }), uid: 'ico2' }, n1 = { ...native, group: undefined }
+    const h = harness({ ...group, root: [] }, { natives: [n1, n2], sel: { ...sel(), native: 'ico2' }, also: [{ ...sel(), native: 'ico1' }] })
+    expect(setFrame(h.ctx)?.box).toEqual({ x: 80, y: 20, w: 80, h: 30 })
+    const html = renderToStaticMarkup(<SetOutlines ctx={h.ctx} o={{ zoom: 1, frame: h.ctx.frame(), view: h.ctx.view() }} />)
+    expect(html).toContain('vb-sel-set')
+    expect(html.split('vb-handle').length - 1).toBe(8)
+    expect(html).not.toContain('vb-knob')
+    expect(html).toContain('points="80,20 100,20 100,50 80,50"')
+  })
+  it('gives a mixed set its union and a knob when its scene member can turn', () => {
+    const h = harness(scene, { natives: [native], sel: { ...sel(), native: 'ico1' }, also: [sel(0)] })
+    expect(setFrame(h.ctx)?.box).toEqual({ x: 80, y: 20, w: 60, h: 100 })
+    expect(setFrame(h.ctx)?.rotate).toBe(true)
+  })
+  it('adds group unions and natives to snap targets and excludes moving natives and group-held natives', () => {
+    const h = harness(group, { natives: [native] })
+    const boxes = canvasSelect.canvasTargets?.(h.ctx.page(), vanillaPlus)
+    expect(boxes).toContainEqual({ x: 10, y: 0, w: 90, h: 50 })
+    expect(boxes).toContainEqual({ x: 80, y: 20, w: 20, h: 30 })
+    expect(canvasSelect.canvasTargets?.(h.ctx.page(), vanillaPlus, [sel(0)])).toEqual([])
+  })
+  it('leaves a moving native out of its holder snap box so it cannot snap to its previous extent', () => {
+    const h = harness(group, { natives: [native] })
+    const boxes = canvasSelect.canvasTargets(h.ctx.page(), vanillaPlus, [{ ...sel(), native: 'ico1' }])
+    expect(boxes).not.toContainEqual({ x: 10, y: 0, w: 90, h: 50 })
+    expect(boxes).toContainEqual({ x: 10, y: 0, w: 20, h: 20 })
+  })
+  it('keeps nested widget params snap targets when their containing group also holds a native', () => {
+    const w = instance('readout', { variant: 'kpi', x: 200, y: 100, w: 100, bar: false })
+    const widget = putWidget({ ...group, root: [] }, w, vanillaPlus).root[0]
+    const s = { ...group, root: [node('G', {}, [node('G', { id: 'card' }, [widget])])] }
+    const h = harness(s, { natives: [native] })
+    expect(canvasSelect.canvasTargets(h.ctx.page(), vanillaPlus)).toContainEqual({ x: 200, y: 100, w: 100, h: w.params.h })
+  })
+})
 
 describe('the select tool\'s geometry', () => {
   it('finds set capabilities without copying transformed scene roots', () => {

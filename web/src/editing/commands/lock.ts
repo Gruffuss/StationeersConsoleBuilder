@@ -4,7 +4,8 @@
 import type { SrcNode } from '../../model/scene'
 import { nodeAt } from '../../model/store'
 import { widgetOf } from '../../widgets/core'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { withFlag } from '../natives'
 import { editAt, isLock, LOCK, mapTree } from '../tree'
 import type { Command } from '../types'
 
@@ -18,14 +19,17 @@ function locked(n: SrcNode, on: boolean): SrcNode {
 }
 
 const lock: Command = { kind: 'command', id: 'lock', label: 'Lock / unlock', menu: 'arrange', order: 22, keys: ['Mod+Shift+L'], once: true,
-  when: ctx => membersOf(ctx).length > 0,
+  when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) {
-    const page = ctx.page(), set = membersOf(ctx), on = set.some(x => !isLocked(nodeAt(page.scene.root, x.path)!))
-    return ctx.apply({ scene: { ...page.scene, root: editAt(page.scene.root, set.map(x => x.path), n => locked(n, on)) } })   // one pass: O(n), not O(n²)
+    const page = ctx.page(), set = membersOf(ctx), nativeSet = nativeMembersOf(ctx), uids = new Set(nativeSet.map(s => s.native))
+    const on = set.some(x => !isLocked(nodeAt(page.scene.root, x.path)!)) || (page.natives ?? []).some(n => uids.has(n.uid) && !n.lock)
+    return ctx.apply({ scene: { ...page.scene, root: editAt(page.scene.root, set.map(x => x.path), n => locked(n, on)) },
+      ...(nativeSet.length && { natives: withFlag(page.natives ?? [], nativeSet.map(s => s.native!), 'lock', on) }) })
   } }
 const unlockAll: Command = { kind: 'command', id: 'unlockAll', label: 'Unlock all', menu: 'arrange', order: 23, when: () => true,
   run(ctx) {
     const page = ctx.page(), t = ctx.theme()
-    return ctx.apply({ scene: { ...page.scene, root: mapTree(page.scene.root, n => isLocked(n) ? locked(n, false) : n, n => !!widgetOf(n, t)) } })
+    return ctx.apply({ scene: { ...page.scene, root: mapTree(page.scene.root, n => isLocked(n) ? locked(n, false) : n, n => !!widgetOf(n, t)) },
+      ...(page.natives && { natives: withFlag(page.natives, page.natives.map(n => n.uid), 'lock', false) }) })
   } }
 export default [lock, unlockAll]

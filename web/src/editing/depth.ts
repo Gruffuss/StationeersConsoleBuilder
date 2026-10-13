@@ -7,6 +7,14 @@ import { expandRoot, widgetAt, widgetOf } from '../widgets/core'
 import { hidden } from './bounds'
 import { isLock } from './tree'
 
+/** A hit on the virtual child after a holder's scene children. */
+export function nativeTarget(hitUid: string, P: number[], E: number[], deep: boolean): { path: number[]; native?: string } {
+  const inside = E.every((k, i) => P[i] === k)
+  return deep || inside && E.length === P.length || !P.length
+    ? { path: [], native: hitUid }
+    : { path: P.slice(0, inside ? E.length + 1 : 1) }
+}
+
 export function pickAt(hit: Selection, entered: number[], deep: boolean, scene: Scene, t: Theme): Selection {
   if (!hit.inDefs && hit.native === undefined && entered.every((k, i) => hit.path[i] === k) && entered.length) {
     const w = widgetAt(scene, entered, t)

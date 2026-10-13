@@ -22,7 +22,8 @@ export function Inspector(p: { ctx: Ctx; tab: InspectorTab; onTab(tab: Inspector
   let icon: IconName = 'page', title = page.name, subtitle = `Page · scene ${size.w} × ${size.h} units`
   if (sel) {
     if (state.also.length) { icon = 'select'; title = `${state.also.length + 1} selected`; subtitle = 'the panel shows the last' }
-    else if (widget) { icon = 'widget'; title = WIDGETS[widget.type]?.label ?? widget.type; subtitle = widget.uid }
+    else if (widget) { icon = 'widget'; title = WIDGETS[widget.type]?.label ?? widget.type
+      subtitle = widget.uid + (sel.native ? `${'group' in widget && widget.group ? ` · in ${widget.group}` : ''} · drawn above the page` : '') }
     else if (node) {
       icon = opIcon(node.op); title = sel.inDefs ? node.op : id ? `#${id}` : node.op
       subtitle = sel.inDefs ? 'definition' : node.op + (parentId ? ` · in ${parentId}` : '')

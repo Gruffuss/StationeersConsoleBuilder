@@ -1,17 +1,18 @@
 // The clipboard's text (ruling R10): src holding the defs the nodes reach, then the nodes; and pasting it back. Pure.
-import type { Box } from '../editor/geometry'
+import type { Box, Mat } from '../editor/geometry'
 import type { Project } from '../model/project'
 import type { Scene, SrcNode } from '../model/scene'
 import { parseSrc } from '../srctext/parse'
 import { printChecked } from '../srctext/print'
 import { foldKey } from '../srctext/props'
 import type { Theme } from '../theme'
-import { allocUid, expandRoot, markerOf, mergeDefs, putWidget, sanitize, takenUids, widgetOf, widgetsIn } from '../widgets/core'
+import { allocUid, expandRoot, markerOf, mergeDefs, putWidget, sanitize, widgetOf, widgetsIn } from '../widgets/core'
 import { nodeAt, replaceAt } from '../model/store'
 import { WIDGETS } from '../widgets/registry'
-import type { WidgetRef } from '../widgets/types'
+import type { NativeRef, WidgetRef } from '../widgets/types'
+import { carry, idsIn as nativeIdsIn } from './natives'
 import { moveBy } from './transform'
-import { defClosure, first, fresh, freshIds, idsFrom, idsOf, kept as keptId, mapTree, renameIds, type Ids } from './tree'
+import { defClosure, first, fresh, freshIds, idsOf, kept as keptId, mapTree, renameIds, type Ids } from './tree'
 
 /** The text of `nodes`: the defs they reach, but a widget root's own `<uid>_` defs (its re-expansion makes them) unless a
  *  plain node among them reaches one too; then the nodes. */
@@ -22,17 +23,38 @@ export function copyText(scene: Scene, nodes: readonly SrcNode[], t: Theme): str
   return printChecked({ header: {}, defs: defClosure(nodes, scene.defs).filter(d => !plain || plain.has(d) || !own(d)), root: [...nodes] })
 }
 
-/** The ids a command that copies nodes gives on `project` (Q14): none any page holds as an id, an id stem or a native's
- *  uid (takenUids), and none whose stem is a widget's or a native's uid: such an id goes to `<uid>copy<k>_`. One per
- *  command. */
+/** Numeric ids name holders by their text too. Reserve them before allocating names for copies. */
 export function idsIn(project: Project, t: Theme): Ids {
-  const taken = idsOf(project.pages.map(p => p.scene)), uids = new Set<string>()
-  for (const u of takenUids(project)) taken.add(u)
-  for (const p of project.pages) {
-    for (const n of p.natives ?? []) uids.add(n.uid)
-    for (const { ref } of widgetsIn(p.scene, t)) uids.add(ref.uid)
+  const ids = nativeIdsIn(project, t)
+  for (const page of project.pages) {
+    const stack = [...page.scene.root, ...page.scene.defs]
+    for (let n = stack.pop(); n; n = stack.pop()) {
+      const id = first(n, 'ID')
+      if (typeof id === 'number') ids.taken.add(String(id))
+      for (const child of n.c ?? []) stack.push(child)
+    }
   }
-  return idsFrom(taken, uids)
+  return ids
+}
+
+/** A copied numeric id must participate in the same string rename map as its native membership. */
+export function copyIds(nodes: readonly SrcNode[], ids: Ids, map: Map<string, string>, t: Theme) {
+  const whole = (n: SrcNode) => !!widgetOf(n, t)
+  const text = mapTree(nodes, n => {
+    if (whole(n)) return n
+    const key = Object.keys(n.attrs).find(k => foldKey(k) === 'ID'), id = key && n.attrs[key]
+    return key && typeof id === 'number' ? { ...n, attrs: { ...n.attrs, [key]: String(id) } } : n
+  }, whole)
+  return freshIds(text, ids, map, whole)
+}
+
+/** Allocate against the scene and natives already made in this edit. */
+export function nativeCopy(project: Project, pageId: string, scene: Scene, natives: NativeRef[], ref: NativeRef,
+  from: Mat | null, to: Mat | null, dx: number, dy: number, t: Theme): NativeRef {
+  const uid = allocUid({ ...project, pages: project.pages.map(p => p.id === pageId ? { ...p, scene, natives } : p) }, WIDGETS[ref.type].prefix)
+  const moved = from && to ? carry(ref, from, to, t) : { ...ref, params: sanitize(WIDGETS[ref.type], { ...ref.params,
+    x: Number(ref.params.x) + dx, y: Number(ref.params.y) + dy }, t) }
+  return { ...moved, uid }
 }
 
 /** A uid for a widget copy on page `pageId` (Q14: one in the project), given that page's scene so far, so two copies get two. */
@@ -114,7 +136,7 @@ export function followClips(defs: readonly SrcNode[], nodes: readonly SrcNode[],
  *  `uidFor` gives, its params moved. The scene, the pasted nodes' paths and notes (a node that did not move, or moved in
  *  part: an expression position; a clip that stays behind), or why not. */
 export function pasteText(scene: Scene, text: string, ids: Ids, dx: number, dy: number, t: Theme,
-  uidFor: (prefix: string, scene: Scene) => string): { scene: Scene; paths: number[][]; notes: string[] } | string {
+  uidFor: (prefix: string, scene: Scene) => string): { scene: Scene; paths: number[][]; notes: string[]; renamed: Map<string, string> } | string {
   const r = parseSrc(text)
   if (r.errors.length || !r.scene) return `the clipboard holds no src: ${r.errors[0]?.message ?? 'nothing parsed'}`
   if (!r.scene.root.length) return 'the clipboard holds no nodes'
@@ -130,7 +152,7 @@ export function pasteText(scene: Scene, text: string, ids: Ids, dx: number, dy: 
     kept.push(d)
   }
   const copied = copyWidgets(scene, plain, t, uidFor)
-  const named = freshIds(copied.nodes, ids, map, n => !!widgetOf(n, t)).nodes
+  const named = copyIds(copied.nodes, ids, map, t).nodes
   const defs = renameIds(kept, map), all = [...copied.defs, ...defs], made = new Map<string, string | null>(), notes = new Set<string>()
   const root = named.map(n => {
     const w = moveBy(n, dx, dy)
@@ -146,5 +168,5 @@ export function pasteText(scene: Scene, text: string, ids: Ids, dx: number, dy: 
   })
   let out: Scene = { ...scene, defs: defs.length ? [...copied.defs, ...defs] : copied.defs, root: [...scene.root, ...root] }
   for (const { w, above } of widgets) out = withWidgetCopy(out, w, uidFor(WIDGETS[w.type].prefix, out), dx, dy, above, t)
-  return { scene: out, paths: out.root.slice(scene.root.length).map((_, i) => [scene.root.length + i]), notes: [...notes] }
+  return { scene: out, paths: out.root.slice(scene.root.length).map((_, i) => [scene.root.length + i]), notes: [...notes], renamed: map }
 }

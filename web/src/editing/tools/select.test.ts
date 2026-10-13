@@ -270,10 +270,12 @@ describe('the select tool: the set', () => {
     h.click({ x: 400, y: 40 })
     expect(h.state().selection).toBeNull()
   })
-  it('a press with a native widget selected picks the node under it and drags it (M2b T9: a native holds no scene node)', () => {
+  it('a press outside a selected native picks the scene node and drags it', () => {
     const h = page([C])
     h.ctx.dispatch({ type: 'insertWidget', pageId: 'p1', widget: 'icon' })
     expect(h.state().selection).toMatchObject({ path: [], native: 'ico1' })
+    const ref = h.ctx.page().natives![0]
+    h.ctx.dispatch({ type: 'setWidget', pageId: 'p1', ref: { ...ref, params: { ...ref.params, x: 300, y: 300 } } })
     h.drag({ x: 200, y: 200 }, { x: 210.4, y: 205.3 })
     expect(h.state().selection).toEqual(at(0))
     expect(h.root()[0].attrs).toMatchObject({ cx: 210, cy: 205 })

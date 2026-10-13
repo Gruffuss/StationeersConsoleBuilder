@@ -4,6 +4,7 @@ import { dataNames } from '../editor/fields'
 import { designSize } from '../editor/geometry'
 import { enterable, enterablePath } from '../editing/depth'
 import { reflowEdits } from '../editing/layoutRecords'
+import { followNatives, holderFor, holders } from '../editing/natives'
 import { defKey } from '../schema/duplicateIds'
 import { first, foldKey } from '../srctext/props'
 import { DEFAULT_THEME, gasColours, groundOf, THEMES, themeOf, themesOf, type Theme } from '../theme'
@@ -15,7 +16,7 @@ import { editList, idsOf, mapTree } from '../editing/tree'
 import { themeDefs } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
 import { legacyGasName } from '../widgets/modules/icon'
-import type { Json, WidgetRef } from '../widgets/types'
+import type { Json, NativeRef, WidgetRef } from '../widgets/types'
 import { editFrom, sanitizeEdit } from '../widgets/edits'
 import { cascade, logicFrom, logicOf, renamed, type Binding, type Logic } from './logic'
 import { newPage, newProject, VECTOR_FLOOR, type Page, type Project } from './project'
@@ -45,7 +46,7 @@ export type Action =
   | { type: 'select'; selection: Selection | null; also?: Selection[] }
   | { type: 'enter'; pageId: string; path: number[] }
   // A tool's or command's scene and the selection it chose: one entry, or a transient step.
-  | { type: 'editScene'; pageId: string; scene: Scene; selection?: Selection | null; also?: Selection[]; transient?: boolean }
+  | { type: 'editScene'; pageId: string; scene: Scene; natives?: NativeRef[]; selection?: Selection | null; also?: Selection[]; transient?: boolean }
   | { type: 'undo' } | { type: 'redo' }
   | { type: 'addPage' } | { type: 'removePage'; pageId: string } | { type: 'renamePage'; pageId: string; name: string }
   | { type: 'setActivePage'; pageId: string } | { type: 'loadProject'; project: Project }
@@ -75,17 +76,20 @@ const list = (scene: Scene, inDefs?: boolean) => inDefs ? scene.defs : scene.roo
 export const selected = (s: State): Selection[] => s.selection ? [...s.also, s.selection] : []
 
 // A set's members: each on the primary's page, resolving, once (the last mention of a path), none inside another member
-// (a group and its child never both move), each snapped to its widget's root first (M2b Q2). A DEFS node is a lone
-// primary, and so is one that does not resolve (as a select without also keeps it; settled clears it after an edit), a
-// native among them (its path [] resolves to no node): no other member is promoted in its place.
+// (a group and its child never both move), each snapped to its widget's root first (M2b Q2). A DEFS node stays lone,
+// as does an unresolved scene primary. Native uids join the set, unless a scene member already carries their holder.
 // Numeric trie edges keep duplicate and ancestor checks linear in the supplied path indices.
 function members(s: State, primary: Selection | null, also: readonly Selection[] = []): Picked {
-  const p = snap(s, primary), root = p && s.project.pages.find(x => x.id === p.pageId)?.scene.root
-  if (!p || p.inDefs || !also.length || !root || !nodeAt(root, p.path)) return { selection: p, also: [] }
-  const all = [...also.map(x => snap(s, x)!), p].filter(x => !x.inDefs && x.pageId === p.pageId && nodeAt(root, x.path))
+  const p = snap(s, primary), page = p && s.project.pages.find(x => x.id === p.pageId), root = page?.scene.root
+  if (!p || p.inDefs || p.native === undefined && (!also.length || !root || !nodeAt(root, p.path))) return { selection: p, also: [] }
+  if (!page || !root) return { selection: null, also: [] }
+  const natives = new Map((page.natives ?? []).map(n => [n.uid, n])), lastNative = new Map<string, number>()
+  const all = [...also.map(x => snap(s, x)!), p].filter(x => !x.inDefs && x.pageId === p.pageId
+    && (x.native !== undefined ? natives.has(x.native) : nodeAt(root, x.path)))
   type Path = { last: number; kids?: Map<number, Path> }
   const top: Path = { last: -1 }
   all.forEach((x, i) => {
+    if (x.native !== undefined) { lastNative.set(x.native, i); return }
     let t = top
     for (const k of x.path) {
       const kids = t.kids ??= new Map<number, Path>()
@@ -95,8 +99,20 @@ function members(s: State, primary: Selection | null, also: readonly Selection[]
     }
     t.last = i
   })
+  const held = holders(page.scene, [...lastNative.keys()].flatMap(uid => { const group = natives.get(uid)!.group; return group ? [group] : [] }), themeOf(s.project))
   const kept = all.filter((x, i) => {
     let t = top
+    if (x.native !== undefined) {
+      if (lastNative.get(x.native) !== i) return false
+      const group = natives.get(x.native)!.group, path = group && held.get(group)
+      for (const k of path || []) {
+        const next = t.kids?.get(k)
+        if (!next) return true
+        t = next
+        if (t.last >= 0) return false
+      }
+      return true
+    }
     for (const k of x.path) {
       if (t.last >= 0) return false
       t = t.kids!.get(k)!
@@ -152,7 +168,7 @@ function settled(s: State): State {
   const path = enteredPage && enteredPage.id === activePageId ? enterablePath(enteredPage.scene, s.entered!.path, themeOf(s.project)) : []
   const entered = path.length ? { pageId: activePageId, path } : null
   const next = { ...s, activePageId, entered }
-  return { ...next, ...(there ? members(next, sel, s.also) : { selection: null, also: [] }) }
+  return { ...next, ...(there || sel?.native !== undefined ? members(next, sel, s.also) : { selection: null, also: [] }) }
 }
 
 // The state's project and set, as a history entry.
@@ -183,20 +199,50 @@ const step = (s: State, project: Project): State =>
 const previewOf = (v: unknown): Record<string, Json> => Object.fromEntries(Object.entries(isObject(v) ? v : {})
   .flatMap(([k, x]) => { const d = datum(x); return previewName(k) && d !== undefined ? [[k, d]] : [] }))
 
-const withScene = (p: Project, pageId: string, scene: Scene): Project =>
-  ({ ...p, pages: p.pages.map(x => x.id === pageId ? { ...x, scene } : x) })
-const withNatives = (p: Project, page: Page, natives: WidgetRef[]): Project => ({ ...p, pages: p.pages.map(x => x === page ? { ...x, natives } : x) })
+type SceneWrite = { base?: Project; natives?: NativeRef[]; notes?: string[] }
+const lostNativeNotes = (natives: NativeRef[], lost: string[]): string[] => {
+  const uids = new Set(lost)
+  return natives.filter(n => uids.has(n.uid)).map(n => `${n.uid} left group ${n.group}: no ordinary group has that id now; it stays where it is, on the page (Ctrl+Z puts it back)`)
+}
+/** Scene writers share this follow; transient callers supply the drag's original page. */
+function followed(page: Page, scene: Scene, t: Theme, notes?: string[], base = page, passed?: NativeRef[]): Page {
+  const list = passed ?? page.natives
+  if (list === undefined) return { ...page, scene }
+  const current = new Map((page.natives ?? []).map(n => [n.uid, n])), original = new Map((base.natives ?? []).map(n => [n.uid, n]))
+  const untouched = (n: NativeRef) => passed === undefined || n === current.get(n.uid) || n === original.get(n.uid)
+  const left = list.filter(untouched).map(n => original.get(n.uid) ?? current.get(n.uid) ?? n)
+  const out = followNatives(base.scene, scene, left, t), followed = new Map(out.natives.map(n => [n.uid, n]))
+  if (out.lost.length) notes?.push(...lostNativeNotes(left, out.lost))
+  const next = list.map(n => untouched(n) ? followed.get(n.uid)! : n)
+  return { ...page, scene, natives: next.every((n, i) => n === list[i]) ? list : next }
+}
+function withScene(p: Project, pageId: string, scene: Scene, o: SceneWrite = {}): Project {
+  const page = p.pages.find(x => x.id === pageId)!, base = o.base?.pages.find(x => x.id === pageId) ?? page
+  const next = followed(page, scene, themeOf(p), o.notes, base, o.natives)
+  const kept = o.natives && new Set(o.natives.map(n => n.uid))
+  const bindings = kept ? withoutNatives(p.bindings, (page.natives ?? []).filter(n => !kept.has(n.uid)).map(n => n.uid)) : p.bindings
+  return { ...p, bindings, pages: p.pages.map(x => x === page ? next : x) }
+}
+const withNatives = (p: Project, page: Page, natives: NativeRef[]): Project => ({ ...p, pages: p.pages.map(x => x === page ? { ...x, natives } : x) })
 /** A page's natives from a project that may come from outside: objects of a native type with a valid uid that is not in
  *  `seen` (the project's scene widgets and the natives read before: Q14), which takes each one kept. */
-function nativesFrom(v: unknown, t: Theme, seen: Set<string>, repairs: string[]): WidgetRef[] {
-  return (Array.isArray(v) ? v : []).flatMap(n => {
+function nativesFrom(v: unknown, t: Theme, seen: Set<string>, repairs: string[], scene: Scene): NativeRef[] {
+  const list = Array.isArray(v) ? v : []
+  const groups = list.flatMap(n => isObject(n) && typeof n.group === 'string' && n.group ? [n.group] : [])
+  let found = new Map<string, number[]>()
+  // An unreadable outside scene is left for the checker, as reassociate above loadProject does.
+  try { if (groups.length) found = holders(scene, groups, t) } catch { /* it has no readable holder */ }
+  return list.flatMap(n => {
     const m = isObject(n) && typeof n.type === 'string' ? WIDGETS[n.type] : undefined
     if (!m?.native || typeof n.uid !== 'string' || !UID.test(n.uid) || seen.has(n.uid)) return []
     seen.add(n.uid)
     const params = sanitize(m, n.params, t)
     const name = m.type === 'icon' && params.kind === 'gas' ? legacyGasName(String(params.name)) : undefined
     if (name) { repairs.push(`icon ${n.uid}: ${params.name} -> ${name}`); params.name = name }
-    return [{ type: m.type, uid: n.uid, params }]
+    const group = typeof n.group === 'string' && n.group && found.has(n.group) ? n.group : undefined
+    if (n.group !== undefined && !group) repairs.push(`${m.type} ${n.uid}: no ordinary group ${String(n.group)}; it sits on the page`)
+    return [{ type: m.type, uid: n.uid, params, ...(group && { group }),
+      ...(n.hidden === true && { hidden: true as const }), ...(n.lock === true && { lock: true as const }) }]
   })
 }
 
@@ -268,11 +314,12 @@ function pinned(preview: Record<string, Json> | undefined, widgets: WidgetRef[],
   return out
 }
 /** withScene, carrying the page's preview values (`carried`) and pinning the samples of the widgets `dropped` detached. */
-function withSceneCarried(p: Project, pageId: string, scene: Scene, dropped: WidgetRef[] = []): Project {
+function withSceneCarried(p: Project, pageId: string, scene: Scene, dropped: WidgetRef[] = [], o: SceneWrite = {}): Project {
   const page = p.pages.find(x => x.id === pageId)!, t = themeOf(p)
   const preview = pinned(page.preview && carried(page.preview, page.scene, scene, t), dropped, scene, t)
   const bindings = bindingsCarried(p, page, scene, t)
-  return { ...p, ...(bindings !== p.bindings && { bindings }), pages: p.pages.map(x => x === page ? { ...x, scene, ...(preview !== page.preview && { preview }) } : x) }
+  const next = withScene({ ...p, bindings }, pageId, scene, o)
+  return preview === page.preview ? next : { ...next, pages: next.pages.map(x => x.id === pageId ? { ...x, preview } : x) }
 }
 /** What a setScene or a load says of the widgets it detached: edited by hand, or holding a uid already used (Q14). */
 const detachedNotice = (detached: string[], reused: string[], undo = true) => [
@@ -382,7 +429,9 @@ export function reducer(s: State, a: Action): State {
       // Widgets edited by hand, or pasted with a uid another page uses, are detached (their markers dropped); `scene` is
       // a.scene itself when none is.
       const { scene, detached, reused, dropped } = reassociate(page.scene, a.scene, themeOf(s.project), takenUids(s.project, page.id), false, themesOf(s.project))
-      const next = { ...edit(s, withSceneCarried(s.project, a.pageId, scene, dropped)), notice: detachedNotice(detached, reused) }
+      const notes: string[] = []
+      const project = withSceneCarried(s.project, a.pageId, scene, dropped, { notes })
+      const next = { ...edit(s, project), notice: [detachedNotice(detached, reused), ...notes].filter(Boolean).join('; ') }
       const sel = s.selection
       if (sel?.pageId !== a.pageId) return settled(next)
       // Each member re-resolved (the others share the primary's page and tree): the same path while the node there keeps
@@ -410,8 +459,9 @@ export function reducer(s: State, a: Action): State {
       const routed = widgetEdits(page.scene, a.inDefs ? { ...page.scene, defs: nodes } : { ...page.scene, root: nodes }, themeOf(s.project), themesOf(s.project))
       if ('refused' in routed) return { ...s, notice: routed.refused }
       if (!a.transient && sameData(page.scene, routed.scene)) return settled({ ...s, notice: routed.notice })
-      const project = withScene(s.project, a.pageId, routed.scene)
-      return { ...settled(a.transient ? step(s, project) : edit(s, project)), notice: routed.notice || (a.transient ? s.notice : '') }
+      const notes: string[] = []
+      const project = withScene(s.project, a.pageId, routed.scene, { base: a.transient ? s.dragBase ?? s.project : s.project, notes })
+      return { ...settled(a.transient ? step(s, project) : edit(s, project)), notice: [routed.notice, ...notes].filter(Boolean).join('; ') || (a.transient ? s.notice : '') }
     }
     case 'commitDrag': {
       const next = committed(s)
@@ -439,13 +489,14 @@ export function reducer(s: State, a: Action): State {
       if (!page) return s
       const routed = widgetEdits(page.scene, a.scene, themeOf(s.project), themesOf(s.project))
       if ('refused' in routed) return { ...s, notice: routed.refused }
-      const same = !a.transient && sameData(page.scene, routed.scene)
+      const same = !a.transient && sameData(page.scene, routed.scene) && (a.natives === undefined || sameData(page.natives ?? [], a.natives))
       if (same && a.selection === undefined) return routed.notice ? { ...s, notice: routed.notice } : s
       // A delete's widgets take the preview values only their slots read (as deleteWidget); a transient step (a drag, a
       // nudge) adds and removes no widget.
-      const next = same ? s : a.transient ? step(s, withScene(s.project, a.pageId, routed.scene)) : edit(s, withSceneCarried(s.project, a.pageId, routed.scene))
+      const notes: string[] = [], o = { base: a.transient ? s.dragBase ?? s.project : s.project, natives: a.natives, notes }
+      const next = same ? s : a.transient ? step(s, withScene(s.project, a.pageId, routed.scene, o)) : edit(s, withSceneCarried(s.project, a.pageId, routed.scene, [], o))
       const set = a.selection === undefined ? { selection: s.selection, also: s.also } : members(next, a.selection, a.also)
-      return settled({ ...next, ...set, notice: routed.notice })
+      return settled({ ...next, ...set, notice: [routed.notice, ...notes].filter(Boolean).join('; ') })
     }
     case 'setActivePage':
       return s.project.pages.some(p => p.id === a.pageId) ? { ...s, activePageId: a.pageId, entered: a.pageId === s.activePageId ? s.entered : null } : s
@@ -470,14 +521,21 @@ export function reducer(s: State, a: Action): State {
       const ref: WidgetRef = { type: m.type, uid: allocUid(s.project, m.prefix),
         params: sanitize(m, { ...d, x: Math.round(size.w / 2 - (d.w as number) / 2), y: Math.round(size.h / 2 - (d.h as number) / 2) }, t) }
       // The new widget is selected alone.
-      if (m.native) return { ...edit(s, withNatives(s.project, page, [...(page.natives ?? []), ref])), selection: { pageId: page.id, path: [], native: ref.uid }, also: [] }
       const parent = s.entered?.pageId === page.id ? s.entered.path : []
+      if (m.native) {
+        const holder = parent.length ? holderFor(s.project, page.id, page.scene, parent, t) : null
+        const seated: NativeRef = holder && 'id' in holder ? { ...ref, group: holder.id } : ref
+        const scene = holder && 'scene' in holder ? holder.scene : page.scene
+        const project = withScene(s.project, page.id, scene, { natives: [...(page.natives ?? []), seated] })
+        return { ...edit(s, project), selection: { pageId: page.id, path: [], native: ref.uid }, also: [], notice: holder && 'refused' in holder ? holder.refused : '' }
+      }
       if (widgetRootOf(page.scene, parent, t)) return { ...s, notice: 'cannot insert a widget inside a widget' }
       const made = putWidget({ ...page.scene, root: [] }, ref, t)
       const root = editList(page.scene.root, parent, list => [...list, made.root[0]])
       if (!root) return s
       const laid = reflowEdits(page.scene, { ...made, root }, t), path = [...parent, (parent.length ? nodeAt(root, parent)!.c! : root).length - 1]
-      return { ...edit(s, withScene(s.project, page.id, laid.scene)), selection: { pageId: page.id, path }, also: [], notice: laid.skipped.join('; ') }
+      const notes: string[] = [], project = withScene(s.project, page.id, laid.scene, { notes })
+      return { ...edit(s, project), selection: { pageId: page.id, path }, also: [], notice: [...laid.skipped, ...notes].join('; ') }
     }
     case 'setWidget': {
       const page = s.project.pages.find(p => p.id === a.pageId), m = WIDGETS[a.ref.type], t = themeOf(s.project)
@@ -486,14 +544,19 @@ export function reducer(s: State, a: Action): State {
       const k = m.native ? null : indexOf(page.scene, a.ref.uid, t)
       const was = m.native ? nativeAt(page, a.ref.uid, t) : k ? widgetAt(page.scene, k, t) : null
       if (was?.type !== a.ref.type) return s
-      const ref = { ...a.ref, params: sanitize(m, a.ref.params, t), edit: m.native ? undefined : sanitizeEdit(Object.hasOwn(a.ref, 'edit') ? a.ref.edit : was.edit) }
+      if (m.native) {
+        const ref: NativeRef = { ...was, params: sanitize(m, a.ref.params, t) }
+        if (sameData(ref.params, was.params)) return s
+        return (a.transient ? step : edit)(s, withNatives(s.project, page, (page.natives ?? []).map(n => n.uid === ref.uid ? ref : n)))
+      }
+      const ref = { ...a.ref, params: sanitize(m, a.ref.params, t), edit: sanitizeEdit(Object.hasOwn(a.ref, 'edit') ? a.ref.edit : was.edit) }
       if (markerOf(ref) === markerOf(was)) return s   // nothing changes (a drag of under half a unit): no history entry
-      if (m.native) return (a.transient ? step : edit)(s, withNatives(s.project, page, (page.natives ?? []).map(n => n.uid === ref.uid ? ref : n)))
       // putWidget keeps the root at k. A widget that reads every data name it read (a move, a resize, a colour) leaves
       // nothing to carry, and withSceneCarried would read every root's marker at each step of a drag.
       const laid = reflowEdits(page.scene, putWidget(page.scene, ref, t), t), scene = laid.scene, read = new Set(slotsOf(nodeAt(scene.root, k!)!, t).map(x => x.key))
-      const project = slotsOf(nodeAt(page.scene.root, k!)!, t).every(x => read.has(x.key)) ? withScene(s.project, page.id, scene) : withSceneCarried(s.project, page.id, scene)
-      return { ...(a.transient ? step(s, project) : edit(s, project)), notice: laid.skipped.join('; ') }
+      const notes: string[] = [], o = { base: a.transient ? s.dragBase ?? s.project : s.project, notes }
+      const project = slotsOf(nodeAt(page.scene.root, k!)!, t).every(x => read.has(x.key)) ? withScene(s.project, page.id, scene, o) : withSceneCarried(s.project, page.id, scene, [], o)
+      return { ...(a.transient ? step(s, project) : edit(s, project)), notice: [...laid.skipped, ...notes].join('; ') }
     }
     case 'detachWidget': case 'deleteWidget': {
       const page = s.project.pages.find(p => p.id === a.pageId), t = themeOf(s.project)
@@ -503,7 +566,11 @@ export function reducer(s: State, a: Action): State {
       const k = page ? indexOf(page.scene, a.uid, t) : null
       if (!k) return s
       // Detached in one entry with its samples pinned: its nodes keep drawing as they did (withSceneCarried).
-      if (a.type === 'detachWidget') return settled(edit(s, withSceneCarried(s.project, page!.id, detach(page!.scene, a.uid, t), [widgetAt(page!.scene, k, t)!])))
+      if (a.type === 'detachWidget') {
+        const notes: string[] = []
+        const project = withSceneCarried(s.project, page!.id, detach(page!.scene, a.uid, t), [widgetAt(page!.scene, k, t)!], { notes })
+        return settled({ ...edit(s, project), notice: notes.join('; ') })
+      }
       // A delete shifts the roots after it: a member on the widget goes, one on a later root moves down with its node (the
       // primary gone, the set goes with it, as settled has it).
       const shift = (x: Selection) => {
@@ -513,7 +580,8 @@ export function reducer(s: State, a: Action): State {
       }
       const also = s.also.map(shift).filter(x => x !== null)
       const laid = reflowEdits(page!.scene, dropWidget(page!.scene, a.uid, t), t)
-      return settled({ ...edit(s, withSceneCarried(s.project, page!.id, laid.scene)), selection: s.selection && shift(s.selection), also, notice: laid.skipped.join('; ') })
+      const notes: string[] = [], project = withSceneCarried(s.project, page!.id, laid.scene, [], { notes })
+      return settled({ ...edit(s, project), selection: s.selection && shift(s.selection), also, notice: [...laid.skipped, ...notes].join('; ') })
     }
     case 'setPreview': {
       // Only what the data element can carry (datum); a value equal to the one held, or the removal of one not held, is no edit.
@@ -533,10 +601,11 @@ export function reducer(s: State, a: Action): State {
       const to = Object.hasOwn(THEMES, id) ? THEMES[id] : project.themes && Object.hasOwn(project.themes, id) ? project.themes[id] : undefined
       if (!to || to === from && project === s.project) return s
       const report = { missing: new Set<string>(), stale: 0, layout: [] as string[] }
-      const ground = groundOf(from), pages = project.pages.map(p => ({ ...p, scene: dropUnusedThemeGradients(rethemed(p.scene, from, to, report), project.customLua),
+      const ground = groundOf(from), nativeNotes: string[] = [], pages = project.pages.map(p => ({
+        ...followed(p, dropUnusedThemeGradients(rethemed(p.scene, from, to, report), project.customLua), to, nativeNotes),
         background: sameColours(p.background, ground) ? groundOf(to) : p.background }))
       const notice = [report.missing.size && `missing theme style tokens: ${[...report.missing].join(', ')}`,
-        report.stale && `${report.stale} style link${report.stale === 1 ? '' : 's'} severed; authored values kept`, ...new Set(report.layout)].filter(Boolean).join('; ')
+        report.stale && `${report.stale} style link${report.stale === 1 ? '' : 's'} severed; authored values kept`, ...new Set(report.layout), ...nativeNotes].filter(Boolean).join('; ')
       return { ...settled(edit(s, { ...project, theme: id, pages })), notice }
     }
     case 'removeTheme': {
@@ -639,7 +708,7 @@ export function reducer(s: State, a: Action): State {
         theme: t.id, pages: read.map((p, i) => {
           const v = a.project.pages[i].natives
           if (v === undefined) return p
-          const repairs: string[] = [], natives = nativesFrom(v, t, seen, repairs)
+          const repairs: string[] = [], natives = nativesFrom(v, t, seen, repairs, p.scene)
           overrideNotes.push(...repairs.map(note => `page ${p.id} ${note}`))
           left += (Array.isArray(v) ? v.length : 0) - natives.length
           return { ...p, natives }

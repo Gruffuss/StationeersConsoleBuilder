@@ -5,6 +5,14 @@ import { harness } from '../../editing/testing'
 import { parseSrc } from '../../srctext/parse'
 import * as registry from '../../editing/registry'
 import { TaskBar } from './TaskBar'
+import { instance } from '../../widgets/testing'
+
+it('shows no Edit parts action for a selected native', () => {
+  const h = harness(parseSrc('R w=20 h=10').scene!, { natives: [instance('icon')], sel: { pageId: 'p1', path: [], native: 'ico1' } })
+  const ui = mount(<TaskBar ctx={h.ctx} box={{ x: 0, y: 0, w: 20, h: 20 }} zoom={1} onDataNames={() => {}} />)
+  try { expect(ui.container.textContent).not.toContain('Edit parts'); expect(ui.container.querySelector('[role="toolbar"]')).not.toBeNull() }
+  finally { ui.unmount(); h.checker.dispose() }
+})
 
 it('anchors selection actions without taking the canvas press and runs registry commands', async () => {
   const h = harness(parseSrc('G { R w=20 h=10 }\nR w=20 h=10').scene!, { sel: { pageId: 'p1', path: [0] } })

@@ -23,6 +23,7 @@ import { layoutOf } from '../editing/layoutRecords'
 import { onPath } from '../editing/tree'
 import { stripRichText } from './text'
 import { Icon } from '../ui/icons'
+import { NATIVE_DESCRIPTION } from './nativeText'
 import './inspector.css'
 
 /** Why `s` (read as `n`) is no number a float32 holds, or null. */
@@ -205,6 +206,7 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
       {!native && <button type="button" className="ibtn flat" title="Detach" onClick={after({ type: 'detachWidget', pageId: page.id, uid: widget.uid })}><Icon name="detach" /><span className="vh">Detach</span></button>}
       <button type="button" className="ibtn flat" title="Delete" onClick={after({ type: 'deleteWidget', pageId: page.id, uid: widget.uid })}><Icon name="trash" /><span className="vh">Delete</span></button>
     </div>
+    {native && <p className="unit">{NATIVE_DESCRIPTION}</p>}
     {expansion?.notes?.map(note => <p key={note} role="status">{note}</p>)}
     {!native && root && <LayoutFields page={page} path={root} theme={theme} checker={checker} dispatch={dispatch} sceneOf={sceneOf} />}
     {!native && <details className="disc" open><summary><span className="ptitle">Parts</span><span className="unit">{Object.keys(widget.edit?.parts ?? {}).length}</span></summary>

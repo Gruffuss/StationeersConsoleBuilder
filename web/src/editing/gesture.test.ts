@@ -12,6 +12,30 @@ const press = (x: number, css = x): Press => ({ at: { x, y: 0 }, px: { x, y: 0 }
 const movedBy = (base: Scene, dx: number): Scene => ({ ...base, root: [{ ...base.root[0], attrs: { ...base.root[0].attrs, x: 10 + dx } }] })
 
 describe('sceneDrag', () => {
+  const ref = () => ({ type: 'icon', uid: 'ico1', params: { x: 10, y: 20, w: 30, h: 30, kind: 'gas', name: 'Oxygen' } })
+  it('writes native-only steps rebuilt from base natives and commits once', () => {
+    const initial = ref(), h = harness({ header: {}, defs: [], root: [R] }, { natives: [initial] }), bases: unknown[] = []
+    const g = sceneDrag(h.ctx, (p, base, natives) => { bases.push(natives[0]); return { scene: base, natives: [{ ...natives[0], params: { ...natives[0].params, x: 10 + p.at.x } }] } })
+    g.move(press(5)); g.move(press(9))
+    expect(h.ctx.page().natives![0].params.x).toBe(19)
+    expect(bases).toEqual([initial, initial])
+    expect(h.state().past).toHaveLength(0)
+    g.up(press(9))
+    expect(h.state().past).toHaveLength(1)
+    h.ctx.dispatch({ type: 'undo' })
+    expect(h.ctx.page().natives![0]).toBe(initial)
+  })
+  it('stops when another edit changes natives mid-drag, preserving that edit', () => {
+    const initial = ref(), h = harness({ header: {}, defs: [], root: [R] }, { natives: [initial] })
+    const g = sceneDrag(h.ctx, (p, base, natives) => ({ scene: base, natives: [{ ...natives[0], params: { ...natives[0].params, x: 10 + p.at.x } }] }))
+    g.move(press(5))
+    h.ctx.dispatch({ type: 'setWidget', pageId: 'p1', ref: { ...initial, params: { ...initial.params, x: 100 } } })
+    const count = h.actions.length
+    g.move(press(9)); g.up(press(9))
+    expect(h.ctx.page().natives![0].params.x).toBe(100)
+    expect(h.actions.slice(count).filter(a => a.type === 'editScene')).toEqual([])
+    expect(h.state().past).toHaveLength(2)
+  })
   it('writes nothing within the slop, then rebuilds every step from the first move\'s scene; release is one undo step', () => {
     const h = start(), bases: unknown[] = []
     const g = sceneDrag(h.ctx, (p, base) => { bases.push(base.root[0].attrs.x); return { scene: movedBy(base, p.at.x) } })

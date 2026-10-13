@@ -10,31 +10,38 @@ import { apply, groupMatrix, invert, type Box, type Handle, type Mat } from '../
 import { widgetBoxes } from '../../editor/Handles'
 import { nodeAt, sameSelection, selected, type Selection } from '../../model/store'
 import { foldKey } from '../../srctext/props'
-import { indexOf, putWidget, sanitize, widgetAt } from '../../widgets/core'
+import { putWidget, sanitize, widgetAt } from '../../widgets/core'
 import { WIDGETS } from '../../widgets/registry'
 import type { WidgetRef } from '../../widgets/types'
-import { allBoxes, hidden, similar, worldBox, worldOf } from '../bounds'
+import { hidden, IDENTITY, similar, worldBox, worldOf } from '../bounds'
 import { membersOf } from '../ctx'
 import { enterable } from '../depth'
 import { sceneDrag, SLOP, snapOn, snapOpts } from '../gesture'
 import { Guides } from '../Guides'
 import { dragBox, leadOf, travelOf, union } from '../layout'
 import { hasPoints } from '../points'
-import { handleAt, handleFrame, marqueeHits, setFrame, setHandleAt, SetOutlines, spanBox } from '../select'
+import { canvasTargets, handleAt, handleFrame, marqueeHits, setFrame, setHandleAt, SetOutlines, shownNativeUnitsOf, spanBox } from '../select'
 import { transformSet } from '../multiTransform'
 import { snapMove, snapResize, targetsOf, type Guide, type Targets } from '../snap'
 import { resizeTo, rotate, turnOf } from '../transform'
 import { lockedAt, replaceAt } from '../tree'
 import type { Ctx, Gesture, OverlayCtx, Press, Tool } from '../types'
 import { clipAbove, moveUnits, unitsOf, type Unit } from '../units'
+import { holderOf, moveNatives, nativeUnitsOf, nativesUnder, shownNatives, transformNatives, type NativeUnit } from '../natives'
 
-/** a is b, or inside it. A native (M2b T9: its path [] holds no scene node) holds nothing. */
-const within = (a: Selection, b: Selection) => a.pageId === b.pageId && !a.inDefs && !b.inDefs && b.native === undefined && b.path.length <= a.path.length
-  && b.path.every((k, i) => a.path[i] === k)
+/** a is b, or rides inside b's scene subtree. Native paths are virtual children of their holders. */
+const within = (ctx: Ctx, a: Selection, b: Selection) => {
+  if (a.pageId !== b.pageId || a.inDefs || b.inDefs) return false
+  if (b.native !== undefined) return a.native === b.native
+  const ref = a.native === undefined ? null : ctx.page().natives?.find(n => n.uid === a.native)
+  const path = ref ? holderOf(ctx.page().scene, ref, ctx.theme()) : a.native === undefined ? a.path : null
+  return !!path && b.path.length <= path.length && b.path.every((k, i) => path[i] === k)
+}
 const choose = (ctx: Ctx, set: Selection[]) => ctx.dispatch({ type: 'select', selection: set[set.length - 1] ?? null, also: set.slice(0, -1) })
 const guided = (oc: OverlayCtx, guides: Guide[]) => <Guides guides={guides} css={oc.view.css} />
 /** m's linear part has no turn or shear: x maps to x, y to y (a mirror allowed). Relative, so any scale counts. */
 const axisAligned = (m: Mat) => Math.abs(m[1]) + Math.abs(m[2]) <= 1e-9 * (Math.abs(m[0]) + Math.abs(m[3]))
+const uprightNote = (uids: string[]) => uids.length ? `${[...new Set(uids)].join(', ')} stay upright: natives do not turn` : ''
 /** At release: why the last step was refused, and a clip that stayed behind when the node changed (as a move says). */
 const said = (ctx: Ctx, why: string, clip: string | null, wrote: boolean, verb: string) => {
   const all = [why, wrote && clip ? `clip ${clip} does not follow a ${verb}` : ''].filter(Boolean)
@@ -42,13 +49,14 @@ const said = (ctx: Ctx, why: string, clip: string | null, wrote: boolean, verb: 
 }
 
 function move(ctx: Ctx, click: Selection | null): Gesture {
-  let units: Unit[] = [], box: Box | null = null, seen: Targets | null = null, said: string[] = []
-  return sceneDrag<Guide>(ctx, (q, base) => {
+  let units: Unit[] = [], nativeUnits: NativeUnit[] = [], box: Box | null = null, seen: Targets | null = null, said: string[] = []
+  return sceneDrag<Guide>(ctx, (q, base, natives) => {
     if (!seen) {
-      units = unitsOf(base, membersOf(ctx), ctx.theme())
-      const boxes = units.flatMap(u => u.box ? [u.box] : [])
+      units = unitsOf(base, membersOf(ctx), ctx.theme(), natives)
+      nativeUnits = shownNativeUnitsOf({ ...ctx.page(), scene: base, natives }, selected(ctx.get()), ctx.theme())
+      const boxes = [...units.flatMap(u => u.box ? [u.box] : []), ...nativeUnits.map(u => u.box)]
       box = boxes.length ? union(boxes) : null
-      seen = targetsOf(allBoxes(base, new Set(units.map(u => u.node)), widgetBoxes(base, ctx.theme())), ctx.view().size)
+      seen = targetsOf(canvasTargets({ ...ctx.page(), scene: base, natives }, ctx.theme(), [...units, ...nativeUnits].map(u => u.sel)), ctx.view().size)
     }
     let dx = q.at.x - q.start.x, dy = q.at.y - q.start.y, guides: Guide[] = []
     if (snapOn(ctx, q.mods)) {
@@ -60,8 +68,9 @@ function move(ctx: Ctx, click: Selection | null): Gesture {
       } else { dx = Math.round(dx); dy = Math.round(dy) }
     }
     const r = moveUnits(base, units, units.map(() => ({ dx, dy })), ctx.theme())
-    said = [...r.skipped, ...r.notes]
-    return { scene: r.scene, guides }
+    const n = moveNatives(natives, nativeUnits, nativeUnits.map(() => ({ dx, dy })), ctx.theme())
+    said = [...r.skipped, ...n.skipped, ...r.notes]
+    return { scene: r.scene, ...(nativeUnits.length && { natives: n.natives }), guides }
   }, {
     onClick: () => { if (click) ctx.dispatch({ type: 'select', selection: click }) },
     onCommit: () => { if (said.length) ctx.note(said.join('; ')) },
@@ -74,14 +83,14 @@ function move(ctx: Ctx, click: Selection | null): Gesture {
  *  module's range (its min, a fix's one line) and then placed: it stops at the minimum with the edge the drag left where
  *  it was, never crossing over (M2b). Under Shift the axis that leads stops there too and the other follows it, so the
  *  ratio holds (ruling, M2c Wave 3). */
-function resizeWidget(ctx: Ctx, w: WidgetRef, h: Handle, path: number[]): Gesture {
+function resizeWidget(ctx: Ctx, w: WidgetRef, h: Handle, path: number[], native = false): Gesture {
   const t = ctx.theme(), m = WIDGETS[w.type], p = w.params as Box, from = { x: p.x, y: p.y, w: p.w, h: p.h }
   const least = sanitize(m, { ...w.params, w: 0, h: 0 }, t) as Box, min = { w: Math.max(1, least.w), h: Math.max(1, least.h) }
   let seen: Targets | null = null
-  return sceneDrag<Guide>(ctx, (q, base) => {
-    const W = worldOf(base, [...path, 0]), inv = W && invert([W[0], W[1], W[2], W[3], 0, 0])
+  return sceneDrag<Guide>(ctx, (q, base, natives) => {
+    const W = native ? IDENTITY : worldOf(base, [...path, 0]), inv = W && invert([W[0], W[1], W[2], W[3], 0, 0])
     if (!W || !inv) return null
-    seen ??= targetsOf(allBoxes(base, new Set([nodeAt(base.root, indexOf(base, w.uid, t)!)!]), widgetBoxes(base, t)), ctx.view().size)
+    seen ??= targetsOf(canvasTargets({ ...ctx.page(), scene: base, natives }, t, [{ pageId: ctx.page().id, path, ...(native && { native: w.uid }) }]), ctx.view().size)
     // The snap acts where the pointer is (near: the drag box not held at the module's minimum). Without Shift it keeps a
     // crossing, and axis and sanitize then stop each edge. Under Shift dragBox stops the lead at the minimum and the
     // follower follows it on its own side (a corner's follower dragged past its anchor too: snapping its flipped edge led
@@ -99,7 +108,8 @@ function resizeWidget(ctx: Ctx, w: WidgetRef, h: Handle, path: number[]): Gestur
     const Y = axis(box.y, box.h, p.y, p.h, h.includes('n'), h.includes('s'), mods.centre)
     const size = sanitize(m, { ...w.params, w: X.l, h: Y.l }, t) as Box
     const params = sanitize(m, { ...size, x: X.at(size.w), y: Y.at(size.h) }, t) as Box
-    if (params.x === p.x && params.y === p.y && params.w === p.w && params.h === p.h) return { scene: base, guides }
+    if (params.x === p.x && params.y === p.y && params.w === p.w && params.h === p.h) return { scene: base, ...(native && { natives }), guides }
+    if (native) return { scene: base, natives: natives.map(n => n.uid === w.uid ? { ...n, params } : n), guides }
     return { scene: putWidget(base, { ...w, params }, t), guides }
   }, { overlay: guided })
 }
@@ -117,23 +127,29 @@ function axis(s: number, l: number, s0: number, l0: number, lo: boolean, hi: boo
 }
 
 function resize(ctx: Ctx, sel: Selection, h: Handle): Gesture | null {
+  if (sel.native !== undefined) {
+    const unit = shownNativeUnitsOf(ctx.page(), [sel], ctx.theme())[0]
+    if (!unit) return null
+    if (unit.locked) { ctx.note(unit.locked); return null }
+    return resizeWidget(ctx, unit.ref, h, [], true)
+  }
   if (lockedAt(ctx.page().scene.root, sel.path)) { ctx.note('locked'); return null }
   const widget = widgetAt(ctx.page().scene, sel.path, ctx.theme())
   if (widget) return resizeWidget(ctx, widget, h, sel.path)
   const group = foldKey(nodeAt(ctx.page().scene.root, sel.path)!.op) === 'G'
   let from: Box | null = null, W: Mat | null = null, inv: Mat | null = null, seen: Targets | null = null, why = ''
   let clip: string | null = null, wrote = false   // wrote: the step shown changed the node
-  return sceneDrag<Guide>(ctx, (q, base) => {
+  return sceneDrag<Guide>(ctx, (q, base, natives) => {
     const n = nodeAt(base.root, sel.path)
     if (!n) return null
     if (!from) {
-      const f = handleFrame(base, sel.path, ctx.page().size, ctx.theme())
+      const f = handleFrame(base, sel.path, ctx.page().size, ctx.theme(), natives)
       // The handle box's frame (a G: its children's) to design units, and a design-unit delta back into it.
       W = worldOf(base, group ? [...sel.path, 0] : sel.path)
       inv = W && invert([W[0], W[1], W[2], W[3], 0, 0])
       if (!f?.resize || !W || !inv) return null
       from = f.box
-      seen = targetsOf(allBoxes(base, new Set([n]), widgetBoxes(base, ctx.theme())), ctx.view().size)
+      seen = targetsOf(canvasTargets({ ...ctx.page(), scene: base, natives }, ctx.theme(), [sel]), ctx.view().size)
       clip = clipAbove(base.root, sel.path)
     }
     if (!W || !inv) return null
@@ -166,7 +182,7 @@ function resize(ctx: Ctx, sel: Selection, h: Handle): Gesture | null {
 }
 
 function turn(ctx: Ctx, sel: Selection, p: Press): Gesture | null {
-  const page = ctx.page(), n = nodeAt(page.scene.root, sel.path)!, f = handleFrame(page.scene, sel.path, page.size, ctx.theme())
+  const page = ctx.page(), n = nodeAt(page.scene.root, sel.path)!, f = handleFrame(page.scene, sel.path, page.size, ctx.theme(), page.natives)
   if (lockedAt(page.scene.root, sel.path)) { ctx.note('locked'); return null }
   const W = ctx.view().world(sel.path)   // the node's own frame -> design units
   if (!f || !W) return null
@@ -176,6 +192,7 @@ function turn(ctx: Ctx, sel: Selection, p: Press): Gesture | null {
   const [qx, qy] = g ? apply(g, c.x, c.y) : [c.x, c.y]   // the pivot in the node's own frame
   const [cx, cy] = apply(W, qx, qy), a0 = Math.atan2(p.start.y - cy, p.start.x - cx)
   let why = '', clip: string | null = null, r0: number | null = null, wrote = false, first = true
+  const held = nativesUnder(page.scene, page.natives ?? [], [sel.path], ctx.theme()).map(n => n.uid)
   return sceneDrag(ctx, (q, base) => {
     if (first) { first = false; clip = clipAbove(base.root, sel.path); r0 = turnOf(base.root, sel.path) }
     let D = ((Math.atan2(q.at.y - cy, q.at.x - cx) - a0) * 180 / Math.PI + 540) % 360 - 180
@@ -189,16 +206,17 @@ function turn(ctx: Ctx, sel: Selection, p: Press): Gesture | null {
     why = ''
     wrote = out.root !== base.root
     return { scene: { ...base, root: out.root }, selection: [{ ...sel, path: out.path }] }
-  }, { onCommit: () => said(ctx, why, clip, wrote, 'turn') })
+  }, { onCommit: () => said(ctx, [why, wrote ? uprightNote(held) : ''].filter(Boolean).join('; '), clip, wrote, 'turn') })
 }
 
 function transformGesture(ctx: Ctx, set: Selection[], p: Press, handle: Handle | 'rotate', f = setFrame(ctx)): Gesture | null {
   if (!f) return null
   const from = f.box, cx = from.x + from.w / 2, cy = from.y + from.h / 2
   const a0 = Math.atan2(p.start.y - cy, p.start.x - cx)
-  const seen = targetsOf(allBoxes(ctx.page().scene, new Set(unitsOf(ctx.page().scene, set, ctx.theme()).map(u => u.node)), widgetBoxes(ctx.page().scene, ctx.theme())), ctx.view().size)
-  let skipped: string[] = []
-  return sceneDrag<Guide>(ctx, (q, base) => {
+  const seen = targetsOf(canvasTargets(ctx.page(), ctx.theme(), set), ctx.view().size)
+  let skipped: string[] = [], upright: string[] = []
+  const held = nativesUnder(ctx.page().scene, ctx.page().natives ?? [], set.filter(s => s.native === undefined).map(s => s.path), ctx.theme()).map(n => n.uid)
+  return sceneDrag<Guide>(ctx, (q, base, natives) => {
     let m: Mat, guides: Guide[] = []
     if (handle === 'rotate') {
       let D = ((Math.atan2(q.at.y - cy, q.at.x - cx) - a0) * 180 / Math.PI + 540) % 360 - 180
@@ -218,10 +236,12 @@ function transformGesture(ctx: Ctx, set: Selection[], p: Press, handle: Handle |
       m = [sx, 0, 0, sy, box.x - from.x * sx, box.y - from.y * sy]
     }
     const out = transformSet(base, set, ctx.theme(), m)
-    skipped = out.skipped
-    if (out.scene === base && skipped.length) return null   // a refused step keeps the last valid drawing
-    return { scene: out.scene, selection: out.selection, guides }
-  }, { onCommit: () => { if (skipped.length) ctx.note(skipped.join('; ')) }, overlay: guided })
+    const units = shownNativeUnitsOf({ ...ctx.page(), scene: base, natives }, set, ctx.theme()), n = transformNatives(natives, units, out.matrix, ctx.theme())
+    skipped = [...out.skipped, ...n.skipped]
+    upright = handle === 'rotate' ? [...n.upright, ...(out.scene !== base ? held : [])] : []
+    if (out.scene === base && n.natives === natives && skipped.length) return null   // a refused step keeps the last valid drawing
+    return { scene: out.scene, ...(units.length && { natives: n.natives }), selection: out.selection, guides }
+  }, { onCommit: () => { const note = [...skipped, uprightNote(upright)].filter(Boolean).join('; '); if (note) ctx.note(note) }, overlay: guided })
 }
 
 function marquee(ctx: Ctx, keep: Selection[]): Gesture {
@@ -232,14 +252,18 @@ function marquee(ctx: Ctx, keep: Selection[]): Gesture {
   const path = entered?.pageId === pageId ? entered.path : [], children = path.length ? nodeAt(root, path)?.c ?? [] : root
   const boxes = children.map((n, k) => {
     const at = [...path, k]
-    return lockedAt(root, at) || hidden(n) ? null : own(k, n) ?? worldBox(page.scene, at) ?? spanBox(ctx, at)
+    return lockedAt(root, at) || hidden(n) ? null : unitsOf(page.scene, [{ pageId, path: at }], ctx.theme(), page.natives)[0]?.box ?? own(k, n) ?? worldBox(page.scene, at) ?? spanBox(ctx, at)
   })
+  const shown = new Set(shownNatives(page, ctx.theme()).map(n => n.uid))
+  const nativeUnits = nativeUnitsOf(page, (page.natives ?? []).map(n => ({ pageId, path: [], native: n.uid })), ctx.theme())
+    .filter(u => !u.locked && shown.has(u.ref.uid) && (holderOf(page.scene, u.ref, ctx.theme()) ?? []).join() === path.join())
   let rect: Box | null = null
   return {
     move(q) {
       if (!rect && q.css < SLOP) return
       rect = { x: Math.min(q.start.x, q.at.x), y: Math.min(q.start.y, q.at.y), w: Math.abs(q.at.x - q.start.x), h: Math.abs(q.at.y - q.start.y) }
-      choose(ctx, [...keep, ...marqueeHits(boxes, rect, q.mods.mod).map(k => ({ pageId, path: [...path, k] }))])
+      choose(ctx, [...keep, ...marqueeHits(boxes, rect, q.mods.mod).map(k => ({ pageId, path: [...path, k] })),
+        ...marqueeHits(nativeUnits.map(u => u.box), rect, q.mods.mod).map(k => nativeUnits[k].sel)])
       ctx.redraw()
     },
     up() {
@@ -272,7 +296,7 @@ const select: Tool = {
     }
     const deepHit = p.mods.mod ? pick(true) : null
     if (deepHit && !ctx.get().selection) choose(ctx, [deepHit])
-    if (one && !p.mods.mod && p.clicks >= 2 && enterable(page.scene, one.path, ctx.theme())) {
+    if (one && one.native === undefined && !p.mods.mod && p.clicks >= 2 && enterable(page.scene, one.path, ctx.theme())) {
       const hit = pick()
       if (hit && sameSelection(hit, one)) {
         ctx.dispatch({ type: 'enter', pageId: page.id, path: one.path })
@@ -284,14 +308,14 @@ const select: Tool = {
       // Handles take a press only while Selection draws them: over a frame that shows this page (none before the first
       // frame, nor while another page's frame is still shown).
       const shown = !!ctx.frame()?.elements.some(e => e.id === SCENE_ELEMENT && e.scene === page.id)
-      const inside = deepHit && !sameSelection(deepHit, one) && within(deepHit, one)
-      const h = shown && !inside ? handleAt(page.scene, one, page.size, ctx.view().zoom, p.px, ctx.theme()) : null
+      const inside = deepHit && !sameSelection(deepHit, one) && within(ctx, deepHit, one)
+      const h = shown && !inside ? handleAt(page.scene, one, page.size, ctx.view().zoom, p.px, ctx.theme(), page.natives) : null
       if (h === 'rotate') return widgetAt(page.scene, one.path, ctx.theme()) ? transformGesture(ctx, [one], p, h) : turn(ctx, one, p)
       if (h) return resize(ctx, one, h)
-      const n = nodeAt(page.scene.root, one.path)
+      const n = one.native === undefined ? nodeAt(page.scene.root, one.path) : null
       if (p.clicks >= 2 && n && hasPoints(n)) { ctx.setTool('points'); return null }
     }
-    const hit = p.mods.mod ? deepHit : pick(), member = hit ? set.find(x => p.mods.mod ? sameSelection(hit, x) : within(hit, x)) : undefined
+    const hit = p.mods.mod ? deepHit : pick(), member = hit ? set.find(x => p.mods.mod && !(p.mods.shift && hit.native !== undefined) ? sameSelection(hit, x) : within(ctx, hit, x)) : undefined
     if (p.mods.shift) {
       if (!hit) return marquee(ctx, set)
       const rest = set.filter(x => x !== member)

@@ -2,12 +2,15 @@
 // stays as it is (the key is not taken).
 import type { Selection } from '../../model/store'
 import { hidden } from '../bounds'
+import { shownNatives } from '../natives'
 import { lockedAt } from '../tree'
 import type { Command, Ctx } from '../types'
 
 const eligible = (ctx: Ctx): Selection[] => {
   const page = ctx.page(), root = page.scene.root
-  return root.flatMap((n, k) => hidden(n) || lockedAt(root, [k]) ? [] : [{ pageId: page.id, path: [k] }])
+  const shown = new Set(shownNatives(page, ctx.theme()).map(n => n.uid))
+  return [...root.flatMap((n, k) => hidden(n) || lockedAt(root, [k]) ? [] : [{ pageId: page.id, path: [k] }]),
+    ...(page.natives ?? []).filter(n => !n.group && !n.lock && shown.has(n.uid)).map(n => ({ pageId: page.id, path: [], native: n.uid }))]
 }
 
 const selectAll: Command = { kind: 'command', id: 'selectAll', label: 'Select all', menu: 'edit', order: 40, keys: ['Mod+A'],

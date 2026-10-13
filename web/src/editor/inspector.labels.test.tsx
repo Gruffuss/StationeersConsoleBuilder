@@ -12,6 +12,16 @@ import { expandRoot, putWidget } from '../widgets/core'
 import { instance } from '../widgets/testing'
 import { PropertyPanel } from './PropertyPanel'
 import { WidgetPanel } from './WidgetPanel'
+import { Inspector } from './shell/Inspector'
+import { harness } from '../editing/testing'
+
+it('identifies a native holder and its game draw layer in the Inspector subtitle', () => {
+  const h = harness({ header: {}, defs: [], root: [node('G', { id: 'potato' }, [])] }, {
+    natives: [{ ...instance('icon'), group: 'potato' }], sel: { pageId: 'p1', path: [], native: 'ico1' } })
+  const ui = mount(<Inspector ctx={h.ctx} tab="Design" onTab={() => {}}>{null}</Inspector>)
+  try { expect(ui.container.textContent).toContain('ico1 · in potato · drawn above the page') }
+  finally { ui.unmount(); h.checker.dispose() }
+})
 
 const baseline: Record<string, string[]> = {
   "SCENE": [

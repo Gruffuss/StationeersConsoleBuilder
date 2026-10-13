@@ -17,7 +17,7 @@ import { DATA_NAME, gradientDef, hasGradient, plainTextProblem, previewName, tag
 import { WIDGETS } from './registry'
 import { dressing, forWidget, underLabels } from './dress'
 import { applyEdit, sanitizeEdit } from './editData'
-import type { Ctx, Expansion, Json, NativeEl, Param, Params, Slot, WidgetModule, WidgetRef } from './types'
+import type { Ctx, Expansion, Json, NativeEl, NativeRef, Param, Params, Slot, WidgetModule, WidgetRef } from './types'
 
 export { DATA_NAME, previewName }   // defined in paint.ts, which the modules import (they cannot import core: core imports the registry)
 
@@ -327,14 +327,14 @@ export function detach(scene: Scene, uid: string, t: Theme): Scene {
 }
 
 /** The page's native widgets (Q10) and what each declares; an entry of no native type is skipped. */
-export function nativesOf(page: { natives?: WidgetRef[] }, t: Theme): { uid: string; el: NativeEl }[] {
+export function nativesOf(page: { natives?: NativeRef[] }, t: Theme): { uid: string; el: NativeEl }[] {
   return (page.natives ?? []).flatMap(w => {
     const m = WIDGETS[w.type]
     return m?.native ? (m.expand(sanitize(m, w.params, t), t, w.uid).natives ?? []).map(el => ({ uid: w.uid, el })) : []
   })
 }
 /** Native `uid` of the page, its params sanitized; null when there is none. */
-export function nativeAt(page: { natives?: WidgetRef[] }, uid: string | undefined, t: Theme): WidgetRef | null {
+export function nativeAt(page: { natives?: NativeRef[] }, uid: string | undefined, t: Theme): NativeRef | null {
   const w = uid === undefined ? undefined : page.natives?.find(n => n.uid === uid), m = w && WIDGETS[w.type]
   return w && m?.native ? { ...w, params: sanitize(m, w.params, t) } : null
 }

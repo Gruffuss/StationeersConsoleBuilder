@@ -11,12 +11,14 @@ import { expandRoot, putWidget, widgetAt } from '../widgets/core'
 import { instance } from '../widgets/testing'
 import { vanillaPlus } from '../theme/vanillaPlus'
 import { Layers } from './Layers'
+import type { NativeRef } from '../widgets/types'
+import { NATIVE_DESCRIPTION } from './nativeText'
 
 let ui: ReturnType<typeof mount> | null = null
 afterEach(() => { ui?.unmount(); ui = null })
 const at = (path: number[], inDefs?: boolean) => ({ pageId: 'p1', path, ...(inDefs && { inDefs }) })
-function panel(root: SrcNode[], defs: SrcNode[] = []) {
-  const h = harness({ header: { w: 460, h: 460 }, root, defs })
+function panel(root: SrcNode[], defs: SrcNode[] = [], natives?: NativeRef[]) {
+  const h = harness({ header: { w: 460, h: 460 }, root, defs }, { natives })
   const draw = () => <Layers page={h.ctx.page()} selection={h.state().selection} also={h.state().also}
     entered={h.state().entered} dispatch={h.ctx.dispatch} ctx={h.ctx} />
   ui?.unmount()
@@ -35,6 +37,107 @@ function panel(root: SrcNode[], defs: SrcNode[] = []) {
 }
 const R = (id: string, x = 0) => node('R', { id, x, y: 10, w: 20, h: 20 })
 const ids = (nodes: SrcNode[]) => nodes.map(n => n.attrs.id)
+
+const native = (uid = 'ico1', group?: string): NativeRef => ({ ...instance(uid.startsWith('input') ? 'textinput' : 'icon', { x: 30, y: 40 }, uid), ...(group && { group }) })
+const nativeRow = (p: ReturnType<typeof panel>, uid = 'ico1') => {
+  const row = p.box.querySelector<HTMLElement>(`[data-layer="native:${uid}"]`)
+  expect(row).not.toBeNull(); return row!
+}
+const nativeClick = (p: ReturnType<typeof panel>, uid = 'ico1', mods: MouseEventInit = {}) => p.event(() => nativeRow(p, uid).dispatchEvent(new MouseEvent('click', { bubbles: true, ...mods })))
+const nativeKey = (p: ReturnType<typeof panel>, uid: string, key: string) => p.event(() => nativeRow(p, uid).dispatchEvent(new KeyboardEvent('keydown', { key, altKey: true, bubbles: true, cancelable: true })))
+const dropRows = (p: ReturnType<typeof panel>, from: HTMLElement, to: HTMLElement, fraction = 0.5) => p.event(() => {
+  const transfer = new DataTransfer()
+  const start = new Event('dragstart', { bubbles: true }); Object.defineProperty(start, 'dataTransfer', { value: transfer }); from.dispatchEvent(start)
+  Object.defineProperty(to, 'getBoundingClientRect', { configurable: true, value: () => ({ top: 0, height: 100 }) })
+  to.dispatchEvent(new MouseEvent('drop', { bubbles: true, clientY: fraction * 100 }))
+})
+
+describe('native Layers rows', () => {
+  it('emits natives after scene children in draw order and page natives at Root end; empty holders expand', async () => {
+    const p = panel([node('G', { id: 'card' }, [R('shape')]), node('G', { id: 'empty' }, [])], [], [native('input1', 'card'), native('ico1', 'card'), native('ico2'), native('ico3', 'empty')])
+    expect(p.box.querySelector('[data-layer="native:ico1"]')).toBeNull()
+    await p.button([0], 'Expand'); await p.button([1], 'Expand')
+    expect(Array.from(p.box.querySelectorAll('[data-layer]')).map(n => n.getAttribute('data-layer'))).toEqual(['root:0', 'root:0.0', 'native:ico1', 'native:input1', 'root:1', 'native:ico3', 'native:ico2'])
+    const row = nativeRow(p)
+    expect(row.getAttribute('aria-level')).toBe('2'); expect(nativeRow(p, 'ico2').getAttribute('aria-level')).toBe('1')
+    expect(row.textContent).toContain('icon ico1 · drawn above the page')
+    expect(row.title).toBe(NATIVE_DESCRIPTION)
+    expect(row.querySelector<HTMLInputElement>('input')!).toMatchObject({ readOnly: true, value: 'ico1' })
+  })
+  it('click/Ctrl/Shift/keyboard select native sets, including beside nodes, and double click does nothing', async () => {
+    const p = panel([R('shape')], [], [native(), native('ico2'), native('ico3')])
+    await p.click([0]); await nativeClick(p, 'ico1', { ctrlKey: true })
+    expect(p.h.state()).toMatchObject({ selection: { native: 'ico1' }, also: [at([0])] })
+    await nativeClick(p, 'ico1', { ctrlKey: true }); expect(p.h.state().selection).toEqual(at([0]))
+    await nativeClick(p); await nativeClick(p, 'ico3', { shiftKey: true })
+    expect([...p.h.state().also, p.h.state().selection].map(s => s?.native)).toEqual(['ico1', 'ico2', 'ico3'])
+    await p.event(() => nativeRow(p).dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))); expect(p.h.state().entered).toBeNull()
+    for (const key of ['Enter', ' ']) {
+      await p.event(() => nativeRow(p).dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true })))
+      expect(p.h.state().selection?.native).toBe('ico1')
+    }
+  })
+  it('hide/lock toggle one flag and one undo step each', async () => {
+    const p = panel([], [], [native()])
+    for (const label of ['Hide / show', 'Lock / unlock']) await p.event(() => nativeRow(p).querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!.click())
+    expect(p.h.ctx.page().natives![0]).toMatchObject({ hidden: true, lock: true }); expect(p.h.state().past).toHaveLength(2)
+  })
+  it.each(['card', ''])('drops into %s with its unchanged box and an allocated id when needed', async id => {
+    const p = panel([node('G', id ? { id } : {}, [])], [], [native()]), before = p.h.ctx.page().natives![0].params
+    await dropRows(p, nativeRow(p), p.row([0]))
+    expect(p.h.ctx.page().natives![0]).toMatchObject({ group: id || 'group_1', params: before })
+    expect(p.h.root()[0].attrs.id).toBe(id || 'group_1'); expect(p.h.state().past).toHaveLength(1)
+  })
+  it.each(['scope', 'widget', 'scroll', 'defs'])('refuses a native drop on %s', async target => {
+    const w = putWidget({ header: {}, defs: [], root: [] }, instance('panel'), vanillaPlus)
+    const root = target === 'scope' ? [node('G', {}, [R('shape', 0), node('T', { text: '{=hover}' })])] : target === 'widget' ? w.root : target === 'scroll' ? [node('SC', {}, [node('G', { id: 'card' }, [])])] : [R('shape')]
+    const p = panel(root, [node('SYM', { id: 'd' }, [])], [native()])
+    if (target === 'scroll') await p.button([0], 'Expand')
+    await dropRows(p, nativeRow(p), p.row(target === 'scroll' ? [0, 0] : [0], target === 'defs'))
+    expect(p.h.state().past).toHaveLength(0)
+    expect(p.h.status()).toContain(target === 'scope' ? 'giving it one would change' : target === 'widget' ? 'a native never sits inside a widget' : target === 'scroll' ? 'a native cannot follow scrolling or repeating' : 'natives live on the page, not in Defs')
+  })
+  it('drops to Root and another native holder before/after, refusing cross-band drops', async () => {
+    const p = panel([node('G', { id: 'a' }, []), node('G', { id: 'b' }, [])], [], [native('ico1', 'a'), native('ico2', 'b'), native('input1', 'b')])
+    await p.button([0], 'Expand'); await p.button([1], 'Expand')
+    await dropRows(p, nativeRow(p), nativeRow(p, 'ico2'), 0.9)
+    expect(p.h.ctx.page().natives!.map(n => [n.uid, n.group])).toEqual([['ico2', 'b'], ['ico1', 'b'], ['input1', 'b']])
+    await dropRows(p, nativeRow(p), nativeRow(p, 'input1')); expect(p.h.status()).toContain('a text input always draws above an icon')
+    await dropRows(p, nativeRow(p), p.box.querySelector<HTMLElement>('[aria-label="Root layers"]')!)
+    expect(p.h.ctx.page().natives!.find(n => n.uid === 'ico1')!.group).toBeUndefined(); expect(p.h.state().past).toHaveLength(2)
+  })
+  it('Alt keys reorder in band, move into last eligible G and out to parent/page', async () => {
+    const p = panel([node('G', { id: 'outer' }, [node('G', { id: 'card' }, [])])], [], [native(), native('ico2'), native('input1')])
+    await nativeKey(p, 'ico1', 'ArrowDown'); expect(p.h.ctx.page().natives!.map(n => n.uid)).toEqual(['ico2', 'ico1', 'input1'])
+    await nativeKey(p, 'ico1', 'ArrowUp'); expect(p.h.ctx.page().natives![0].uid).toBe('ico1')
+    await nativeKey(p, 'ico1', 'ArrowRight'); expect(p.h.ctx.page().natives![0].group).toBe('outer')
+    await nativeKey(p, 'ico1', 'ArrowRight'); expect(p.h.ctx.page().natives![0].group).toBe('card')
+    await nativeKey(p, 'ico1', 'ArrowLeft'); expect(p.h.ctx.page().natives![0].group).toBe('outer')
+    await nativeKey(p, 'ico1', 'ArrowLeft'); expect(p.h.ctx.page().natives![0].group).toBeUndefined()
+  })
+  it('Alt+Up/Down reorder only the native holder even when other holders interleave its z band', async () => {
+    const p = panel([node('G', { id: 'card' }, [])], [], [native('ico1', 'card'), native('ico2'), native('ico3', 'card'), native('ico4')])
+    await p.button([0], 'Expand')
+    await nativeKey(p, 'ico1', 'ArrowDown')
+    expect(p.h.ctx.page().natives!.map(n => n.uid)).toEqual(['ico3', 'ico2', 'ico1', 'ico4'])
+    await nativeKey(p, 'ico1', 'ArrowUp')
+    expect(p.h.ctx.page().natives!.map(n => n.uid)).toEqual(['ico1', 'ico2', 'ico3', 'ico4'])
+    expect(p.h.state().past).toHaveLength(2)
+  })
+  it('drops scene rows onto native rows and mixed rows into a holder in one entry', async () => {
+    const p = panel([R('shape'), node('G', { id: 'card' }, [R('child')])], [], [native('ico1', 'card'), native('ico2')])
+    await p.button([1], 'Expand'); await dropRows(p, p.row([0]), nativeRow(p))
+    expect(ids(p.h.root()[0].c!)).toEqual(['child', 'shape']); expect(p.h.state().past).toHaveLength(1)
+    const m = panel([R('shape'), node('G', { id: 'card' }, [])], [], [native()])
+    await m.click([0]); await nativeClick(m, 'ico1', { ctrlKey: true }); await dropRows(m, nativeRow(m), m.row([1]))
+    expect(ids(m.h.root()[0].c!)).toEqual(['shape']); expect(m.h.ctx.page().natives![0].group).toBe('card'); expect(m.h.state().past).toHaveLength(1)
+  })
+  it('renames a numeric holder id and carries membership in one undo entry', async () => {
+    const p = panel([node('G', { id: 5 }, [node('R', { w: 10, h: 10, clip: '5' })])], [node('CP', { id: '5' }, [R('outline')])], [native('ico1', '5')])
+    await p.event(() => { const input = p.row([0]).querySelector<HTMLInputElement>('input')!; input.value = 'potato'; input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })) })
+    expect(p.h.ctx.page().natives![0].group).toBe('potato'); expect(p.h.root()[0].c![0].attrs.clip).toBe('potato'); expect(p.h.state().past).toHaveLength(1)
+  })
+})
 
 describe('Layers', () => {
   it('opens Definitions and its ancestors for a selection sent from elsewhere', async () => {

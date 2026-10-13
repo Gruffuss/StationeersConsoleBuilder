@@ -20,6 +20,9 @@ import { compressProject } from '../project/codec'
 import { assembleExport } from './export'
 import { answer } from '../project/transfer.worker'
 import { unpack } from '../srctext/wire'
+import { node } from '../model/testing'
+import { clickTargets } from './clicks'
+import { namesOf } from './names'
 
 const gen = (p: Project) => generate(p, pg => printSrc(pg.scene))
 const json = (f: string) => JSON.parse(readFileSync(new URL(f, import.meta.url), 'utf8'))
@@ -29,6 +32,37 @@ const withBar = (): Project => {
   p.pages[0] = { ...p.pages[0], scene: putWidget(p.pages[0].scene, instance('bar'), vanillaPlus) }
   return p
 }
+
+describe('native memberships and visibility in generated Lua', () => {
+  const grouped = () => {
+    const p = newProject()
+    p.pages[0].scene.root = [node('G', { id: 'outer' }, [node('G', { id: 'card' }, [node('R', { w: 20, h: 20 })])]), node('G', { id: 'other' }, [])]
+    p.pages[0].natives = [{ ...instance('icon', {}, 'ico1'), group: 'card' }, { ...instance('textinput', {}, 'input1'), group: 'outer' }, { ...instance('icon', {}, 'ico2'), group: 'other' }]
+    return p
+  }
+  const declarations = (p: Project) => gen(p).lua.split('\n').filter(s => s.trimStart().startsWith('natives = {')).join('\n')
+  it('never includes memberships in runtime Lua, including nested holders', () => {
+    const p = grouped(), ungrouped = { ...p, pages: p.pages.map(page => ({ ...page, natives: page.natives?.map(({ group: _, ...n }) => n) })) }
+    expect(gen(p).lua).toBe(gen(ungrouped).lua)
+  })
+  it('omits own-hidden and hidden-ancestor natives and bindings, keeps actions and editable names', () => {
+    const p = grouped()
+    p.pages[0].natives![1].hidden = true; p.pages[0].scene.root[0].attrs.v = 0
+    p.bindings['@input1.value'] = { from: 'const', value: 'HIDDEN_BINDING_SENTINEL' }
+    p.actions.push({ id: 'change', on: 'input1', do: [{ op: 'log', text: '"input changed"' }] })
+    const list = declarations(p), lua = gen(p).lua
+    expect(list).not.toContain('"ico1"'); expect(list).not.toContain('"input1"'); expect(list).toContain('"ico2"')
+    expect(lua).not.toContain('HIDDEN_BINDING_SENTINEL'); expect(lua).toContain('input changed')
+    expect(clickTargets(p.pages[0], vanillaPlus).some(n => n.id === 'input1')).toBe(true)
+    expect(namesOf(p.pages[0], vanillaPlus).some(n => n.name === '@input1.value')).toBe(true)
+  })
+  it('keeps declaration order among shown natives, including after a reorder', () => {
+    const p = grouped(), first = declarations(p)
+    expect(first.indexOf('"ico1"')).toBeLessThan(first.indexOf('"input1"')); expect(first.indexOf('"input1"')).toBeLessThan(first.indexOf('"ico2"'))
+    p.pages[0].natives!.reverse(); const last = declarations(p)
+    expect(last.indexOf('"ico2"')).toBeLessThan(last.indexOf('"input1"')); expect(last.indexOf('"input1"')).toBeLessThan(last.indexOf('"ico1"'))
+  })
+})
 
 describe('the export', () => {
   it('owns row flags at fixed uid names and excludes their samples and bindings from export data', () => {

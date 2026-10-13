@@ -3,10 +3,9 @@
 // hits and stays here for another line, polygon, curve or path (saying why when its points cannot be edited), else goes
 // back to Select. Esc goes back to Select.
 import { apply, invert } from '../../editor/geometry'
-import { widgetBoxes } from '../../editor/Handles'
 import { nodeAt, type Selection } from '../../model/store'
 import type { SrcNode } from '../../model/scene'
-import { allBoxes } from '../bounds'
+import { canvasTargets } from '../select'
 import { sceneDrag, snapOn, snapOpts } from '../gesture'
 import { Guides } from '../Guides'
 import { crossOf, hasPoints, movePoint, noPoints, PointHandles, pointAt, pointsOf, segmentAt, addPoint, editPoint, noteCrossing } from '../points'
@@ -39,7 +38,7 @@ function drag(ctx: Ctx, sel: Selection, k: number): Gesture {
       const [x, y] = apply(W, pt.x, pt.y)
       // Every other node's box and the page, and the node's own other points (a vertex lines up with its neighbour); not
       // its own box, which moves with the point, nor the point's own place (nor another point there).
-      const seen = targetsOf(allBoxes(base, new Set([n]), widgetBoxes(base, ctx.theme())), ctx.view().size), cross = crossOf(n)
+      const seen = targetsOf(canvasTargets({ ...ctx.page(), scene: base }, ctx.theme(), [sel]), ctx.view().size), cross = crossOf(n)
       pts.forEach((o, i) => {
         if (i === k || (o.x === pt.x && o.y === pt.y)) return
         const [ox, oy] = apply(W, o.x, o.y)
@@ -134,10 +133,10 @@ const points: Tool = {
     chosenSegment.delete(ctx)
     if (p.mods.alt) {
       chosen.delete(ctx)
-      let target = sel && !sel.inDefs && sel.pageId === page.id ? sel : null
+      let target = sel && !sel.inDefs && sel.native === undefined && sel.pageId === page.id ? sel : null
       let hit = target && segmentAt(page.scene, target.path, page.size, ctx.view().zoom, p.px)
       if (!hit) {
-        const { target: picked, enter } = ctx.pick(p.px, true)
+        const { target: picked, enter } = ctx.pick(p.px, true, { natives: false })
         if (enter) ctx.dispatch(enter)
         if (picked && !picked.inDefs && picked.pageId === page.id) {
           target = picked; hit = segmentAt(page.scene, target.path, page.size, ctx.view().zoom, p.px)
@@ -152,11 +151,11 @@ const points: Tool = {
       }
       return null
     }
-    const k = sel && !sel.inDefs && sel.pageId === page.id ? pointAt(page.scene, sel.path, page.size, ctx.view().zoom, p.px) : null
+    const k = sel && !sel.inDefs && sel.native === undefined && sel.pageId === page.id ? pointAt(page.scene, sel.path, page.size, ctx.view().zoom, p.px) : null
     if (sel && k !== null) { chosen.set(ctx, { sel, node: nodeAt(page.scene.root, sel.path)!, k }); ctx.redraw(); return drag(ctx, sel, k) }
     chosen.delete(ctx)
-    const segment = sel && !sel.inDefs && sel.pageId === page.id && segmentAt(page.scene, sel.path, page.size, ctx.view().zoom, p.px)
-    const { target: hit, enter } = segment ? { target: sel } : ctx.pick(p.px, true)
+    const segment = sel && !sel.inDefs && sel.native === undefined && sel.pageId === page.id && segmentAt(page.scene, sel.path, page.size, ctx.view().zoom, p.px)
+    const { target: hit, enter } = segment ? { target: sel } : ctx.pick(p.px, true, { natives: false })
     if (enter) ctx.dispatch(enter)
     const n = hit && nodeAt(page.scene.root, hit.path)
     ctx.dispatch({ type: 'select', selection: hit })

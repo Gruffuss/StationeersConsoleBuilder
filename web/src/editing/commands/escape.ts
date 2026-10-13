@@ -3,6 +3,7 @@
 // another page is not touched. Keys only, no menu entry.
 import { selected } from '../../model/store'
 import { enterable } from '../depth'
+import { holderOf } from '../natives'
 import type { Command, Ctx } from '../types'
 
 const shown = (ctx: Ctx) => { const s = ctx.get().selection; return s?.pageId === ctx.page().id ? s : null }
@@ -24,6 +25,12 @@ const parent: Command = { kind: 'command', id: 'select.parent', label: 'Select t
     const s = ctx.get(), sel = shown(ctx)
     if (!sel) { exit(ctx, false); return }
     const e = entered(ctx)
+    if (sel.native && selected(s).length === 1) {
+      const ref = ctx.page().natives?.find(n => n.uid === sel.native), path = ref && holderOf(ctx.page().scene, ref, ctx.theme())
+      if (path && e?.path.join() === path.join()) exit(ctx, true)
+      else ctx.dispatch({ type: 'select', selection: path ? { pageId: sel.pageId, path } : null })
+      return
+    }
     if (e && !sel.inDefs && selected(s).length === 1 && e.path.length < sel.path.length && e.path.every((k, i) => sel.path[i] === k)) {
       exit(ctx, true)
       return

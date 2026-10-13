@@ -116,7 +116,7 @@ describe('transformSet', () => {
     expect(out.scene.root[0].c![0]).toBe(base.root[0].c![0])
     expect(worldBox(out.scene, [0, 0])).toEqual({ x: 40, y: 0, w: 20, h: 20 })
   })
-  it('preserves and names locked, bound and native members', () => {
+  it('names locked and bound members while native members pass silently to the gesture', () => {
     const bound = node('R', { id: 'readout', x: '$x', y: '=t', w: 10, h: 10 }), locked = { ...pair().root[1], comments: ['lock'], attrs: { ...pair().root[1].attrs, id: 'plate' } }
     const base = { ...empty, root: [pair().root[0], locked, bound] }
     const native = { pageId: 'p1', path: [], native: 'icon1' }
@@ -125,7 +125,7 @@ describe('transformSet', () => {
     expect(out.scene.root[1]).toBe(locked); expect(out.scene.root[2]).toBe(bound)
     expect(out.skipped.join('; ')).toMatch(/plate.*locked/)
     expect(out.skipped.join('; ')).toMatch(/readout.*expression/)
-    expect(out.skipped.join('; ')).toMatch(/icon1.*native/)
+    expect(out.skipped.join('; ')).not.toMatch(/icon1|native/)
     expect(out.selection.at(-1)).toEqual(native)
   })
   it('scales a Panel and a rectangle together in whole widget units, retaining overrides', () => {

@@ -289,7 +289,8 @@ may overturn any, and those marked *owner* are the owner's answers to the M2c qu
   gap, deletes, duplicates, copies, groups, reorders, hides, locks and takes a style paste or
   a named style; resize and rotate handles are for a single node. E1 adds resize and rotate
   of a multi-selection about its union box (owner, 2026-10-12: "yes yes", superseding Q5);
-  expressions, locks and natives stay where they are and are named.
+  expressions and locks stay where they are and are named; natives move and scale with the
+  set but stay upright (owner, 2026-10-13).
 - **Drawing:** a draw tool inserts at the top of the page root and switches back to Select
   after one shape. E1: at the top of the entered group, in its frame.
 - **Picking:** where the mesh hits nothing, the smallest closed shape with its own fill or
@@ -338,7 +339,10 @@ may overturn any, and those marked *owner* are the owner's answers to the M2c qu
   units (no `G s` or `t`); Delete takes the widget's own defs with it; duplicate and paste give
   new uids. A widget root has no rotate knob; group refuses it, and hide and a style paste skip
   it, each saying why; ungroup does not apply (Detach is the way out); lock works. A native
-  (M2b) is selected alone, never in a set; Delete removes it and no other command acts on it.
+  (M2b) acts as any other element (owner, 2026-10-13: "it should act as any other element"):
+  it is picked group-first, joins sets (Shift+click, marquee), moves, nudges and resizes with
+  eight handles and no knob (the game draws it upright), and takes delete, cut, copy, paste,
+  duplicate, hide, lock, order within its z band, align, distribute and gap (§5.1).
   E1 changes this: entering a widget selects its parts, whose paint, effects, position and
   size become the instance's overrides without Detach (a theme's ornaments are parts too, but
   their place follows their part: §5.1); a widget root hides, fades and
@@ -581,10 +585,20 @@ an animated dash), which lets widgets sit inside transformed groups.
 - **Never empty.** A widget whose drawing all hides at rest (an Alert at state 0, an Event log
   with no entry, a Repeater at `n` 0) holds its box with an unpainted `R`, so a page of them
   draws no empty-scene marker.
+- **Natives in groups** (owner, 2026-10-13, choosing "Inside their card"). A native may
+  belong to the plain group it sits on: its optional `group` names that group's id (a group
+  without one gets `group_<n>`, refused where the id would change what `hover` or `down`
+  answers to). The Layers panel shows it after the group's own rows, marked as drawn above
+  the page, since the game always draws natives above the vector page. It follows the group's
+  literal moves, resizes and turns, in whole units and always upright; when the group goes
+  away it stays on the page with a notice. Hiding a native, or a statically hidden group
+  around it, leaves it out of the export and the editor (owner's choice). Membership never
+  reaches the generated Lua. The three console starters seat each icon in its card.
 - **Native icons: names only, no game images.** The Item / gas icon defaults to
   `Oxygen` and offers `gas`, `slot` and `prefab`. The generated catalogue ships
   names only; no game image, atlas or sprite is copied or bundled. The canvas and
-  preview keep the existing placeholder: the icon's box and its chosen name.
+  preview keep the existing placeholder: the icon's box and its chosen name, kept whole on
+  one line at any zoom.
   The panel offers catalogue keys through a datalist, plus known device prefab
   names for `prefab`. Unknown gas and slot names get a warning with a suggested
   key when known; the chosen value is kept. Prefab names are never warned about.
@@ -1803,6 +1817,12 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   spare width or height is used, not left blank; and a landscape and a portrait arrangement in one
   page, the export choosing by the console's size, as the owner's own Power console does. Its own
   plan comes first. Until then a console made for both orientations ships as two templates.
+- Future: game icon pictures in the editor (owner, 2026-10-13). The builder never ships, hosts or
+  redistributes the game's images. Planned: while linked to the game, a button loads the pictures
+  of the open page's icons from the game, only when pressed; they stay in memory and never enter
+  projects, share links or exports. It needs a new game-side tool that returns an icon's picture:
+  none of StationeersLua's tools or ScriptedScreens' surface tools returns images today. Which mod
+  gets the tool is the owner's call when the work starts.
 
 Execution: tasks run in parallel wherever only shared lines of text order them; a task waits only
 for another task's output (an interface it consumes). Merge conflicts are resolved at the merge, and
@@ -1944,3 +1964,6 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-13 · Inspector (§5.4), owner, asking "why is it the page option present on the design tb of every element": the Design tab leaves the Page section out under a selection, superseding the earlier entry's "under a selection it stays last and collapsed"; it still leads the tab when nothing is selected, and Custom in the frame label's console sizes clears the selection to open it. The same round centres a styled dropdown's value in its control.
 - 2026-10-13 · Starter layers (§5.2), owner: "can this be layers ande sublayers like a tree, now everithing on the page is the same zdepth layer and it is a mess :))": the three console starters are authored as trees of named groups (each panel with its contents; each card, setting or light with its labels; lone widgets at the top); ids, bindings, the custom Lua and the draw order of overlapping elements are unchanged. An icon placeholder's name now stays whole on one line at any zoom; a ten-digit prefab hash was cut.
 - 2026-10-13 · Game icons in groups (§5.1), owner, choosing "Inside their card" over a Layers section of their own or leaving them out of Layers: each game icon belongs to the layer group it sits on, shown inside it in the Layers panel, marked as drawn above the page, and moving the group moves it. Planned; not built yet.
+- 2026-10-13 · Game icon pictures (§11), owner: "can it be made once connected to a chip to load the ingame images from the game (i do not want us redistributing them) and loading simages should be on demand", then "just add it as future plans": on the roadmap, with the rule that the builder never redistributes game images; while linked, the open page's icon pictures load from the game on demand, memory only. The game-side tool it needs does not exist yet; the owner left open whether the ScriptedScreens Vector mod or ScriptedScreens should get it.
+- 2026-10-13 · Game icons on the canvas (§5.1), owner, answering the icons-in-groups questions: an icon "should act as any other element" (select, drag with snapping, nudge with the arrow keys, resize, multi-select, align), always upright since the game cannot turn it; hiding an icon, or a group around it, leaves it out of the export and the editor. Planned with icons in groups.
+- 2026-10-13 · Natives in groups built (§§4, 5.1): membership by group id, Layers rows marked drawn above, following the group upright, acting as any other element on the canvas (picking group-first, sets, drag, nudge, resize, the commands), hidden natives left out of the export; the console starters' icons seated in their cards with every generated Lua byte unchanged.

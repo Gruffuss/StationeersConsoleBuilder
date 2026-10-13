@@ -10,11 +10,11 @@ import { instance } from '../widgets/testing'
 import { NativeLayer } from './NativeLayer'
 import { WIDGET_GONE, WidgetPanel } from './WidgetPanel'
 
-it('places each native at its design box over the canvas, shows its name or placeholder, and selects it on press', async () => {
+it('places each native at its design box and leaves presses to the canvas, retaining keyboard selection', async () => {
   const p = newProject(), got: string[] = []
   const page = { ...p.pages[0], size: { w: 460, h: 460 }, scene: { header: { w: 480, h: 480, fit: 'contain' }, defs: [], root: [] },
     natives: [instance('icon', { x: 48, y: 96 }), instance('textinput')] }
-  const ui = mount(<NativeLayer page={page} theme={t} zoom={2} selected="ti1" onSelect={uid => got.push(uid)} />)
+  const ui = mount(<NativeLayer page={page} theme={t} zoom={2} selected={new Set(['ti1'])} onSelect={uid => got.push(uid)} />)
   const [icon, input] = Array.from(ui.container.querySelectorAll<HTMLElement>('.vb-native'))
   expect([icon.textContent, icon.style.left, icon.style.top]).toEqual(['Oxygen', '92px', '184px'])
   expect([input.textContent, input.className]).toEqual(['Text', 'vb-native vb-native-sel'])
@@ -22,10 +22,20 @@ it('places each native at its design box over the canvas, shows its name or plac
   expect([input.style.width, input.style.height, input.style.background]).toEqual(['575px', '103.5px', '#111116'])
   expect(parseFloat(input.style.fontSize)).toBeCloseTo(26 * 460 / 480 * 2, 5)
   await run(() => { icon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })) })
-  expect(got).toEqual(['ico1'])
+  expect(got).toEqual([])
+  expect(icon.style.pointerEvents).toBe('none')
   expect(input.tabIndex).toBe(0)   // and from the keyboard
   await run(() => { input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })) })
-  expect(got).toEqual(['ico1', 'ti1'])
+  expect(got).toEqual(['ti1'])
+})
+
+it('renders only shown natives in z order and marks every selected uid', () => {
+  const p = newProject(), page = { ...p.pages[0], natives: [instance('textinput'), instance('icon'),
+    { ...instance('icon'), uid: 'hidden', hidden: true as const }, { ...instance('icon'), uid: 'held', group: 'gone' }] }
+  page.scene = { header: {}, defs: [], root: [{ op: 'G', attrs: { id: 'gone', v: 0 }, c: [] }] }
+  const ui = mount(<NativeLayer page={page} theme={t} zoom={1} selected={new Set(['ico1', 'ti1'])} onSelect={() => {}} />)
+  expect(Array.from(ui.container.querySelectorAll('.vb-native'), el => el.getAttribute('aria-label'))).toEqual(['icon ico1', 'textinput ti1'])
+  expect(ui.container.querySelectorAll('.vb-native-sel')).toHaveLength(2)
 })
 
 it('places natives by the scene header’s fit, as the shell does', () => {

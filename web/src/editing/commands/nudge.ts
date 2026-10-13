@@ -4,7 +4,8 @@
 // one page: a press after the set or the page changed (Mod+A, a page switch) commits the open burst first.
 import type { Project } from '../../model/project'
 import { selected, type State } from '../../model/store'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { moveNatives, nativeUnitsOf } from '../natives'
 import type { Command } from '../types'
 import { moveUnits, unitsOf } from '../units'
 
@@ -19,16 +20,17 @@ const setOf = (s: State) => JSON.stringify([s.activePageId, selected(s)])   // t
 const nudge = (key: keyof typeof STEP, big: boolean): Command => ({
   kind: 'command', id: `nudge.${key}${big ? '.big' : ''}`, label: `Nudge ${key.slice(5).toLowerCase()}${big ? ' (big)' : ''}`,
   keys: [big ? `Shift+${key}` : key],
-  when: ctx => ctx.tool() === 'select' && membersOf(ctx).length > 0,
+  when: ctx => ctx.tool() === 'select' && membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) {
     const now = ctx.get()
     if (mine && now.dragBase === mine && now.project === written && setOf(now) !== set) { ctx.dispatch({ type: 'commitDrag' }); mine = written = null }
     const k = big ? BIG : NUDGE, page = ctx.page()
-    const t = ctx.theme(), units = unitsOf(page.scene, membersOf(ctx), t)
+    const t = ctx.theme(), units = unitsOf(page.scene, membersOf(ctx), t, page.natives), nativeUnits = nativeUnitsOf(page, nativeMembersOf(ctx), t)
     const r = moveUnits(page.scene, units, units.map(() => ({ dx: STEP[key][0] * k, dy: STEP[key][1] * k })), t)
-    if (r.skipped.length || r.notes.length) ctx.note([...r.skipped, ...r.notes].join('; '))
-    if (r.scene === page.scene) return
-    ctx.dispatch({ type: 'editScene', pageId: page.id, scene: r.scene, transient: true })
+    const n = moveNatives(page.natives ?? [], nativeUnits, nativeUnits.map(() => ({ dx: STEP[key][0] * k, dy: STEP[key][1] * k })), t)
+    if (r.skipped.length || r.notes.length || n.skipped.length) ctx.note([...r.skipped, ...r.notes, ...n.skipped].join('; '))
+    if (r.scene === page.scene && n.natives === (page.natives ?? n.natives)) return
+    ctx.dispatch({ type: 'editScene', pageId: page.id, scene: r.scene, ...(nativeUnits.length && { natives: n.natives }), transient: true })
     mine = ctx.get().dragBase
     written = ctx.get().project
     set = setOf(ctx.get())

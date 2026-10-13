@@ -16,6 +16,11 @@ const scene = (root: SrcNode[]): Scene => ({ header: { w: 480, h: 480 }, defs: [
 const at = (...path: number[]) => ({ pageId: 'p1', path })
 
 describe('units', () => {
+  it('includes a held icon sticking out of a G unit when natives are supplied', () => {
+    const s = scene([node('G', { id: 'card' }, [R(0)])]), refs = [{ type: 'icon', uid: 'ico1', group: 'card', params: { x: 8, y: 2, w: 10, h: 10, kind: 'gas', name: 'Oxygen' } }]
+    expect(unitsOf(s, [at(0)], t, refs)[0].box).toEqual({ x: 0, y: 0, w: 18, h: 12 })
+    expect(unitsOf(s, [at(0)], t)[0].box).toEqual({ x: 0, y: 0, w: 10, h: 10 })
+  })
   it('reads a group of any scale the mod draws as pick.ts does: a box, handles and a move under G s=[1e-7,1e-7]', () => {
     const s = scene([node('G', { s: [1e-7, 1e-7] }, [node('R', { x: 0, y: 0, w: 1e8, h: 1e8 })])])
     const b = worldBox(s, [0, 0])!

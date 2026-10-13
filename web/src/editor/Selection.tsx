@@ -6,7 +6,7 @@
 // only says 'locked'). Spans, parse indices and handles are root-only.
 import { SCENE_ELEMENT } from '../codegen/lua'
 import { similar } from '../editing/bounds'
-import { handleFrame } from '../editing/select'
+import { handleFrame, nativeHandleFrame } from '../editing/select'
 import { stays } from '../editing/transform'
 import { lockedAt } from '../editing/tree'
 import type { Scene } from '../model/scene'
@@ -17,16 +17,27 @@ import { apply, chainTo, type Box, type Handle } from './geometry'
 import { Handles } from './Handles'
 import { spanBounds } from './hitTest'
 import { drawable, shearMatrix } from './text'
+import type { Theme } from '../theme'
+import type { NativeRef } from '../widgets/types'
 
 /** `selection` on the page shown, or null; `node` its parse index (from the scene check), or null while a structural
  *  edit waits for its check. `rect`: the page's surface size. `handles`: draw them. `widget`: the selected widget root's
  *  box and handles (widgetBox). */
-export function Selection({ frame, zoom, scene, selection, node, rect, handles, widget }: {
+export function Selection({ frame, zoom, scene, selection, node, rect, handles, widget, natives = [], theme = null }: {
   frame: Frame | null; zoom: number; scene: Scene; selection: Selected | null; node: number | null; rect: { w: number; h: number }; handles: boolean
   widget?: { box: Box; handles: Handle[] } | null
+  natives?: NativeRef[]; theme?: Theme | null
 }) {
   if (!frame || !selection || selection.inDefs) return null
   const element = frame.elements.findIndex(e => e.id === SCENE_ELEMENT && e.scene === selection.pageId)
+  if (selection.native !== undefined) {
+    const f = element < 0 ? null : nativeHandleFrame(scene, natives, selection.native, rect, theme)
+    if (!f) return null
+    const points = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([u, v]) => apply(f.chain, f.box.x + f.box.w * u, f.box.y + f.box.h * v))
+      .map(([x, y]) => `${x * zoom},${y * zoom}`).join(' ')
+    return <svg className="vb-selection" aria-hidden="true"><g><polygon points={points} className="vb-sel-under" /><polygon points={points} className="vb-sel-over" /></g>
+      {handles && !f.locked && <Handles box={f.box} chain={f.chain} zoom={zoom} within={rect} />}</svg>
+  }
   if (widget) {   // The params box through the widget's root rotation, with its module's resize handles and a knob.
     const chain = element < 0 ? null : chainTo(scene, [...selection.path, 0], rect)
     if (!chain) return null
@@ -48,7 +59,7 @@ export function Selection({ frame, zoom, scene, selection, node, rect, handles, 
     const at = { x: x * zoom, y: y * zoom, width: w * zoom, height: h * zoom, transform: transform || undefined }
     return <g key={key}><rect {...at} className="vb-sel-under" /><rect {...at} className="vb-sel-over" /></g>
   }
-  const hf = handleFrame(scene, selection.path, rect, null), lock = stays(n)
+  const hf = handleFrame(scene, selection.path, rect, natives.length ? theme : null, natives), lock = stays(n)
   // A T under a similarity chain: its attribute box is exact (and current during a drag); under a shear, the label as
   // TextLayer draws it (ruling P8).
   const plain = foldKey(n.op) === 'T' && hf !== null && similar(hf.chain)

@@ -13,7 +13,8 @@ import type { Scene } from '../model/scene'
 import { px } from '../model/shapes'
 import { printChecked } from '../srctext/print'
 import { themeOf } from '../theme'
-import { isObject, nativesOf, slotsOf, widgetsIn } from '../widgets/core'
+import { isObject, slotsOf, widgetsIn } from '../widgets/core'
+import { shownNatives } from '../editing/natives'
 import { nodeAt } from '../model/tree'
 import { clickTargets, parseStep } from './clicks'
 import { devicesName, devicesPage } from './devicesPage'
@@ -302,7 +303,7 @@ export function generate(p: Project, srcOf: (page: Page) => string): Generated {
       const slots = slotsOf(nodeAt(page.scene.root, path)!, t), key = (s: string) => quote(slots.find(x => x.slot === s)!.key)
       return [`{ n = ${key('n')}, v = ${key('v')}, hasv = ${key('hasv')}, ready = ${key('ready')}, max = ${num(ref.params.max as number)} }`]
     })
-    const natives = nativesOf(page, t).map(({ uid, el }) => {
+    const natives = shownNatives(page, t).map(({ uid, el }) => {
       const prop = el.type === 'icon' ? 'name' : 'value', b = bindingOf(`@${uid}.${prop}`), src = b && sourceOf(`@${uid}.${prop}`, b)
       return `{ uid = ${quote(uid)}, type = ${quote(el.type)}, x = ${num(el.box.x)}, y = ${num(el.box.y)}, w = ${num(el.box.w)}, h = ${num(el.box.h)}, `
         + `props = { ${kv(el.props)} }, style = { ${kv(el.style)} }${el.fontSize ? `, font = ${num(el.fontSize)}` : ''}`

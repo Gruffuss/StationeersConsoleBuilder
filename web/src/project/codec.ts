@@ -7,7 +7,7 @@ export const PAGE_KEYS = ['id', 'name', 'surface', 'shape', 'size', 'background'
 export const SCENE_KEYS = ['header', 'defs', 'root', 'notes']
 export const NODE_KEYS = ['op', 'attrs', 'c', 'comments', 'eol', 'tail']
 export const NOTES_KEYS = ['header', 'defs', 'defsTail', 'tail']
-export const NATIVE_KEYS = ['type', 'uid', 'params']
+export const NATIVE_KEYS = ['type', 'uid', 'params', 'group', 'hidden', 'lock']
 const SIZE_KEYS = ['w', 'h'], TARGET_KEYS = ['vectorMod'], SETTINGS_KEYS = ['budgets', 'beta', 'day', 'wipeOnReexport']
 const BUDGET_KEYS = ['load', 'tick'], DAY_KEYS = ['length', 'start']
 

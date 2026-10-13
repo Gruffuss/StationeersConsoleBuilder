@@ -3,7 +3,6 @@
 // image) and points clicked (line, polygon, curve). Each tool file only names its op. A new node goes on top of the page
 // root or entered group, selected, without an id; then the tool hands back to Select.
 import { apply, childMatrix, invert, outline, round, type Box } from '../editor/geometry'
-import { widgetBoxes } from '../editor/Handles'
 import type { Scene, SrcNode, Value } from '../model/scene'
 import { nodeAt } from '../model/store'
 import { colour, type Theme } from '../theme'
@@ -11,7 +10,8 @@ import { linked, unlinked, type StyleLink } from '../theme/links'
 import { foldKey } from '../srctext/props'
 import { themeDefs } from '../widgets/core'
 import { defKey } from '../schema/duplicateIds'
-import { allBoxes, worldBox, worldOf } from './bounds'
+import { worldBox, worldOf } from './bounds'
+import { canvasTargets } from './select'
 import { sceneDrag, SLOP, snapOn, snapOpts } from './gesture'
 import { Guides } from './Guides'
 import { snapPoint, targetsOf, type Guide, type Targets } from './snap'
@@ -77,7 +77,7 @@ function leastSide(ctx: Ctx, mods: Mods): number {
 const same = (a: Pt, b: Pt) => round(a.x) === round(b.x) && round(a.y) === round(b.y)
 
 // Snap targets: every node on the page and the page itself; a point snaps unless Ctrl/Cmd is held.
-const targets = (ctx: Ctx, base: Scene): Targets => targetsOf(allBoxes(base, new Set(), widgetBoxes(base, ctx.theme())), ctx.view().size)
+const targets = (ctx: Ctx, base: Scene): Targets => targetsOf(canvasTargets({ ...ctx.page(), scene: base }, ctx.theme()), ctx.view().size)
 const snapper = (ctx: Ctx, seen: Targets) => (q: Pt, mods: Mods) => snapOn(ctx, mods) ? snapPoint(q, seen, snapOpts(ctx)) : { p: q, guides: [] as Guide[] }
 
 type BoxKind = 'R' | 'C' | 'T' | 'image'
@@ -180,7 +180,7 @@ export function pointsTool(o: { id: string; label: string; order: number; key: s
       const frame = drawingFrame(ctx, p.at)
       if (!frame) return null
       const pageId = ctx.page().id, t = ctx.theme(), least = o.kind === 'Y' ? 3 : 2
-      const boxes = allBoxes(ctx.page().scene, new Set(), widgetBoxes(ctx.page().scene, t)), size = ctx.view().size
+      const boxes = canvasTargets(ctx.page(), t), size = ctx.view().size
       const shape = (list: readonly Pt[], close: boolean) => dressed(newNode(o.kind, { p: list.flatMap(q => [q.x, q.y]), ...(o.kind === 'SP' && close ? { close: 1 } : {}) }, {}),
         o.kind === 'SP' && close ? 'SPclosed' : o.kind, t, ctx.drawDefaults())
       // The next point after `fixed`: snapped to the nodes, the page and every point of `fixed` but its last, the one it

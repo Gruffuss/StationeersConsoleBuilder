@@ -4,9 +4,21 @@ import { describe, expect, it } from 'vitest'
 import type { Scene } from '../model/scene'
 import { node } from '../model/testing'
 import { Breadcrumb } from './Breadcrumb'
-import { mount } from '../testing'
+import { mount, run } from '../testing'
+import { vanillaPlus } from '../theme/vanillaPlus'
+import { instance } from '../widgets/testing'
+import type { Action } from '../model/store'
 
 describe('Breadcrumb', () => {
+  it('shows a native holder chain and ancestor crumbs select scene paths without a native key', async () => {
+    const scene: Scene = { header: {}, defs: [], root: [node('G', { id: 'select_plant' }, [node('G', { id: 'potato' }, [node('R')])])] }
+    const actions: Action[] = [], natives = [{ ...instance('icon'), uid: 'ico3', group: 'potato' }]
+    const ui = mount(<Breadcrumb scene={scene} natives={natives} theme={vanillaPlus} selection={{ pageId: 'p1', path: [], native: 'ico3' }} dispatch={a => actions.push(a)} />)
+    const buttons = Array.from(ui.container.querySelectorAll('button'))
+    expect(buttons.map(b => b.textContent)).toEqual(['G#select_plant', 'G#potato', 'icon ico3'])
+    await run(() => buttons[1].click())
+    expect(actions).toEqual([{ type: 'select', selection: { pageId: 'p1', path: [0, 0] } }])
+  })
   it('separates the unchanged crumb text with hidden chevrons', () => {
     const scene: Scene = { header: {}, defs: [], root: [node('G', { id: 'outer' }, [node('G', { id: 'inner' }, [node('R', { id: 'box' })])])] }
     const ui = mount(<Breadcrumb scene={scene} selection={{ pageId: 'p1', path: [0, 0, 0] }} dispatch={() => {}} />)

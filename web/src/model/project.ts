@@ -1,6 +1,6 @@
 // A console project: its pages, each one surface holding one vector scene.
 import { DEFAULT_THEME, groundOf, THEMES, themeOf } from '../theme'
-import type { Json, WidgetRef } from '../widgets/types'
+import type { Json, NativeRef } from '../widgets/types'
 import { newLogic, type Logic } from './logic'
 import type { Scene } from './scene'
 import type { ShapeKind } from './shapes'
@@ -14,7 +14,7 @@ export const VECTOR_FLOOR = '0.11.118'
 // natives: the page's native widgets (Q10: ScriptedScreens elements, not vector nodes), declared by the shell after the scene.
 export interface Page {
   id: string; name: string; surface: string; shape: ShapeKind; size: { w: number; h: number }; background?: string[]; scene: Scene
-  preview?: Record<string, Json>; natives?: WidgetRef[]
+  preview?: Record<string, Json>; natives?: NativeRef[]
 }
 /** `theme`: a theme's key in THEMES; themeOf reads one this build does not know as the default. */
 export interface Project extends Logic { version: 1; name: string; target: { vectorMod: typeof VECTOR_FLOOR }; theme: string; pages: Page[]; themes?: Record<string, Theme> }

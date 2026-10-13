@@ -25,7 +25,7 @@ function handles(def: SrcNode): Handle[] | null {
 }
 function selected(ctx: Ctx) {
   const sel = ctx.get().selection, scene = ctx.page().scene
-  if (!sel || sel.inDefs || sel.pageId !== ctx.page().id) return null
+  if (!sel || sel.inDefs || sel.native !== undefined || sel.pageId !== ctx.page().id) return null
   const node = nodeAt(scene.root, sel.path), W = ctx.view().world(sel.path), inv = W && invert(W)
   return node && W && inv ? { sel, scene, node, W, inv } : null
 }
@@ -50,7 +50,7 @@ const gradient: Tool = {
   kind: 'tool', id: 'gradient', label: 'Gradient', order: 2,
   down(p, ctx) {
     const pick = () => {
-      const { target, enter } = ctx.pick(p.px, true)
+      const { target, enter } = ctx.pick(p.px, true, { natives: false })
       if (enter) ctx.dispatch(enter)
       ctx.dispatch({ type: 'select', selection: target })
     }

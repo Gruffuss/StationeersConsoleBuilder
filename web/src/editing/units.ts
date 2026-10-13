@@ -5,25 +5,32 @@ import { nodeAt, type Selection } from '../model/store'
 import type { Theme } from '../theme'
 import { putWidget, sanitize, widgetAt } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
-import type { WidgetRef } from '../widgets/types'
+import type { NativeRef, WidgetRef } from '../widgets/types'
+import { foldKey } from '../srctext/props'
 import { boundsOf, worldBox, worldOf } from './bounds'
 import { FLOAT32, moveBy } from './transform'
 import { editAt, first, lockedAt, onPath } from './tree'
+import { heldBox } from './natives'
 
 /** widget: the widget whose root the unit is (M2b), which moves by its params. */
 export type Unit = { sel: Selection; node: SrcNode; box: Box | null; locked: string | null; widget: WidgetRef | null }
 
 /** The root-tree members of `sels` (a DEFS node is no unit), their boxes in design units (a widget root's: its params'),
  *  and 'locked' for a node under `# lock` (its own or above it). */
-export function unitsOf(scene: Scene, sels: readonly Selection[], t: Theme): Unit[] {
+export function unitsOf(scene: Scene, sels: readonly Selection[], t: Theme, natives?: NativeRef[]): Unit[] {
   const out: Unit[] = []
   for (const sel of sels) {
-    const node = sel.inDefs ? undefined : nodeAt(scene.root, sel.path)
+    const node = sel.inDefs || sel.native !== undefined ? undefined : nodeAt(scene.root, sel.path)
     if (!node) continue
     const widget = widgetAt(scene, sel.path, t), p = widget?.params as Box | undefined
     const parent = p && worldOf(scene, sel.path), root = widget && groupMatrix(node.attrs), W = parent && root && mul(parent, root)
-    out.push({ sel, node, box: p ? W ? boundsOf({ op: 'R', attrs: { x: p.x, y: p.y, w: p.w, h: p.h } }, W) : null : worldBox(scene, sel.path),
-      locked: lockedAt(scene.root, sel.path) ? 'locked' : null, widget })
+    let box = p ? W ? boundsOf({ op: 'R', attrs: { x: p.x, y: p.y, w: p.w, h: p.h } }, W) : null : worldBox(scene, sel.path)
+    const held = natives && foldKey(node.op) === 'G' ? heldBox(scene, natives, sel.path, t) : null
+    if (held) {
+      const x = Math.min(box?.x ?? held.x, held.x), y = Math.min(box?.y ?? held.y, held.y)
+      box = box ? { x, y, w: Math.max(box.x + box.w, held.x + held.w) - x, h: Math.max(box.y + box.h, held.y + held.h) - y } : held
+    }
+    out.push({ sel, node, box, locked: lockedAt(scene.root, sel.path) ? 'locked' : null, widget })
   }
   return out
 }

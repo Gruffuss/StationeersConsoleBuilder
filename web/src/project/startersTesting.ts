@@ -3,10 +3,14 @@
 // writes it (VB_AUTHOR_TEMPLATES=1) and the tests compare against it. Panels sit where each script's own layout puts them on
 // the shape's design size; content keeps the script's paddings (15 in) and row pitches.
 import { DEVICES_PAGE, type Logic, type Read, type Role, type Rule, type SimDevice, type SimSource } from '../model/logic'
+import type { Box } from '../editor/geometry'
+import { worldBox } from '../editing/bounds'
+import { canHold } from '../editing/natives'
 import { newPage, type Project } from '../model/project'
 import type { SrcNode } from '../model/scene'
 import { initialState, reducer } from '../model/store'
 import { SHAPES } from '../model/shapes'
+import { first, textOf } from '../srctext/props'
 import { themeOf } from '../theme'
 import { linked } from '../theme/links'
 import { allocUid, putWidget, sanitize, widgetOf } from '../widgets/core'
@@ -110,8 +114,39 @@ function grouped(p: Project, names: Record<string, string>, tails: Record<string
   return p
 }
 
+/** Seat page-level natives in the deepest named ordinary group enclosing their page-space box. */
+function seated(p: Project): Project {
+  const t = themeOf(p)
+  for (const pg of p.pages) {
+    if (!pg.natives?.some(n => !n.group)) continue
+    const groups: { id: string; depth: number; box: Box }[] = [], path: number[] = []
+    const stack = [{ list: pg.scene.root, k: 0 }]
+    while (stack.length) {
+      const frame = stack[stack.length - 1]
+      if (frame.k === frame.list.length) { stack.pop(); path.pop(); continue }
+      const n = frame.list[frame.k]
+      path.push(frame.k++)
+      if (canHold(pg.scene, path, t)) {
+        const id = textOf(first(n, 'ID')), box = worldBox(pg.scene, path)
+        if (id && box) groups.push({ id, depth: path.length, box })
+        if (n.c?.length) { stack.push({ list: n.c, k: 0 }); continue }
+      }
+      path.pop()
+    }
+    groups.sort((a, b) => b.depth - a.depth)
+    pg.natives = pg.natives.map(n => {
+      if (n.group) return n
+      const x = Number(n.params.x), y = Number(n.params.y), w = Number(n.params.w), h = Number(n.params.h)
+      const holder = groups.find(({ box: b }) => x >= b.x - 0.01 && y >= b.y - 0.01
+        && x + w <= b.x + b.w + 0.01 && y + h <= b.y + b.h + 0.01)
+      return holder ? { ...n, group: holder.id } : n
+    })
+  }
+  return p
+}
+
 const finish = (p: Project, logic: Partial<Logic>, names: Record<string, string> = {}, tails: Record<string, string[]> = {}) =>
-  grouped(reducer(initialState(p), { type: 'setLogic', patch: logic }).project, names, tails)
+  seated(grouped(reducer(initialState(p), { type: 'setLogic', patch: logic }).project, names, tails))
 
 // ── Power wall ──────────────────────────────────────────────────────────────────────────────────────────────────────
 

@@ -8,16 +8,18 @@ import { nodeAt } from '../../model/store'
 import { putWidget, sanitize, widgetAt, widgetOf, widgetsIn } from '../../widgets/core'
 import { WIDGETS } from '../../widgets/registry'
 import { worldOf } from '../bounds'
-import { clipsOf, copyWidgets, followClips, idsIn, uidOn, withWidgetCopy } from '../clipboard'
-import { membersOf } from '../ctx'
+import { clipsOf, copyIds, copyWidgets, followClips, idsIn, nativeCopy, uidOn, withWidgetCopy } from '../clipboard'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { holderOf, innerFrame, nativesUnder } from '../natives'
+import type { NativeRef } from '../../widgets/types'
 import { moveBy } from '../transform'
-import { editAt, freshIds, laterFirst, mapTree, pathsOf } from '../tree'
+import { editAt, laterFirst, mapTree, pathsOf } from '../tree'
 import type { Command } from '../types'
 
 export const OFFSET = 10
 
 const duplicate: Command = { kind: 'command', id: 'duplicate', label: 'Duplicate', menu: 'edit', order: 20, keys: ['Mod+D'],
-  when: ctx => membersOf(ctx).length > 0,
+  when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0,
   run(ctx) {
     const page = ctx.page(), t = ctx.theme(), project = ctx.get().project, ids = idsIn(project, t), copies = new Set<SrcNode>()
     const made = new Map<string, string | null>(), cps: SrcNode[] = [], said = new Set<string>()
@@ -25,6 +27,7 @@ const duplicate: Command = { kind: 'command', id: 'duplicate', label: 'Duplicate
     const uidFor = uidOn(project, page.id)
     let defs = page.scene.defs
     const allocated: SrcNode[] = []
+    const held: { ref: NativeRef; from: ReturnType<typeof innerFrame>; group: string }[] = []
     const plain = set.filter(x => !roots.has(x)), keys = new Set(plain.map(x => x.path.join(',')))
     const under = (p: readonly number[]) => { let key = ''; for (let k = 0; k + 1 < p.length; k++) { key += (k ? ',' : '') + p[k]; if (keys.has(key)) return true } return false }
     // Per parent list (its path joined), the copies that go right after each index, and the parents in first-seen order.
@@ -34,7 +37,12 @@ const duplicate: Command = { kind: 'command', id: 'duplicate', label: 'Duplicate
       const source = nodeAt(page.scene.root, sel.path)!, nested = widgetsIn({ ...page.scene, root: [source] }, t).length > 0
       const copied = nested ? copyWidgets({ ...page.scene, defs, root: [...page.scene.root, ...allocated] }, [source], t, uidFor) : { nodes: [source], defs }
       if (nested) { defs = copied.defs; allocated.push(...copied.nodes) }
-      const [copy] = mapTree(freshIds(copied.nodes, ids, new Map(), n => !!widgetOf(n, t)).nodes, n => ({ ...n }))
+      const renamed = new Map<string, string>()
+      const [copy] = mapTree(copyIds(copied.nodes, ids, renamed, t).nodes, n => ({ ...n }))
+      for (const ref of nativesUnder(page.scene, page.natives ?? [], [sel.path], t)) {
+        const path = holderOf(page.scene, ref, t)!
+        held.push({ ref, from: innerFrame(page.scene, path), group: renamed.get(ref.group!) ?? ref.group! })
+      }
       const W = worldOf(page.scene, sel.path), inv = W && invert([W[0], W[1], W[2], W[3], 0, 0])
       let node = copy
       if (!inv) said.add('a copy stays in place: a group above it is not literal or is singular')
@@ -72,6 +80,19 @@ const duplicate: Command = { kind: 'command', id: 'duplicate', label: 'Duplicate
       paths.push([scene.root.length - 1])
     }
     if (said.size) ctx.note([...said].join('; '))
-    return ctx.apply({ scene, selection: paths.map(path => ({ pageId: page.id, path })) }, { check: true })
+    let natives = page.natives ?? []
+    const sels = paths.map(path => ({ pageId: page.id, path })) as import('../../model/store').Selection[]
+    for (const { ref, from, group } of held) {
+      const path = holderOf(scene, { ...ref, group }, t), to = path && innerFrame(scene, path)
+      const copy = nativeCopy(project, page.id, scene, natives, { ...ref, group }, from, to, OFFSET, OFFSET, t)
+      natives = [...natives, copy]
+    }
+    const added = new Map<string, NativeRef>()
+    for (const sel of nativeMembersOf(ctx)) {
+      const ref = page.natives!.find(n => n.uid === sel.native)!, copy = nativeCopy(project, page.id, scene, natives, ref, null, null, OFFSET, OFFSET, t)
+      natives = [...natives, copy]; added.set(ref.uid, copy); sels.push({ pageId: page.id, path: [], native: copy.uid })
+    }
+    if (added.size) natives = natives.filter(n => ![...added.values()].includes(n)).flatMap(n => [n, ...added.has(n.uid) ? [added.get(n.uid)!] : []])
+    return ctx.apply({ scene, ...(natives !== page.natives && (held.length || added.size) ? { natives } : {}), selection: sels }, { check: true })
   } }
 export default duplicate

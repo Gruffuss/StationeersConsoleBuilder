@@ -364,13 +364,13 @@ describe('widget roots in the commands', () => {
     expect(params(h.root()[3])).toMatchObject({ x: 10, y: 10 })
     expect([...h.state().also, h.state().selection].map(x => x!.path)).toEqual([[2], [3]])
   })
-  it('Delete removes a selected native; no other command acts on one (M2b T9)', async () => {
+  it('Delete removes a selected native; arrange commands also act on it (R10)', async () => {
     const h = page(empty, [])
     h.ctx.dispatch({ type: 'insertWidget', pageId: 'p1', widget: 'icon' })   // selects it
     expect(h.state().selection).toMatchObject({ path: [], native: 'ico1' })
     expect(membersOf(h.ctx)).toEqual([])
-    expect(COMMANDS.find(c => c.id === 'hide')!.when(h.ctx)).toBe(false)
-    expect(COMMANDS.find(c => c.id === 'duplicate')!.when(h.ctx)).toBe(false)
+    expect(COMMANDS.find(c => c.id === 'hide')!.when(h.ctx)).toBe(true)
+    expect(COMMANDS.find(c => c.id === 'duplicate')!.when(h.ctx)).toBe(true)
     await run(h, 'delete')
     expect(h.ctx.page().natives ?? []).toHaveLength(0)
   })

@@ -36,12 +36,12 @@ describe('delete, duplicate, copy, paste', () => {
     expect(h.root()).toEqual([R(0)])
     expect([h.state().selection, h.state().past.length]).toEqual([null, before + 1])
   })
-  it('offers no command that acts on members while a native widget is selected: it is no member (membersOf)', () => {
+  it('offers native commands while scene membersOf stays empty', () => {
     const h = page([R(0)])
     h.ctx.dispatch({ type: 'insertWidget', pageId: 'p1', widget: 'icon' })
     expect(membersOf(h.ctx)).toEqual([])
     const offered = ['duplicate', 'copy', 'cut', 'hide', 'lock', 'nudge.ArrowLeft'].filter(id => COMMANDS.find(c => c.id === id)!.when(h.ctx))
-    expect(offered).toEqual([])
+    expect(offered).toEqual(['duplicate', 'copy', 'cut', 'hide', 'lock', 'nudge.ArrowLeft'])
   })
   it('duplicates each member +10 units right after it, with a fresh id, the copies selected', async () => {
     const h = page([R(0, { id: 'btn' }), node('G', { s: [2, 2] }, [R(0)])], [[0], [1, 0]])

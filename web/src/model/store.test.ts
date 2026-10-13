@@ -776,12 +776,12 @@ describe('the selection set and editScene', () => {
     expect(reducer(s, { type: 'select', selection: null, also: [at(0)] })).toMatchObject({ selection: null, also: [] })
     expect(reducer(s, { type: 'select', selection: { pageId: 'p1', path: [0], inDefs: true }, also: [at(1)] }).also).toEqual([])
   })
-  it('keeps a native a lone primary: no set beside it (M2b T9)', () => {
+  it('keeps a native primary beside a node in the set (R10)', () => {
     const native = { pageId: 'p1', path: [], native: 'ico1' }
     const s0 = reducer(start(), { type: 'insertWidget', pageId: 'p1', widget: 'icon' })
     const s = reducer(s0, { type: 'select', selection: native, also: [at(0)] })
     expect(s.selection).toEqual(native)
-    expect(s.also).toEqual([])
+    expect(s.also).toEqual([at(0)])
   })
   it('editScene: one undo step with the selection it names; transient steps commit as one; omitted keeps the set', () => {
     const s0 = reducer(start(), { type: 'select', selection: at(0), also: [at(2)] })

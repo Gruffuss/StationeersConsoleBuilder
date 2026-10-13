@@ -8,7 +8,7 @@ html, body, #root { min-height: 100%; margin: 0; }
 .vb-workspace { display: grid; grid-template-columns: auto clamp(200px,18vw,320px) minmax(0,1fr) clamp(260px,24vw,420px); gap: var(--sp5); min-height: 0; }
 .vb-scripts { grid-template-columns: minmax(0,1fr); }
 .vb-rail { display: flex; flex-direction: column; gap: var(--sp2); padding: var(--sp2); }
-.vb-sidebar, .vb-inspector { min-width: 0; min-height: 0; overflow: auto; padding: var(--sp3); }
+.vb-sidebar, .vb-inspector { position: relative; min-width: 0; min-height: 0; overflow: auto; padding: var(--sp3); }
 .vb-sidebar > [role=tablist] { position: sticky; top: 0; z-index: 2; background: var(--surface-screen); }
 .vb-center { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: var(--sp5); }
 .vb-canvas-area { position: relative; display: flex; flex: 1; min-height: 200px; background: var(--surface-screen-lo); }
@@ -31,7 +31,7 @@ html, body, #root { min-height: 100%; margin: 0; }
 .vb-source .tok-number, .vb-source .tok-atom { color: var(--text); }
 .vb-source .tok-variableName { color: var(--text-secondary); text-decoration: underline dotted; }
 .vb-messages { display: flex; flex-direction: column; min-height: 0; height: calc(520px*var(--s)); overflow: auto; }
-.vb-statusbar { grid-row: 4; display: flex; align-items: center; gap: var(--sp3); height: calc(var(--h-ctl) + 2*var(--sp2)); flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; }
+.vb-statusbar { position: relative; grid-row: 4; display: flex; align-items: center; gap: var(--sp3); height: calc(var(--h-ctl) + 2*var(--sp2)); flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; }
 .vb-statusbar > * { flex-shrink: 0; }
 .vb-statusbar input { width: 4em; }
 .vb-statusbar .vb-run-line { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }

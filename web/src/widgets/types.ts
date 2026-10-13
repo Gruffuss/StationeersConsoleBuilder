@@ -54,3 +54,5 @@ export interface WidgetModule<P extends Params = Params> {
 export type PartEdit = { attrs?: Record<string, Value | null>; dx?: number; dy?: number; dw?: number; dh?: number }
 export type WidgetEdit = { v: 1; parts: Record<string, PartEdit>; root?: { v?: number; o?: number; r?: number; a?: [number, number] } }
 export type WidgetRef = { type: string; uid: string; params: Params; edit?: WidgetEdit }
+/** A game element on the page, optionally seated in an ordinary group's id. False flags are omitted. */
+export type NativeRef = WidgetRef & { group?: string; hidden?: true; lock?: true }

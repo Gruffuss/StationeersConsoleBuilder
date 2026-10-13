@@ -7,7 +7,10 @@ import { childMatrix, invert, mul, type Box, type Mat } from '../../editor/geome
 import type { SrcNode } from '../../model/scene'
 import { boundsOf, hidden, IDENTITY } from '../bounds'
 import { foldKey } from '../../srctext/props'
-import { membersOf } from '../ctx'
+import { membersOf, nativeMembersOf } from '../ctx'
+import { nativesOf } from '../../widgets/core'
+import type { NativeRef } from '../../widgets/types'
+import type { Theme } from '../../theme'
 import { overlaps, union } from '../layout'
 import { editAt } from '../tree'
 import type { Command, Ctx } from '../types'
@@ -81,8 +84,27 @@ function boxes(nodes: readonly SrcNode[]): Bounds[] {
   return out
 }
 
+/** Each z band keeps its declaration slots; Layers may additionally limit a band to one holder. */
+export function reorderNatives(natives: NativeRef[], uids: ReadonlySet<string>, t: Theme, dir: 1 | -1, all: boolean, withinHolder = false): NativeRef[] {
+  const z = new Map(nativesOf({ natives }, t).map(n => [n.uid, n.el.props.z_index]))
+  const bands = new Map<string, number[]>()
+  natives.forEach((n, i) => { const key = JSON.stringify(withinHolder ? [n.group ?? '', z.get(n.uid)] : [z.get(n.uid)]); const slots = bands.get(key) ?? []; slots.push(i); bands.set(key, slots) })
+  const out = [...natives]
+  for (const slots of bands.values()) {
+    let refs = slots.map(i => natives[i])
+    if (all) { const picked = refs.filter(n => uids.has(n.uid)), rest = refs.filter(n => !uids.has(n.uid)); refs = dir > 0 ? [...rest, ...picked] : [...picked, ...rest] }
+    else for (let i = dir > 0 ? refs.length - 2 : 1; dir > 0 ? i >= 0 : i < refs.length; i -= dir) {
+      const j = i + dir
+      if (uids.has(refs[i].uid) && !uids.has(refs[j].uid)) [refs[i], refs[j]] = [refs[j], refs[i]]
+    }
+    slots.forEach((slot, i) => { out[slot] = refs[i] })
+  }
+  return out.every((n, i) => n === natives[i]) ? natives : out
+}
+
 function reorder(ctx: Ctx, dir: 1 | -1, all: boolean) {
   const page = ctx.page(), set = membersOf(ctx), top: Level = { next: new Map() }
+  let nodesMoved = false
   const bounds = all ? [] : boxes(page.scene.root)
   for (const x of set) {   // each member's parent list found down the trie: no path key built per level
     let t = top
@@ -103,6 +125,7 @@ function reorder(ctx: Ctx, dir: 1 | -1, all: boolean) {
     if (!all) for (const k of parent) bs = bs[k]?.kids ?? []
     const next = all ? dir > 0 ? [...front, ...picked] : [...picked, ...front]
       : stepped(list.length, chosen, list.map((_, i) => bs[i]?.box ?? null), dir)
+    if (next.some((old, i) => old !== i)) nodesMoved = true
     const index: number[] = []
     next.forEach((old, i) => { index[old] = i })
     t.index = index
@@ -126,11 +149,15 @@ function reorder(ctx: Ctx, dir: 1 | -1, all: boolean) {
     for (let d = 0; d < p.length; d++) { out[d] = t?.index?.[p[d]] ?? p[d]; t = t?.next.get(p[d]) }
     return out
   }
-  return ctx.apply({ scene: { ...page.scene, root }, selection: set.map(x => ({ ...x, path: after(x.path) })) })
+  const nativeSet = nativeMembersOf(ctx)
+  const before = page.natives ?? [], natives = nativeSet.length ? reorderNatives(before, new Set(nativeSet.map(s => s.native!)), ctx.theme(), dir, all) : before
+  if (!nodesMoved && natives === before) { ctx.note(`nothing moved: already at the ${dir > 0 ? 'front' : 'back'} of their z order`); return }
+  return ctx.apply({ scene: { ...page.scene, root }, ...(nativeSet.length && { natives }),
+    selection: [...set.map(x => ({ ...x, path: after(x.path) })), ...nativeSet] })
 }
 
 const entry = (id: string, label: string, order: number, key: string, dir: 1 | -1, all: boolean): Command =>
-  ({ kind: 'command', id, label, menu: 'arrange', order, keys: [key], when: ctx => membersOf(ctx).length > 0, run: ctx => reorder(ctx, dir, all) })
+  ({ kind: 'command', id, label, menu: 'arrange', order, keys: [key], when: ctx => membersOf(ctx).length + nativeMembersOf(ctx).length > 0, run: ctx => reorder(ctx, dir, all) })
 export default [
   entry('forward', 'Bring forward', 10, 'Mod+]', 1, false), entry('backward', 'Send backward', 11, 'Mod+[', -1, false),
   entry('front', 'Bring to front', 12, 'Mod+Shift+]', 1, true), entry('back', 'Send to back', 13, 'Mod+Shift+[', -1, true),

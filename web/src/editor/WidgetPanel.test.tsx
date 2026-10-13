@@ -18,8 +18,18 @@ import { bracket, instance } from '../widgets/testing'
 import type { Json, Params, Slot, WidgetRef } from '../widgets/types'
 import { EXPR_NAME, LABEL_NAME, readParam, readSample, WIDGET_GONE, WidgetPanel } from './WidgetPanel'
 import { WidgetPalette } from './WidgetPalette'
+import { NATIVE_DESCRIPTION } from './nativeText'
 
 const tick = () => new Promise(r => setTimeout(r, 0))
+
+it('explains native draw order and the group changes it follows', () => {
+  const p = newProject().pages[0], w = instance('icon'), checker = new SceneChecker(checkWorkers().make)
+  p.natives = [w]
+  const ui = mount(<WidgetPanel page={p} pages={[]} widget={w} native checker={checker} theme={t} dispatch={() => {}}
+    sceneOf={() => p.scene} themeNow={() => t} pageNow={() => p} />)
+  try { expect(ui.container.textContent).toContain(NATIVE_DESCRIPTION) }
+  finally { ui.unmount(); checker.dispose() }
+})
 
 it('opens counted widget sections with a data-name anchor and top icon actions', () => {
   const h = setup(instance('gauge'))

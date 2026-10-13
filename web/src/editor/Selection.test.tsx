@@ -6,6 +6,8 @@ import { node } from '../model/testing'
 import { decodeFrame, type Frame, type FrameText } from '../runtime/frame'
 import { label, vbf1 } from '../runtime/testing'
 import { Selection } from './Selection'
+import { vanillaPlus } from '../theme/vanillaPlus'
+import { instance } from '../widgets/testing'
 
 const element = { id: 'scene', scene: 'p1', x: 0, y: 0, w: 460, h: 460, firstVertex: 0, vertexCount: 0 }
 /**
@@ -23,6 +25,34 @@ function draw(root: SrcNode[], path: number[], text: FrameText[] = [], geometry:
 }
 
 describe('Selection', () => {
+  it.each(['own', 'holder'])('omits the selected native outline and handles when hidden by %s', kind => {
+    const frame = decodeFrame(vbf1(JSON.stringify({ elements: [element], text: [], problems: [] })))
+    const scene: Scene = { header: { w: 460, h: 460 }, defs: [], root: [node('G', { id: 'card', v: kind === 'holder' ? 0 : 1 }, [node('R')])] }
+    const native = { ...instance('icon', { x: 50, y: 50, w: 30, h: 30 }), group: 'card', ...(kind === 'own' && { hidden: true as const }) }
+    const html = renderToStaticMarkup(<Selection frame={frame} zoom={1} scene={scene} selection={{ pageId: 'p1', path: [], native: 'ico1' }}
+      node={null} rect={{ w: 460, h: 460 }} handles theme={vanillaPlus} natives={[native]} />)
+    expect(html).toBe('')
+  })
+  it('draws a selected native outline and eight handles, with no turn knob, and hides locked handles', () => {
+    const frame = decodeFrame(vbf1(JSON.stringify({ elements: [element], text: [], problems: [] })))
+    const scene: Scene = { header: { w: 460, h: 460 }, defs: [], root: [] }
+    const native = instance('icon', { x: 10, y: 20, w: 30, h: 40 })
+    const draw = (lock = false) => renderToStaticMarkup(<Selection frame={frame} zoom={1} scene={scene}
+      selection={{ pageId: 'p1', path: [], native: 'ico1' }} node={null} rect={{ w: 460, h: 460 }} handles
+      theme={vanillaPlus} natives={[{ ...native, ...(lock && { lock: true as const }) }]} />)
+    expect(draw()).toContain('points="10,20 40,20 40,60 10,60"')
+    expect(draw().split('vb-handle').length - 1).toBe(8)
+    expect(draw()).not.toContain('vb-knob')
+    expect(draw(true).split('vb-handle').length - 1).toBe(0)
+  })
+  it('includes a held native in a selected group outline', () => {
+    const frame = decodeFrame(vbf1(JSON.stringify({ elements: [element], text: [], problems: [] })))
+    const scene: Scene = { header: { w: 460, h: 460 }, defs: [], root: [node('G', { id: 'card' }, [node('R', { x: 0, y: 0, w: 10, h: 10 })])] }
+    const html = renderToStaticMarkup(<Selection frame={frame} zoom={1} scene={scene}
+      selection={{ pageId: 'p1', path: [0] }} node={null} rect={{ w: 460, h: 460 }} handles theme={vanillaPlus}
+      natives={[{ ...instance('icon', { x: 20, y: 20, w: 30, h: 40 }), group: 'card' }]} />)
+    expect(html).toContain('points="0,0 50,0 50,60 0,60"')
+  })
   it('outlines a widget root by its box, with only the handles its module allows, and no padlock', () => {
     const scene: Scene = { header: { w: 460, h: 460 }, defs: [], root: [node('G', { id: 'w1' }, [node('R', { x: 1, y: 2, w: 3, h: 4 })])] }
     const frame = decodeFrame(vbf1(JSON.stringify({ elements: [element], text: [], problems: [] })))

@@ -41,5 +41,5 @@
 .vb-grid { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .vb-grid path { fill: none; stroke: #ffffff1a; stroke-width: 1px; }
 .vb-native { position: absolute; box-sizing: border-box; display: flex; align-items: center; padding: 0 6px; overflow: hidden;
-  white-space: nowrap; border: 1px dashed #9cb4c8; color: #9cb4c8; font: 12px sans-serif; pointer-events: auto; }
+  white-space: nowrap; border: 1px dashed #9cb4c8; color: #9cb4c8; font: 12px sans-serif; pointer-events: none; }
 .vb-native-sel { outline: 2px solid #ffd166; }

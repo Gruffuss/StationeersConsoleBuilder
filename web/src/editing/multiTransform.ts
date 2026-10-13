@@ -19,9 +19,10 @@ const mapped = (b: Box, m: Mat): Box => {
 }
 
 /** Apply the set's design-space scale or turn in each member's frame; skipped members keep their nodes and paths. */
-export function transformSet(scene: Scene, sels: Selection[], t: Theme, m: Mat): { scene: Scene; selection: Selection[]; skipped: string[] } {
-  const out = transforms(scene, sels, t, [m], false)
-  return { scene: out.scene, selection: out.selection, skipped: out.skipped }
+export function transformSet(scene: Scene, sels: Selection[], t: Theme, m: Mat): { scene: Scene; selection: Selection[]; skipped: string[]; matrix: Mat } {
+  const matrices = [m], out = transforms(scene, sels, t, matrices, false)
+  // Natives in the gesture use the same effective scale when a widget minimum holds the set.
+  return { scene: out.scene, selection: out.selection, skipped: out.skipped, matrix: matrices[0] }
 }
 
 /** Test handles in one pass, stopping after support is found; never rebuild a scene to display its frame. */
@@ -108,8 +109,8 @@ function transforms(scene: Scene, sels: Selection[], t: Theme, matrices: Mat[], 
       if (!probe) { paths.push(path); nodes.push(next) }
       return true
     }
+    if (sel.native !== undefined) return   // the gesture transforms natives separately, preserving this selection
     if (!m.every(Number.isFinite) || !invert(m)) return skip('the transform is singular or non-finite')
-    if (sel.native !== undefined) return skip('native geometry stays unchanged')
     if (sel.inDefs || !original) return skip('not a scene member')
     if (ancestors[i]) return
     if (lockedAt(scene.root, sel.path)) return skip('locked')

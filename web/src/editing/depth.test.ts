@@ -5,10 +5,25 @@ import { vanillaPlus } from '../theme/vanillaPlus'
 import { expandRoot, putWidget } from '../widgets/core'
 import { instance } from '../widgets/testing'
 import { enterable, pickAt as pickDepth } from './depth'
+import * as depth from './depth'
 const pickAt = (hit: import('../model/store').Selection, entered: number[], deep: boolean) => pickDepth(hit, entered, deep, scene([]), vanillaPlus)
 
 const at = (...path: number[]) => ({ pageId: 'p1', path })
 const scene = (root: Scene['root']): Scene => ({ header: {}, defs: [], root })
+
+describe('native virtual-path promotion', () => {
+  it.each([
+    [[0, 1], [0, 1], false, { path: [], native: 'ico1' }],
+    [[0, 1], [], false, { path: [0] }],
+    [[0, 1], [0], false, { path: [0, 1] }],
+    [[0, 1], [2], false, { path: [0] }],
+    [[], [], false, { path: [], native: 'ico1' }],
+    [[], [0], false, { path: [], native: 'ico1' }],
+    [[0, 1], [], true, { path: [], native: 'ico1' }],
+  ] as const)('promotes uid through holder %j entered %j deep=%s', (holder, entered, deep, target) => {
+    expect(depth.nativeTarget?.('ico1', [...holder], [...entered], deep)).toEqual(target)
+  })
+})
 
 describe('picking at the entered depth', () => {
   it('picks named parts under Button states and Repeater structure, with the plate promoted to the root', () => {

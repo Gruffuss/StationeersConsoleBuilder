@@ -1044,6 +1044,35 @@ describe('App widgets', () => {
 })
 
 describe('App natives', () => {
+  it('places the mixed selection task bar under held and selected natives, keeping chrome mounted through a native drag', async () => {
+    box460()
+    const context = vi.spyOn(editing, 'makeCtx'), app = await booted(), p = newProject()
+    p.theme = 'vanilla-plus'
+    p.pages[0].size = { w: 460, h: 460 }
+    p.pages[0].scene = { header: { w: 460, h: 460 }, defs: [], root: [{ op: 'G', attrs: { id: 'card' },
+      c: [{ op: 'R', attrs: { x: 10, y: 10, w: 10, h: 10 } }] }] }
+    p.pages[0].natives = [{ type: 'icon', uid: 'ico1', group: 'card', params: { x: 50, y: 200, w: 30, h: 30, kind: 'gas', name: 'Oxygen' } },
+      { type: 'icon', uid: 'ico2', params: { x: 100, y: 50, w: 20, h: 30, kind: 'gas', name: 'Oxygen' } }]
+    const ctx = context.mock.results.at(-1)!.value as ReturnType<typeof editing.makeCtx>
+    await run(() => { ctx.dispatch({ type: 'loadProject', project: p }); ctx.dispatch({ type: 'select',
+      selection: { pageId: 'p1', path: [], native: 'ico2' }, also: [{ pageId: 'p1', path: [0] }] }) })
+    for (let k = 0; k < 4; k++) { await wait(50); await app.serve() }
+    await run(() => app.ui.container.querySelector<HTMLButtonElement>('[aria-label="100 percent"]')!.click())
+    const taskbar = app.ui.container.querySelector<HTMLElement>('[aria-label="Selection actions"]')!
+    expect([taskbar.style.left, taskbar.style.top]).toEqual(['65px', '242px'])
+    expect(app.ui.container.querySelectorAll('.vb-selection .vb-handle')).toHaveLength(8)
+    const chrome = Array.from(app.ui.container.querySelectorAll('header, aside, .vb-crumbs, .vb-sourcepane'))
+    const overlay = app.ui.container.querySelector('.vb-overlay')!
+    const at = (type: string, dx: number) => run(() => { overlay.dispatchEvent(new PointerEvent(type,
+      { bubbles: true, pointerId: 1, button: 0, clientX: 110 + dx, clientY: 65, ctrlKey: true })) })
+    await at('pointerdown', 0); await at('pointermove', 15)
+    expect(ctx.page().natives?.[1].params.x).toBe(115)
+    expect(chrome.every(el => el.isConnected)).toBe(true)
+    expect(app.ui.container.querySelector('.vb-overlay')).toBe(overlay)
+    expect(taskbar.isConnected).toBe(true)
+    await at('pointerup', 15)
+    app.ui.unmount()
+  })
   it('inserts a native from the palette as a selected placeholder the shell declares; its form, Delete, undo, a theme switch, a new design size and a new fit reload it', async () => {
     box460()
     const app = await booted()
@@ -1081,8 +1110,13 @@ describe('App natives', () => {
     await run(() => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true })) })
     await wait(50)
     expect(placeholders().map(([text]) => text)).toEqual(['Text'])
-    // a press on the placeholder selects it
-    await run(() => { app.ui.container.querySelector('.vb-native')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })) })
+    // A press over the placeholder reaches the canvas router.
+    await run(() => pane.props!.dispatch({ type: 'select', selection: null }))
+    const placeholder = app.ui.container.querySelector<HTMLElement>('.vb-native')!
+    const px = parseFloat(placeholder.style.left) + parseFloat(placeholder.style.width) / 2
+    const py = parseFloat(placeholder.style.top) + parseFloat(placeholder.style.height) / 2
+    await run(() => { for (const type of ['pointerdown', 'pointerup']) app.ui.container.querySelector('.vb-overlay')!
+      .dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, button: 0, clientX: px, clientY: py })) })
     expect(placeholders()).toEqual([['Text', 'vb-native vb-native-sel']])
     expect(app.ui.container.querySelector('[aria-label="Widget"] h2')!.textContent).toBe('Text input ti1')
     // the placeholders sit under the selection, so a selected widget's handles stay on top

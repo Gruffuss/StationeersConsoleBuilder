@@ -21,7 +21,7 @@ export function TaskBar(p: { ctx: Ctx; box: Box | null; zoom: number; onDataName
   const b = p.box
   return <div className="vb-taskbar raised" role="toolbar" aria-label="Selection actions" style={{ left: (b.x + b.w / 2) * p.zoom, top: (b.y + b.h) * p.zoom + 12, transform: 'translateX(-50%)' }} onPointerDown={e => e.stopPropagation()}>
     <span className="unit">{count > 1 ? `${count} selected` : widget ? WIDGETS[widget.type]?.label ?? widget.type : group ? 'Group' : node ? node.op : ''}</span>
-    {count > 1 ? button('group') : widget ? <>{button('select.enter', 'Edit parts')}{WIDGETS[widget.type]?.params.some((param: { type: string }) => param.type === 'keys') && <button className="btn" onMouseDown={e => e.preventDefault()} onClick={p.onDataNames}>Data names</button>}</> : group ? <>{button('select.enter')}{button('ungroup')}</> : null}
+    {count > 1 ? button('group') : widget ? <>{!sel.native && button('select.enter', 'Edit parts')}{WIDGETS[widget.type]?.params.some((param: { type: string }) => param.type === 'keys') && <button className="btn" onMouseDown={e => e.preventDefault()} onClick={p.onDataNames}>Data names</button>}</> : group ? <>{button('select.enter')}{button('ungroup')}</> : null}
     <MenuButton label="More actions" align="end" className="ibtn flat" items={() => ['duplicate', 'delete', 'hide', 'lock', 'front', 'back'].flatMap(id => {
       const c = commands.find(c => c.id === id)
       return c ? [{ kind: 'item' as const, id: c.id, label: c.label, disabled: !c.when(ctx), run: () => { void runCommand(c, ctx) } }] : []

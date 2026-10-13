@@ -11,6 +11,7 @@ import { checkWorkers } from '../srctext/testing'
 import { makeCtx } from './ctx'
 import { makeRouter } from './router'
 import type { Pt } from './types'
+import type { NativeRef } from '../widgets/types'
 
 /** double: this press comes 100 ms after the previous one (the router counts a double click when it is also at the same
  *  spot); any other press comes 1000 ms later, so two clicks in a test are never a double click by accident. */
@@ -23,10 +24,10 @@ type Mods = { shiftKey?: boolean; altKey?: boolean; ctrlKey?: boolean; metaKey?:
  * Pointer helpers take surface px, which are also client px here; pointer 1.
  */
 export function harness(scene: Scene, o: { pick?: (px: Pt) => Selection | null; sel?: Selection | null; also?: Selection[];
-  verdict?: (s: Scene) => Checked; frame?: () => Frame | null } = {}) {
+  verdict?: (s: Scene) => Checked; frame?: () => Frame | null; natives?: NativeRef[] } = {}) {
   const p = newProject()
   p.theme = 'vanilla-plus'
-  p.pages[0] = { ...p.pages[0], scene }
+  p.pages[0] = { ...p.pages[0], scene, ...(o.natives !== undefined && { natives: o.natives }) }
   let state: State = { ...initialState(p), selection: o.sel ?? null, also: o.also ?? [] }
   const actions: Action[] = [], notes: string[] = []
   let status = '', redraws = 0

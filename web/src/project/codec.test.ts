@@ -19,6 +19,21 @@ import { generate } from '../codegen/generate'
 import { embeddedToken } from './input'
 import { exportProblems } from '../codegen/exportProblems'
 
+it('native membership and flags travel through JSON, share tokens and the embedded block', async () => {
+  const p = reducer(initialState(), { type: 'insertWidget', pageId: 'p1', widget: 'icon' }).project
+  p.pages[0].scene.root = [{ op: 'G', attrs: { id: 'potato' }, c: [] }]
+  Object.assign(p.pages[0].natives![0], { group: 'potato', hidden: true, lock: true, foo: 1 })
+  const expected = { ...p.pages[0].natives![0] }; delete (expected as unknown as Record<string, unknown>).foo
+  const token = await compressProject(p), generated = generate(p, pg => printChecked(pg.scene))
+  const lua = assembleExport(generated, token, new Date('2026-10-13T00:00:00Z')).lua
+  for (const text of [projectText(p), await decompressProject(token), await decompressProject(embeddedToken(lua)!)]) {
+    expect(JSON.parse(text).pages[0].natives).toEqual([expected])
+    const read = readProject(text)
+    expect(read.project.pages[0].natives).toEqual([expected])
+    expect(read.notice).toBe('')
+  }
+})
+
 it('the theme travels through JSON, compressed links and an exported block', async () => {
   let s = initialState()
   for (const widget of ['panel', 'button']) s = reducer(s, { type: 'insertWidget', pageId: 'p1', widget })

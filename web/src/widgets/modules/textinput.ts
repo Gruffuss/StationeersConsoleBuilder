@@ -6,7 +6,7 @@ import type { WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; placeholder: string; value: string; fontSize: number }
 const textinput: WidgetModule<P> = {
-  type: 'textinput', label: 'Text input', group: 'icons', prefix: 'ti', resize: 'none', native: true,
+  type: 'textinput', label: 'Text input', group: 'icons', prefix: 'ti', resize: 'both', native: true,
   params: [...box(), { key: 'placeholder', type: 'template' }, { key: 'value', type: 'template' }, { key: 'fontSize', type: 'num', min: 1 }],
   defaults: t => ({ x: 24, y: 24, w: 300, h: t.geo.size.control, placeholder: 'Text', value: '', fontSize: t.type.message.size }),
   expand: (p, t) => ({ nodes: [], slots: [], natives: [{ type: 'textinput', box: { x: p.x, y: p.y, w: p.w, h: p.h },
