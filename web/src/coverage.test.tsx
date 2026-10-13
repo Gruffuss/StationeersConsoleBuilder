@@ -113,13 +113,12 @@ it('keeps the inventory in its named regions and all modal contents mounted', as
   await x.clickTab('Design')
   const pageFirst = () => !!(region('aside.vb-inspector').querySelector('details.vb-page-section')!.compareDocumentPosition(region('aside.vb-inspector').querySelector('aside[aria-label="Properties"]')!) & Node.DOCUMENT_POSITION_FOLLOWING)
   expect(pageFirst()).toBe(true)   // nothing selected: the Page section leads the Design tab (owner, 2026-10-13)
+  expect(region('aside.vb-inspector').querySelector('.vb-page-settings [aria-label="Pictures"]')).not.toBeNull()
   await run(() => x.ctx.dispatch({ type: 'select', selection: { pageId: 'p1', path: [0] } }))
   expect(region('aside.vb-inspector').querySelector('[aria-label="Layout properties"]')).not.toBeNull()
   await run(() => x.ctx.dispatch({ type: 'select', selection: { pageId: 'p1', path: [0, 0] } }))
   expect(region('aside.vb-inspector').querySelector('aside[aria-label="Properties"]')).not.toBeNull()
-  expect(region('aside.vb-inspector').querySelector('.vb-page-settings [aria-label="Pictures"]')).not.toBeNull()
-  expect(region('aside.vb-inspector').querySelector('details.vb-page-section')).not.toBeNull()
-  expect(pageFirst()).toBe(false)   // a selection's own properties come first; the Page section follows
+  expect(region('aside.vb-inspector').querySelector('details.vb-page-section')).toBeNull()   // a selection shows only its own properties
   await run(() => x.ctx.dispatch({ type: 'select', selection: { pageId: 'p1', path: [1] } }))
   expect(region('aside.vb-inspector').querySelector('[aria-label="Widget"]')).not.toBeNull()
   // The game link, Send to chip and the device pickers are mounted, and none asked the game anything without a click.

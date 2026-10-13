@@ -132,6 +132,7 @@ dialog.dlg { position: fixed; }
 :where(option, optgroup) { background-color: var(--surface-panel); color: var(--text); }
 @supports (appearance: base-select) {
   select, ::picker(select) { appearance: base-select; }
+  select { align-items: center; }   /* a styled select is a flex box: centre its value in the control's height */
   select::picker-icon { color: var(--text-muted); }
   .field select { justify-content: flex-end; }   /* a styled select lays out as flex, so text-align no longer places its value */
   .field select::picker-icon { margin-inline-start: var(--sp2); }

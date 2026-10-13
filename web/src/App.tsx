@@ -776,15 +776,13 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
   const sidebarChrome = useMemo(() => (!scripts && <Sidebar tab={sidebarTab} onTab={setSidebarTab}
         layers={<><PageTabs pages={project.pages} activeId={picturePage} dispatch={dispatch} /><DevicesRow project={project} play={play} active={active} problems={gen.problems} /><Layers key={page.id} page={page} selection={selection} also={state.also} entered={state.entered} dispatch={dispatch} ctx={editor.ctx} /></>}
         widgets={<WidgetPalette onInsert={type => dispatch({ type: 'insertWidget', pageId: page.id, widget: type })} />} />), [scripts, sidebarTab, committed, fitKey, JSON.stringify(state.entered), picturePage, play, active, JSON.stringify(gen.problems), editor.ctx])
-  const inspectorChrome = useMemo(() => { const pageSection = tab === 'Design' && <details className="disc vb-page-section" open={!selection}><summary>Page</summary><PageSettings key={page.id} page={page} pages={project.pages} dispatch={dispatch}><PictureControls notes={pictures.notes(picturePage)} canLoad={pictures.canLoad(picturePage)} onLoad={() => { void pictures.loadPictures(picturePage) }} /></PageSettings></details>
-    return !scripts && <Inspector ctx={editor.ctx} tab={tab} onTab={setTab}>{checker && <>
+  const inspectorChrome = useMemo(() => (!scripts && <Inspector ctx={editor.ctx} tab={tab} onTab={setTab}>{checker && <>
         {tab === 'Design' && <PendingColours />}
-        {!selection && pageSection}{/* nothing selected: the page leads (owner, 2026-10-13) */}
+        {!selection && tab === 'Design' && <details className="disc vb-page-section" open><summary>Page</summary><PageSettings key={page.id} page={page} pages={project.pages} dispatch={dispatch}><PictureControls notes={pictures.notes(picturePage)} canLoad={pictures.canLoad(picturePage)} onLoad={() => { void pictures.loadPictures(picturePage) }} /></PageSettings></details>}{/* only with nothing selected, first (owner, 2026-10-13) */}
         {tab === 'Design' && (chosen
         ? <WidgetPanel key={chosen.uid} page={page} pages={project.pages.map(p => ({ id: p.id, name: p.name }))} widget={chosen}
             boundName={Object.hasOwn(project.bindings, `@${chosen.uid}.name`)} native={!!native} checker={checker} theme={theme} dispatch={dispatch} sceneOf={sceneOf} themeNow={themeNow} pageNow={pageNow} />
         : <PropertyPanel page={page} selection={selection} checker={checker} theme={theme} dispatch={dispatch} sceneOf={sceneOf} />)}
-        {selection && pageSection}
         {tab === 'Data' && <DataPanel project={project} theme={theme} dispatch={dispatch} catalog={catalog} />}
         {tab === 'Logic' && <LogicPanel project={project} theme={theme} dispatch={dispatch} catalog={catalog} roleDevice={id => {
           const role = project.roles.find(r => r.id === id)
@@ -796,7 +794,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
           onWipePersist={() => { chipStore.current.wipePersist(); bridge?.sim(JSON.stringify({ wipePersist: true })) }} />}
         {tab === 'Lua' && <CustomLuaPane project={project} dispatch={dispatch} />}
         </>}
-      </Inspector> }, [scripts, tab, committed, fitKey, JSON.stringify(state.entered), checker, theme, chosen?.uid, catalog, writes, hostNotes, pictures.version, picturePage, editor.ctx, editor.ctx.tool(), editor.ctx.settings()])
+      </Inspector>), [scripts, tab, committed, fitKey, JSON.stringify(state.entered), checker, theme, chosen?.uid, catalog, writes, hostNotes, pictures.version, picturePage, editor.ctx, editor.ctx.tool(), editor.ctx.settings()])
   const dialogChrome = useMemo(() => {
     const fonts = <FontImport key={chipRevision} page={page} project={project} dispatch={dispatch} />
     const exporter = exportTransfer && <ExportControls project={committed} checker={checker} makeWorker={makeExportWorker} transfer={exportTransfer}
@@ -836,7 +834,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
         pictures={pictures} picturePage={picturePage}
         navigate={!scripts && !play} selectionBox={selectionBox} viewSlot={viewSlot} viewApi={viewApi}
         chrome={scripts || play ? undefined : ({ zoom }) => <>
-          <FrameLabel page={page} dispatch={dispatch} onCustom={() => { setTab('Design'); requestAnimationFrame(() => {
+          <FrameLabel page={page} dispatch={dispatch} onCustom={() => { setTab('Design'); dispatch({ type: 'select', selection: null }); requestAnimationFrame(() => {
             const section = document.querySelector<HTMLDetailsElement>('.vb-page-section'), select = section?.querySelector<HTMLSelectElement>('select[aria-label="Console size"]')
             if (section) section.open = true
             select?.scrollIntoView({ block: 'center' }); select?.focus()

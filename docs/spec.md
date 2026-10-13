@@ -1010,6 +1010,9 @@ note. The bytes never enter a project, and the import never requests a font.
 
 ### 5.4 Page shapes
 
+The inspector's Design tab starts with the Page section when nothing is selected and leaves it
+out under a selection (owner, 2026-10-13); Custom in the frame label's console sizes clears the
+selection and opens it.
 Page settings in the inspector's Design → Page section include the background: a colour,
 a vertical two-colour gradient, or No background. New pages keep their theme's ground.
 Choosing No background sets background to undefined in one undo step; setting a colour
@@ -1934,3 +1937,4 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-13 · Future milestone (§11), owner: adapting a page to the console's size goes on the roadmap ("Add it as a future feature"), after he noted "my script have the ability to adapt to console size as you can see, the designer i assume does not at the moment" and "the fact that is 100 fixed instead of spread any spare width is not really ok": edge pinning or stretching to use spare space, and a landscape and a portrait arrangement in one page chosen by the export from the console's size. Meanwhile the owner's Power wall ships as two templates, "Power wall (3×2)" and "Power wall (2×3)" (his choice).
 - 2026-10-13 · Inspector (§4), owner: "yes" to moving the Page section (name, console size, background) to the top of the Design tab when nothing is selected; under a selection it stays last and collapsed. The same UI round: the console size opens from the frame label above the page, Snap and Source show their on state, dropdown lists are styled, and checkable menu items show a check.
 - 2026-10-13 · Starters (§5.2), owner: his Power and Hydro farm consoles become starters rebuilt from the builder's widgets, looks from the theme and behaviour from his scripts, at their own shapes and never resized ("do not resize them"): Power wall (3×2), Power wall (2×3) and Hydro farm (3×2); docs/templates-power-farm.md maps every device, read, write and page and lists what could not be built. The Data panel's recipes are rewritten in plain words (owner: "text like this mane no sense for regular users ... make it regular human readable pls").
+- 2026-10-13 · Inspector (§5.4), owner, asking "why is it the page option present on the design tb of every element": the Design tab leaves the Page section out under a selection, superseding the earlier entry's "under a selection it stays last and collapsed"; it still leads the tab when nothing is selected, and Custom in the frame label's console sizes clears the selection to open it. The same round centres a styled dropdown's value in its control.
