@@ -2,7 +2,7 @@
 import { useRef, useState, type Dispatch } from 'react'
 import type { Page } from '../model/project'
 import type { Action } from '../model/store'
-import { SHAPES } from '../model/shapes'
+import { sizeOf } from '../model/shapes'
 import { Icon } from '../ui/icons'
 import './sidebar.css'
 
@@ -29,7 +29,7 @@ export function PageTabs({ pages, activeId, dispatch }: { pages: Page[]; activeI
             }} />
         : <button className={'lrow' + (p.id === activeId ? ' on' : '')} aria-label={p.name} ref={el => { if (el && back.current === p.id) { back.current = null; el.focus() } }} aria-pressed={p.id === activeId} aria-current={p.id === activeId ? 'page' : undefined} title="Double-click or F2 to rename" aria-keyshortcuts="F2"
             onClick={() => dispatch({ type: 'setActivePage', pageId: p.id })}
-            onDoubleClick={() => setEditing(p.id)} onKeyDown={e => { if (e.key === 'F2') setEditing(p.id) }}><span>{p.name}</span><span className="unit">{p.shape === 'custom' ? 'Custom' : SHAPES[p.shape].label}</span></button>}
+            onDoubleClick={() => setEditing(p.id)} onKeyDown={e => { if (e.key === 'F2') setEditing(p.id) }}><span>{p.name}</span><span className="unit">{sizeOf(p.shape)?.label ?? 'Custom'}</span></button>}
       <button className="ibtn flat vb-page-remove" aria-label={`Remove page ${p.name}`} title={`Remove page ${p.name}`} disabled={pages.length === 1}
         onClick={() => dispatch({ type: 'removePage', pageId: p.id })}><Icon name="trash" /><span className="vh">×</span></button>
     </div>)}

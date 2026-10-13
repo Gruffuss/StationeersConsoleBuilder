@@ -1,7 +1,7 @@
 // The active page's shape: a console face (its preview size and design units, spec 5.4) or a custom size in px.
 import { useState, type Dispatch, type KeyboardEvent } from 'react'
 import type { Page } from '../model/project'
-import { SHAPES, type ShapeKind } from '../model/shapes'
+import { SIZES, sizeOf, type ShapeKind } from '../model/shapes'
 import type { Action } from '../model/store'
 
 export function PageShape({ page, dispatch }: { page: Page; dispatch: Dispatch<Action> }) {
@@ -27,8 +27,8 @@ export function PageShape({ page, dispatch }: { page: Page; dispatch: Dispatch<A
   const input = (k: 'w' | 'h', label: string) => <input type="number" min={1} max={8192} aria-label={label} value={shown[k]}
     onChange={e => setDraft({ ...shown, [k]: e.target.value })} onBlur={commit} onKeyDown={enter} />
   return <span className="vb-shape">
-    <select aria-label="Console size" value={custom ? 'custom' : page.shape} onChange={e => choose(e.target.value as ShapeKind)}>
-      {Object.entries(SHAPES).map(([k, s]) => <option key={k} value={k}>{s.label}</option>)}
+    <select aria-label="Console size" value={custom ? 'custom' : sizeOf(page.shape)?.keys[0]} onChange={e => choose(e.target.value as ShapeKind)}>
+      {SIZES.map(s => <option key={s.keys[0]} value={s.keys[0]}>{s.label}</option>)}
       <option value="custom">Custom</option>
     </select>
     {custom && <>{input('w', 'Width (px)')}×{input('h', 'Height (px)')}</>}

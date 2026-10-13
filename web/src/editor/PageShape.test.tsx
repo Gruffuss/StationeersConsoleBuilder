@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { initialState, reducer, type Action, type State } from '../model/store'
 import { mount, run } from '../testing'
 import { PageShape } from './PageShape'
+import { SIZES } from '../model/shapes'
 
 // The real reducer behind the control, showing the active page; `log` records the control's dispatches, and `api` lets a
 // test act as the rest of the editor (undo, a page switch) and read the state.
@@ -112,27 +113,24 @@ describe('PageShape', () => {
     ui.unmount()
   })
 
-  it('offers the MoreConsoles shapes and sets one chosen', async () => {
+  it('offers the sizes, not the models, and sets a chosen size by its representative model', async () => {
     const { ui, select, choose } = setup()
-    expect(Array.from(select.options).find(o => o.value === 'v3x2-bulkhead')!.textContent).toBe('Vertical 3×2 Bulkhead (MoreConsoles)')
-    await choose('v3x2-bulkhead')
-    expect(select.value).toBe('v3x2-bulkhead')
-    expect(api.state.project.pages[0]).toMatchObject({ shape: 'v3x2-bulkhead', size: { w: 460, h: 723 }, scene: { header: { w: 960, h: 1509 } } })
+    expect(Array.from(select.options).map(o => [o.value, o.textContent])).toEqual([...SIZES.map(s => [s.keys[0], s.label]), ['custom', 'Custom']])
+    const page = () => api.state.project.pages[0]
+    await choose('v3x2')
+    expect([select.value, page().shape, page().size, page().scene.header]).toEqual(['v3x2', 'v3x2', { w: 460, h: 714 }, { w: 960, h: 1490, fit: 'contain' }])
+    await choose('vmonitor')
+    expect([select.value, page().shape, page().size, page().scene.header]).toEqual(['vmonitor', 'vmonitor', { w: 460, h: 943 }, { w: 480, h: 984, fit: 'contain' }])
     ui.unmount()
   })
 
-  it('offers the LargeConsoleMod shapes, square in px, and the vertical monitors, and sets each chosen', async () => {
-    const { ui, select, choose } = setup()
-    const label = (v: string) => Array.from(select.options).find(o => o.value === v)?.textContent
-    expect([label('2x2-lcm'), label('3x3-lcm'), label('vmonitor-3x2')])
-      .toEqual(['2×2 (LargeConsoleMod)', '3×3 (LargeConsoleMod)', 'Vertical Monitor 3×2 (MoreConsoles)'])
-    const page = () => api.state.project.pages[0]
-    await choose('2x2-lcm')
-    expect([select.value, page().shape, page().size, page().scene.header]).toEqual(['2x2-lcm', '2x2-lcm', { w: 460, h: 460 }, { w: 960, h: 960, fit: 'contain' }])
-    await choose('3x3-lcm')
-    expect([select.value, page().shape, page().size, page().scene.header]).toEqual(['3x3-lcm', '3x3-lcm', { w: 460, h: 460 }, { w: 1440, h: 1440, fit: 'contain' }])
-    await choose('vmonitor')
-    expect([select.value, page().shape, page().size, page().scene.header]).toEqual(['vmonitor', 'vmonitor', { w: 460, h: 943 }, { w: 480, h: 984, fit: 'contain' }])
+  it("shows a page on any model of a size as that size, keeping the page's own model", async () => {
+    const start = initialState(), id = start.project.pages[0].id
+    const { log, ui, select, choose } = setup(reducer(start, { type: 'setPageShape', pageId: id, shape: '3x3-lcm' }))
+    expect([select.value, select.selectedOptions[0].textContent]).toEqual(['3x3', '3×3'])
+    expect(api.state.project.pages[0].shape).toBe('3x3-lcm')
+    await choose('2x2')
+    expect(log).toEqual([{ type: 'setPageShape', pageId: id, shape: '2x2', size: { w: 460, h: 460 } }])
     ui.unmount()
   })
 

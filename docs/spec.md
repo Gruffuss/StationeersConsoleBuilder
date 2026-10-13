@@ -1069,6 +1069,15 @@ Page shape = proportions of the real surface:
 | vertical monitors 2×2, 3×2, 3×3 (each of the six, MoreConsoles) | the flat one's, turned | the flat one's, turned | prefab, turned |
 | custom | any | 480 on the shorter side | |
 
+- **The menus list sizes, not consoles** (owner, 2026-10-13: "here you should only have the sizes not all the consoles most of the are the same size, why ahve  the same size 2 times?"). Models whose
+  design units lie within 2% of each other on each side share one size, named without mod
+  names: Square (1×1), 2×1, Vertical 2×1, Monitor, Vertical Monitor, Air Conditioner face
+  (beta), 2×2, 3×2, Vertical 3×2, 3×3, Monitor 2×2, Vertical Monitor 2×2, Monitor 3×2,
+  Vertical Monitor 3×2, Monitor 3×3, Vertical Monitor 3×3, then Custom. The table above stays:
+  every model keeps its key and exact px, a page keeps its model's key and shows its size,
+  and choosing a size sets that size's first model (the plain MoreConsoles one where there is
+  one). Loading, adopting a script and the game link's console match still set exact keys.
+
 - The viewbox is in design units. **480 per cell height is a reference unit, not a
   resolution**, so a 2×1 page is 1080×480 units, a MoreConsoles 3×3 page 1434×1440 and a
   LargeConsoleMod 3×3 page 1440×1440. A cell is the
@@ -1967,3 +1976,4 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-13 · Game icon pictures (§11), owner: "can it be made once connected to a chip to load the ingame images from the game (i do not want us redistributing them) and loading simages should be on demand", then "just add it as future plans": on the roadmap, with the rule that the builder never redistributes game images; while linked, the open page's icon pictures load from the game on demand, memory only. The game-side tool it needs does not exist yet; the owner left open whether the ScriptedScreens Vector mod or ScriptedScreens should get it.
 - 2026-10-13 · Game icons on the canvas (§5.1), owner, answering the icons-in-groups questions: an icon "should act as any other element" (select, drag with snapping, nudge with the arrow keys, resize, multi-select, align), always upright since the game cannot turn it; hiding an icon, or a group around it, leaves it out of the export and the editor. Planned with icons in groups.
 - 2026-10-13 · Natives in groups built (§§4, 5.1): membership by group id, Layers rows marked drawn above, following the group upright, acting as any other element on the canvas (picking group-first, sets, drag, nudge, resize, the commands), hidden natives left out of the export; the console starters' icons seated in their cards with every generated Lua byte unchanged.
+- 2026-10-13 · Console size menus (§5.4), owner: "here you should only have the sizes not all the consoles most of the are the same size, why ahve  the same size 2 times?": the menus list 16 sizes plus Custom; models within 2% a side share a size; every model keeps its key and exact px underneath. Supersedes the picker part of 2026-10-06's "each its own picker entry (the real sizes differ)".

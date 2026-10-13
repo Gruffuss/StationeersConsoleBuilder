@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SHAPES, unitsOf } from './shapes'
+import { SHAPES, SIZES, sizeOf, unitsOf } from './shapes'
 
 // Every shape, in the picker's order: [px w, px h, units w, units h, cells tall, turned]. Cells tall are the console's own
 // (its footprint's second number); a turned page is the console placed a quarter turn round, read upright (portrait).
@@ -95,5 +95,24 @@ describe('shapes', () => {
   it('makes a custom size 480 on its shorter side', () => {
     expect(unitsOf('custom', { w: 800, h: 400 })).toEqual({ w: 960, h: 480 })
     expect(unitsOf('custom', { w: 400, h: 800 })).toEqual({ w: 480, h: 960 })
+  })
+})
+
+// The menus offer sizes, not models (owner, 2026-10-13: "here you should only have the sizes not all the consoles").
+describe('sizes', () => {
+  const within = (a: { w: number; h: number }, b: { w: number; h: number }) => Math.abs(a.w - b.w) / b.w <= 0.02 && Math.abs(a.h - b.h) / b.h <= 0.02
+  it('puts every model in exactly one size, each within 2% of its representative on each side', () => {
+    expect([...SIZES.flatMap(s => s.keys)].sort()).toEqual(Object.keys(SHAPES).sort())
+    for (const s of SIZES) for (const k of s.keys) expect([k, within(SHAPES[k].units, SHAPES[s.keys[0]].units)]).toEqual([k, true])
+  })
+  it('keeps the sizes apart: no two representatives within 2%', () => {
+    for (const a of SIZES) for (const b of SIZES) if (a !== b) expect([a.label, b.label, within(SHAPES[a.keys[0]].units, SHAPES[b.keys[0]].units)]).toEqual([a.label, b.label, false])
+  })
+  it('lists the sizes in order, named without mod names', () => {
+    expect(SIZES.map(s => s.label)).toEqual(['Square (1×1)', '2×1', 'Vertical 2×1', 'Monitor', 'Vertical Monitor', 'Air Conditioner face (beta)',
+      '2×2', '3×2', 'Vertical 3×2', '3×3', 'Monitor 2×2', 'Vertical Monitor 2×2', 'Monitor 3×2', 'Vertical Monitor 3×2', 'Monitor 3×3', 'Vertical Monitor 3×3'])
+  })
+  it('finds the size of any model, and none for a custom size', () => {
+    expect([sizeOf('3x2-rugged')?.label, sizeOf('3x3-lcm')?.label, sizeOf('v2x2')?.label, sizeOf('custom')]).toEqual(['3×2', '3×3', '2×2', undefined])
   })
 })

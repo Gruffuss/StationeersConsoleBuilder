@@ -46,6 +46,31 @@ export const SHAPES: Record<Exclude<ShapeKind, 'custom'>, Shape> = TABLE
 for (const s of Object.values(SHAPES)) [s.px, s.units, s].forEach(o => Object.freeze(o))
 Object.freeze(SHAPES)
 
+type Model = Exclude<ShapeKind, 'custom'>
+/** The sizes the menus offer (owner, 2026-10-13: "here you should only have the sizes not all the consoles"): models whose
+ *  design units are within 2% on each side share a size. Its first key is its representative, set when the size is chosen;
+ *  a page on any member keeps its own key, and adopt and the game link still match a console's exact model. */
+export const SIZES: readonly { readonly label: string; readonly keys: readonly [Model, ...Model[]] }[] = [
+  { label: 'Square (1×1)', keys: ['square'] },
+  { label: '2×1', keys: ['2x1'] },
+  { label: 'Vertical 2×1', keys: ['v2x1'] },
+  { label: 'Monitor', keys: ['monitor'] },
+  { label: 'Vertical Monitor', keys: ['vmonitor'] },
+  { label: 'Air Conditioner face (beta)', keys: ['ac'] },
+  { label: '2×2', keys: ['2x2', '2x2-lcm', 'v2x2'] },
+  { label: '3×2', keys: ['3x2', '3x2-panel', '3x2-rugged', '3x2-bulkhead'] },
+  { label: 'Vertical 3×2', keys: ['v3x2', 'v3x2-panel', 'v3x2-rugged', 'v3x2-bulkhead'] },
+  { label: '3×3', keys: ['3x3', '3x3-lcm', 'v3x3'] },
+  { label: 'Monitor 2×2', keys: ['monitor-2x2-rugged', 'monitor-2x2-bulkhead'] },
+  { label: 'Vertical Monitor 2×2', keys: ['vmonitor-2x2-rugged', 'vmonitor-2x2-bulkhead'] },
+  { label: 'Monitor 3×2', keys: ['monitor-3x2', 'monitor-3x2-rugged'] },
+  { label: 'Vertical Monitor 3×2', keys: ['vmonitor-3x2', 'vmonitor-3x2-rugged'] },
+  { label: 'Monitor 3×3', keys: ['monitor-3x3-rugged', 'monitor-3x3-bulkhead'] },
+  { label: 'Vertical Monitor 3×3', keys: ['vmonitor-3x3-rugged', 'vmonitor-3x3-bulkhead'] },
+]
+/** The size a page's shape belongs to; none for a custom size. */
+export const sizeOf = (shape: ShapeKind) => shape === 'custom' ? undefined : SIZES.find(s => s.keys.includes(shape))
+
 /** A shape's design units; a custom size's are 480 on its shorter side (it has no cells), its aspect kept. */
 export const unitsOf = (shape: ShapeKind, px: { w: number; h: number }) =>
   shape !== 'custom' ? SHAPES[shape].units
