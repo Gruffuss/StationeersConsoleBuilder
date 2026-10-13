@@ -55,7 +55,7 @@ it('keeps pending picker colours and Discard visible outside the closed colour p
   const p = newProject(); p.pages[0].scene = parseSrc('R w=100 h=100 f=#ffffff').scene!
   const x = await boot(p), box = x.ui.container
   await run(() => x.ctx.dispatch({ type: 'select', selection: { pageId: 'p1', path: [0] } }))
-  const picker = box.querySelector<HTMLInputElement>('input[aria-label="f colour"]')!
+  const picker = box.querySelector<HTMLInputElement>('input[aria-label="Fill colour"]')!
   await run(() => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(picker, '#273849'); picker.dispatchEvent(new Event('change', { bubbles: true })) })
   const discard = Array.from(box.querySelectorAll<HTMLButtonElement>('[aria-label="Discard pending picker colours"]')).find(b => !b.closest('.vb-colour-panel'))
   expect(discard).toBeDefined()

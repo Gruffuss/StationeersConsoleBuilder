@@ -7,7 +7,7 @@
 // v on C: 0.11.75; the bar item 0.11.79.
 import type { SrcNode } from '../../model/scene'
 import type { Theme } from '../../theme/types'
-import { box, el, holder, ITEM, itemPlaceholder, KEYS, keyOf, label, lights, num, oneLine, partRect, plus, pos, raised, well, type At, type LabelText } from '../paint'
+import { box, el, holder, ITEM, itemPlaceholder, KEYS, keyOf, label, lights, num, oneLine, partRect, plus, pos, raised, well, type At, type LabelText, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; max: number; layout: string; cols: number; pitch: number; item: string; fmt: string
@@ -16,9 +16,10 @@ const itemH = (t: Theme, item: string) =>
   item === 'row' ? Math.max(t.geo.size.row, oneLine(t, 'value', 'value-lg')) : item === 'bar' ? t.geo.size.bar : item === 'light' ? t.geo.size.light : 1.4 * t.type.value.size
 const repeater: WidgetModule<P> = {
   type: 'repeater', label: 'Repeater', group: 'chrome', prefix: 'rep', resize: 'width',
-  params: [...box(), { key: 'max', type: 'num', min: 1, int: true }, { key: 'layout', type: 'enum', enum: ['list', 'grid'] },
-    { key: 'cols', type: 'num', min: 1, int: true }, { key: 'pitch', type: 'num', min: 0 }, { key: 'item', type: 'enum', enum: ['row', 'text', 'bar', 'light'] },
-    { key: 'fmt', type: 'fmt' }, { key: 'valueW', type: 'num', min: 0 }, { key: 'click', type: 'flag' }, { key: 'fade', type: 'flag' }, KEYS],
+  slotName: named({ n: 'Item count', t: 'Texts', name: 'Names', v: 'Values', st: 'States', lvl: 'Levels', fade: 'Fade amounts', hasv: 'Has a value', ready: 'Ready' }),
+  params: [...box(), { key: 'max', name: 'Most items', type: 'num', min: 1, int: true }, { key: 'layout', name: 'Layout', type: 'enum', enum: ['list', 'grid'] },
+    { key: 'cols', name: 'Columns', type: 'num', min: 1, int: true }, { key: 'pitch', name: 'Item spacing', type: 'num', min: 0 }, { key: 'item', name: 'Item look', type: 'enum', enum: ['row', 'text', 'bar', 'light'] },
+    { key: 'fmt', name: 'Number format', type: 'fmt' }, { key: 'valueW', name: 'Value width', type: 'num', min: 0 }, { key: 'click', name: 'Clickable items', type: 'flag' }, { key: 'fade', name: 'Fade items by data', type: 'flag' }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: 0, max: 6, layout: 'list', cols: 2, pitch: t.metrics['list.pitch'], item: 'row', fmt: '%.1f', valueW: 0, click: false, fade: false, keys: {} }),
   fix: (p, t) => ({ ...p, keys: Object.fromEntries(Object.entries(p.keys).filter(([s]) => s !== 'hasv' && s !== 'ready')), h: ((p.layout === 'grid' ? Math.ceil(p.max / p.cols) : p.max) - 1) * p.pitch + itemH(t, p.item) }),
   expand(p, t, uid) {

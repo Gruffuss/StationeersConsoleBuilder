@@ -84,7 +84,7 @@ it('keeps the inventory in its named regions and all modal contents mounted', as
   expect(dialog('Share link').textContent).toContain('Sharing includes the whole project')
   controls(dialog('Fonts'), ['Font file'])
   expect(dialog('Fonts').querySelector('[aria-label="This page\'s font links"]')).not.toBeNull()
-  controls(dialog('Export'), ['Embed project', 'Check export', 'Download the script', 'Copy the script', 'Download JSON fallback', 'Show Send to chip (advanced)'])
+  controls(dialog('Export'), ['Embed project', 'Download the script', 'Copy the script', 'Download JSON fallback', 'Show Send to chip (advanced)'])
   controls(dialog('Game link'), ['List chips', 'Use the chip selected in the IC editor', 'Unlink', 'Stop'])
   expect(dialog('Import a design system').querySelector('[aria-label="Import theme"]')).not.toBeNull()
   controls(region('header.vb-header'), ['Play'])

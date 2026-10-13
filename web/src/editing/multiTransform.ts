@@ -18,7 +18,8 @@ const mapped = (b: Box, m: Mat): Box => {
   return { x, y, w: b.w * m[0], h: b.h * m[3] }
 }
 
-/** Apply the set's design-space scale or turn in each member's frame; skipped members keep their nodes and paths. */
+/** Apply the set's design-space scale or turn in each member's frame. Widgets carry their centres even when a
+ * dimension or orientation must stay; skipped names both those constraints and members that cannot be written. */
 export function transformSet(scene: Scene, sels: Selection[], t: Theme, m: Mat): { scene: Scene; selection: Selection[]; skipped: string[]; matrix: Mat } {
   const matrices = [m], out = transforms(scene, sels, t, matrices, false)
   // Natives in the gesture use the same effective scale when a widget minimum holds the set.
@@ -78,7 +79,6 @@ function transforms(scene: Scene, sels: Selection[], t: Theme, matrices: Mat[], 
       if (!uniform && !axis(W) && !swapped) continue
       const mod = WIDGETS[w.type], p = w.params as unknown as Box
       if (mod.resize === 'none') continue
-      if (mod.resize === 'width' && Math.abs((swapped ? sx : sy) - 1) > 1e-9) continue
       const min = sanitize(mod, { ...w.params, w: 0, h: 0 }, t) as unknown as Box
       if (m[0] < 0 || m[3] < 0) continue   // widgets cannot mirror; they must not clamp other members
       const wx = p.w ? Math.ceil(min.w) / p.w : 0, hy = mod.resize === 'both' && p.h ? Math.ceil(min.h) / p.h : 0
@@ -125,31 +125,49 @@ function transforms(scene: Scene, sels: Selection[], t: Theme, matrices: Mat[], 
     if (!local.every(Number.isFinite)) return skip('the value left float32')
     if (!h) return skip('geometry is an expression or has no literal box')
     if (widget) {
-      const p = widget.params as unknown as Box, B = groupMatrix(n.attrs)!
+      const p = widget.params as unknown as Box, B = groupMatrix(n.attrs)!, mod = WIDGETS[widget.type]
       const [cx, cy] = apply(mul(local, B), p.x + p.w / 2, p.y + p.h / 2)
+      const name = [widget.params.name, widget.params.caption, widget.params.title].find(v => typeof v === 'string' && v.trim())
+      const note = (why: string) => { if (!probe) skipped.push(`${name ? `${name} (${widget.uid})` : `${mod.label} (${widget.uid})`}: ${why}`) }
+      const whole = (v: number, was: number) => Math.abs(v - was) <= 4 * Number.EPSILON * (Math.abs(v) + Math.abs(was)) ? was : Math.round(v)
+      // Keep the widget's own turn while placing its centre at the set's transformed centre.
+      const centred = (w: number, h: number) => {
+        const [x, y] = apply(invert(B)!, cx, cy)
+        return { ...widget, params: { ...widget.params, x: whole(x - w / 2, p.x), y: whole(y - h / 2, p.y), w, h } }
+      }
       let ref = widget
       if (turning) {
-        if (!rotation(local)) return skip('the parent scales unevenly: a turn would skew')
-        const r = (round((widget.edit?.root?.r ?? 0) + Math.atan2(local[1], local[0]) * 180 / Math.PI) % 360 + 360) % 360
-        const x = round(cx - p.w / 2), y = round(cy - p.h / 2)
-        ref = { ...widget, params: { ...widget.params, x, y }, edit: { v: 1, parts: widget.edit?.parts ?? {}, root: { ...widget.edit?.root, r, a: [round(x + p.w / 2), round(y + p.h / 2)] } } }
-        if (!r) {
-          delete ref.edit!.root!.r; delete ref.edit!.root!.a
-          if (!Object.keys(ref.edit!.root!).length) delete ref.edit!.root
-          if (!ref.edit!.root && !Object.keys(ref.edit!.parts).length) delete ref.edit
+        if (!rotation(local)) {
+          ref = centred(p.w, p.h)
+          note('size and turn kept (the parent scales unevenly: a turn would skew)')
+        } else {
+          const r = (round((widget.edit?.root?.r ?? 0) + Math.atan2(local[1], local[0]) * 180 / Math.PI) % 360 + 360) % 360
+          const x = round(cx - p.w / 2), y = round(cy - p.h / 2)
+          ref = { ...widget, params: { ...widget.params, x, y }, edit: { v: 1, parts: widget.edit?.parts ?? {}, root: { ...widget.edit?.root, r, a: [round(x + p.w / 2), round(y + p.h / 2)] } } }
+          if (!r) {
+            delete ref.edit!.root!.r; delete ref.edit!.root!.a
+            if (!Object.keys(ref.edit!.root!).length) delete ref.edit!.root
+            if (!ref.edit!.root && !Object.keys(ref.edit!.parts).length) delete ref.edit
+          }
         }
       } else {
         const inBox = mul(invert(B)!, mul(local, B))
-        if (!axis(inBox)) return skip('the resize would skew the widget')
-        if (inBox[0] < 0 || inBox[3] < 0) return skip('the widget cannot be mirrored')
-        const mod = WIDGETS[widget.type]
-        if (mod.resize === 'none') return skip('the widget has no resize handles')
-        if (mod.resize === 'width' && Math.abs(inBox[3] - 1) > 1e-9) return skip('the widget allows width resize only')
-        const box = mapped(p, inBox), whole = (v: number, was: number) => Math.abs(v - was) <= 4 * Number.EPSILON * (Math.abs(v) + Math.abs(was)) ? was : Math.round(v)
-        const w = whole(box.w, p.w), hh = mod.resize === 'both' ? whole(box.h, p.h) : p.h
-        const x = whole(box.x, p.x), y = whole(box.y, p.y)
-        if (![x, y, w, hh].every(v => Number.isFinite(Math.fround(v)))) return skip('the value left float32')
-        ref = { ...widget, params: sanitize(mod, { ...widget.params, x, y, w, h: hh }, t) }
+        if (!axis(inBox)) {
+          ref = centred(p.w, p.h)
+          note('size and turn kept (the resize would skew the widget)')
+        } else {
+          const box = mapped(p, inBox)
+          const w = mod.resize === 'none' ? p.w : whole(Math.abs(box.w), p.w)
+          const hh = mod.resize === 'both' ? whole(Math.abs(box.h), p.h) : p.h
+          const mirror = inBox[0] < 0 || inBox[3] < 0
+          const x = whole(box.x, p.x), y = whole(box.y, p.y)
+          if (![x, y, w, hh].every(v => Number.isFinite(Math.fround(v)))) return skip('the value left float32')
+          const params = sanitize(mod, { ...widget.params, x, y, w, h: hh }, t)
+          ref = mirror || mod.resize !== 'both' ? centred(params.w as number, params.h as number) : { ...widget, params }
+          if (mirror) note('orientation kept (the widget cannot mirror)')
+          if (mod.resize === 'none' && (Math.abs(inBox[0]) !== 1 || Math.abs(inBox[3]) !== 1)) note('size kept (no resize handles)')
+          if (mod.resize === 'width' && Math.abs(Math.abs(inBox[3]) - 1) > 1e-9) note('height kept (width only)')
+        }
       }
       const values = [ref.params.x, ref.params.y, ref.params.w, ref.params.h, ref.edit?.root?.r ?? 0, ...ref.edit?.root?.a ?? []]
       if (!values.every(v => typeof v === 'number' && Number.isFinite(Math.fround(v)))) return skip('the value left float32')

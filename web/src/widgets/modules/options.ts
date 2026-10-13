@@ -1,15 +1,16 @@
 // Option group (builder-defined, Q8): options side by side with space-3 gaps, the selected one ringed (eq($sel, value)).
 // Each option is a plate and its body in a G id=<uid>_g<k>, so its pressed look answers to it alone; the labels come after
 // all the groups, since option k+1's ring reaches past its body over option k's label (E5). v on R/T: 0.11.75.
-import { body, box, el, keyOf, keyed, KEYS, label, literal, num, oneLine, pos, ring } from '../paint'
+import { body, box, el, keyOf, keyed, KEYS, label, literal, num, oneLine, pos, ring, named } from '../paint'
 import type { WidgetModule } from '../types'
 
 type Option = { label: string; value: number; key: number }
 type P = { x: number; y: number; w: number; h: number; options: Option[]; gap: number; keys: Record<string, string> }
 const options: WidgetModule<P> = {
   type: 'options', label: 'Option group', group: 'controls', prefix: 'og', resize: 'both',
-  params: [...box(), { key: 'options', type: 'list', min: 1, item: [{ key: 'label', type: 'text' }, { key: 'value', type: 'num' }, { key: 'key', type: 'num', min: 0, int: true }] },
-    { key: 'gap', type: 'num', min: 0 }, KEYS],
+  slotName: named({ sel: 'Selected value' }),
+  params: [...box(), { key: 'options', name: 'Options', type: 'list', min: 1, item: [{ key: 'label', name: 'Label', type: 'text' }, { key: 'value', name: 'Value', type: 'num' }, { key: 'key', name: 'Option id', type: 'num', min: 0, int: true }] },
+    { key: 'gap', name: 'Gap', type: 'num', min: 0 }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: t.geo.size.control, options: [{ label: 'Auto', value: 0, key: 0 }, { label: 'On', value: 1, key: 1 }, { label: 'Off', value: 2, key: 2 }],
     gap: t.geo.space[3], keys: {} }),
   // At least one line of its button-label labels, which have fit=ellipsis.

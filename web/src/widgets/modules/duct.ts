@@ -1,13 +1,14 @@
 // Flow duct: a track and a dashed stroke whose opacity follows run above an idle floor.
-import { box, el, KEYS, keyOf, num, paintOf, partRect, tag } from '../paint'
+import { box, el, KEYS, keyOf, num, paintOf, partRect, tag, named } from '../paint'
 import type { WidgetModule } from '../types'
 import { dress } from '../dress'
 
 type P = { x: number; y: number; w: number; h: number; dir: string; period: number; dash: number; speed: number; idle: number; keys: Record<string, string> }
 const duct: WidgetModule<P> = {
   type: 'duct', label: 'Flow duct', group: 'chrome', prefix: 'duct', resize: 'both',
-  params: [...box(), { key: 'dir', type: 'enum', enum: ['h', 'v'] }, { key: 'period', type: 'num', min: 0 }, { key: 'dash', type: 'num', min: 0 },
-    { key: 'speed', type: 'num' }, { key: 'idle', type: 'num', min: 0, max: 1 }, KEYS],
+  slotName: named({ run: 'Running' }),
+  params: [...box(), { key: 'dir', name: 'Direction', type: 'enum', enum: ['h', 'v'] }, { key: 'period', name: 'Dash repeat length', type: 'num', min: 0 }, { key: 'dash', name: 'Dash length', type: 'num', min: 0 },
+    { key: 'speed', name: 'Flow speed', type: 'num' }, { key: 'idle', name: 'Idle opacity', type: 'num', min: 0, max: 1 }, KEYS],
   defaults: () => ({ x: 24, y: 24, w: 300, h: 4, dir: 'h', period: 22, dash: 11, speed: 20, idle: 0, keys: {} }),
   expand(p, t, uid) {
     const run = keyOf(p, uid, 'run'), along = p.dir === 'h'

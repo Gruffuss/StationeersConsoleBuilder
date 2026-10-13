@@ -1,14 +1,15 @@
 // Toggle (Q8, builder-defined): the button look is a secondary button whose focus ring shows when on, the label left and
 // ON/OFF right (text-muted when off), `on` sent snapped; the switch look is a 64 x 38 track mix(surface-well, status-ok, on)
 // and a white knob that slides 26 units, `on` eased so the knob glides. v on R/T: 0.11.75 (button look); mix: 0.11.79.
-import { body, box, el, inkOf, keyOf, KEYS, label, literal, num, oneLine, paintOf, partRect, ring } from '../paint'
+import { body, box, el, inkOf, keyOf, KEYS, label, literal, num, oneLine, paintOf, partRect, ring, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; label: string; onText: string; offText: string; look: string; keys: Record<string, string> }
 const toggle: WidgetModule<P> = {
   type: 'toggle', label: 'Toggle', group: 'controls', prefix: 'tg', resize: 'both',
-  params: [...box(), { key: 'label', type: 'text' }, { key: 'onText', type: 'text' }, { key: 'offText', type: 'text' },
-    { key: 'look', type: 'enum', enum: ['button', 'switch'] }, KEYS],
+  slotName: named({ on: 'On', st: 'State' }),
+  params: [...box(), { key: 'label', name: 'Label', type: 'text' }, { key: 'onText', name: 'On text', type: 'text' }, { key: 'offText', name: 'Off text', type: 'text' },
+    { key: 'look', name: 'Style', type: 'enum', enum: ['button', 'switch'] }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 300, h: t.geo.size.control, label: 'Label', onText: 'On', offText: 'Off', look: 'button', keys: {} }),
   // At least one line of its button-label labels, which have fit=ellipsis.
   fix: (p, t) => ({ ...p, h: Math.max(p.h, oneLine(t, 'button-label')) }),

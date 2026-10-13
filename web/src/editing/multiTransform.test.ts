@@ -7,6 +7,8 @@ import { vanillaPlus as t } from '../theme/vanillaPlus'
 import { expandRoot, putWidget, sanitize, widgetOf } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
 import { instance } from '../widgets/testing'
+import { templateProject } from '../project/templateData'
+import { THEMES } from '../theme'
 import { worldBox } from './bounds'
 import { transformSet } from './multiTransform'
 
@@ -21,11 +23,12 @@ const closeBox = (actual: ReturnType<typeof worldBox>, expected: NonNullable<Ret
 }
 
 describe('transformSet', () => {
-  it('mirrors plain members while preserving and naming a zero-minimum widget', () => {
-    const base = putWidget(pair(), instance('panel'), t)
+  it('mirrors plain members while carrying an upright widget to its mirrored box', () => {
+    const base = putWidget(pair(), instance('panel', { x: 30, y: 40, w: 100, h: 80 }), t)
     const out = transformSet(base, [sel(0), sel(2)], t, [-1, 0, 0, 1, 200, 0])
     expect(out.scene.root[0].attrs).toMatchObject({ x: 190, y: 0, w: 10, h: 10 })
-    expect(out.scene.root[2]).toBe(base.root[2])
+    expect(widgetOf(out.scene.root[2], t)?.params).toMatchObject({ x: 70, y: 40, w: 100, h: 80 })
+    expect(widgetOf(out.scene.root[2], t)?.edit?.root?.r).toBeUndefined()
     expect(out.skipped).toHaveLength(1)
     expect(out.skipped[0]).toMatch(/mirror.*widget|widget.*mirror/)
   })
@@ -196,12 +199,43 @@ describe('transformSet', () => {
     expect(out.scene.root[0].attrs.w).toBeCloseTo(100 * k, 3)
     expect(widgetOf(out.scene.root[1].c![0], t)?.params).toMatchObject({ w: Math.round(100 * k), h: min })
   })
-  it('names and preserves a width-only widget when a scale would change its fixed height', () => {
-    const base = putWidget(pair(), instance('readout'), t)
-    const out = transformSet(base, [sel(0), sel(2)], t, twice)
-    expect(out.scene.root[0].attrs.w).toBe(20)
-    expect(out.scene.root[2]).toBe(base.root[2])
-    expect(out.skipped.join()).toMatch(/width.*only/)
+  it('carries all eight Airlock widgets through a near-half resize, centring the fixed-height row', () => {
+    const base = templateProject('airlock').pages[0].scene, theme = THEMES.neutral
+    const out = transformSet(base, base.root.map((_, i) => sel(i)), theme, [0.5, 0, 0, 0.49, 12, 0])
+    // The text minimum holds the vertical scale at 28/33.6; horizontal stays one half.
+    expect(widgetOf(out.scene.root[0], theme)?.params).toMatchObject({ x: 24, y: 0, w: 216, h: 53 })
+    expect(widgetOf(out.scene.root[1], theme)?.params).toMatchObject({ x: 24, y: 71, w: 216, h: 50 })
+    expect(widgetOf(out.scene.root[2], theme)?.params).toMatchObject({ x: 24, y: 133, w: 105, h: 45 })
+    expect(out.scene.root.every((n, i) => n !== base.root[i])).toBe(true)
+    expect(out.skipped.join()).toMatch(/Room pressure kPa.*height kept.*width only/)
+  })
+  it('centres a fixed-size status light in its scaled set box and names the size it kept', () => {
+    const base = putWidget(pair(), instance('light', { x: 100, y: 80 }), t)
+    const out = transformSet(base, [sel(0), sel(2)], t, [0.5, 0, 0, 0.5, 0, 0])
+    expect(widgetOf(out.scene.root[2], t)?.params).toMatchObject({ x: 46, y: 36, w: 18, h: 18 })
+    expect(out.skipped.join()).toMatch(/lt1.*size kept/)
+  })
+  it('takes width and follows the centre on a flip while retaining a width-only widget height', () => {
+    const base = putWidget(pair(), instance('readoutrow', { x: 100, y: 80, w: 200, h: 50, name: 'Pressure' }), t)
+    const out = transformSet(base, [sel(0), sel(2)], t, [-0.5, 0, 0, 0.5, 300, 0])
+    expect(widgetOf(out.scene.root[2], t)?.params).toMatchObject({ x: 150, y: 28, w: 100, h: 50 })
+    expect(out.skipped.join()).toMatch(/Pressure.*orientation kept.*mirror/)
+    expect(out.skipped.join()).toMatch(/height kept/)
+  })
+  it('moves a widget whose uneven parent prevents a turn, keeping its size and turn', () => {
+    const widget = putWidget(empty, instance('light', { x: 30, y: 40 }), t).root[0]
+    const base = { ...pair(), root: [...pair().root, node('G', { s: [2, 1] }, [widget])] }
+    const out = transformSet(base, [sel(0), sel(2, 0)], t, [0, 1, -1, 0, 200, 0])
+    expect(widgetOf(out.scene.root[2].c![0], t)?.params).toMatchObject({ x: 67, y: 69, w: 18, h: 18 })
+    expect(widgetOf(out.scene.root[2].c![0], t)?.edit?.root?.r).toBeUndefined()
+    expect(out.skipped.join()).toMatch(/lt1.*turn kept/)
+  })
+  it('carries a fixed-size widget through a resize that would skew it in its rotated parent', () => {
+    const widget = putWidget(empty, instance('light', { x: 30, y: 40 }), t).root[0]
+    const base = { ...pair(), root: [...pair().root, node('G', { r: 45 }, [widget])] }
+    const out = transformSet(base, [sel(0), sel(2, 0)], t, [2, 0, 0, 3, 0, 0])
+    expect(widgetOf(out.scene.root[2].c![0], t)?.params).toMatchObject({ x: 113, y: 133, w: 18, h: 18 })
+    expect(out.skipped.join()).toMatch(/lt1.*size and turn kept.*skew/)
   })
   it('resizes a rotated widget in its own params frame through a design-space scale', () => {
     const w = { ...instance('bar', { x: 100, y: 100, w: 200, h: 30 }), edit: { v: 1 as const, parts: {}, root: { r: 90, a: [200, 115] as [number, number] } } }

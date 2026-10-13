@@ -2,13 +2,14 @@
 // RP; a row is hidden where its class state reads 0 (an out-of-range read is 0), and an unpainted R holds the box
 // (holder). k[] class states, m[] messages, t[] times when `time` is on (off by default, Q13). The ring itself (keep N,
 // de-duplicate) is M3's generated Lua. Colour expressions: 0.11.79.
-import { box, chip, el, holder, ITEM, KEYS, keyOf, label, num, oneLine, plus, pos, raised } from '../paint'
+import { box, chip, el, holder, ITEM, KEYS, keyOf, label, num, oneLine, plus, pos, raised, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; rows: number; time: boolean; pitch: number; keys: Record<string, string> }
 const eventlog: WidgetModule<P> = {
   type: 'eventlog', label: 'Event log', group: 'values', prefix: 'log', resize: 'width',
-  params: [...box(), { key: 'rows', type: 'num', min: 1, int: true }, { key: 'time', type: 'flag' }, { key: 'pitch', type: 'num', min: 0 }, KEYS],
+  slotName: named({ k: 'States', m: 'Messages', t: 'Times' }),
+  params: [...box(), { key: 'rows', name: 'Rows shown', type: 'num', min: 1, int: true }, { key: 'time', name: 'Show time', type: 'flag' }, { key: 'pitch', name: 'Row spacing', type: 'num', min: 0 }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: 0, rows: 4, time: false, pitch: t.metrics['list.pitch'], keys: {} }),
   fix: (p, t) => ({ ...p, h: (p.rows - 1) * p.pitch + Math.max(t.geo.size.row, oneLine(t, 'message', ...(p.time ? ['unit' as const] : []))) }),
   expand(p, t, uid) {

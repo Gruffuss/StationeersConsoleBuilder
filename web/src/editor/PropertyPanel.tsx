@@ -209,21 +209,21 @@ function Fields({ page, selection, checker, theme, dispatch, sceneOf }: Props) {
   const row = (f: Field, raw = false) => {
     const exact = raw || passedDown(f), key = raw ? f.key : keyOf(f) ?? f.key
     const v = attrs[key], derived = modeOf(v, f), mode = modes[key] ?? derived, options = modesOf(f), now = shown(v)
-    const fallback = absent(f)
+    const fallback = absent(f), label = f.name, hint = f.note ? `${f.key}: ${f.note}` : f.key
     // Unchanged text in its own mode is no edit: it only clears what was said about an earlier one.
     const commitText = (text: string) => text === now && mode === derived ? say(key, '') : void commit(key, text, mode, f, exact)
     // A word the mod may not know is still shown. A flag passed down (on a group, ownDefault none) can go back to inherited.
     const choices = f.enum ?? (f.type === 'flag' && ownDefault(f) === undefined ? ['1', '0'] : undefined)
     const words = choices && (now && !choices.includes(now) ? [...choices, now] : choices)
     const control = words && mode === 'literal'
-      ? <select aria-label={f.key} value={now} onChange={e => void commit(key, e.target.value, 'literal', f, exact)}>
+      ? <select aria-label={label} value={now} onChange={e => void commit(key, e.target.value, 'literal', f, exact)}>
           <option value="">(default{fallback && `: ${fallback}`})</option>
           {words.map(w => <option key={w} value={w}>{w}</option>)}
         </select>
       : f.type === 'flag' && mode === 'literal'
-        ? <input type="checkbox" aria-label={f.key} checked={v === undefined ? ownDefault(f) === 1 : isOn(f, v)}
+        ? <input type="checkbox" aria-label={label} checked={v === undefined ? ownDefault(f) === 1 : isOn(f, v)}
             onChange={e => void commit(key, e.target.checked ? '1' : '0', 'literal', f, exact)} />
-        : <TextField label={f.key} now={now} placeholder={fallback} list={listOf(f, mode)} multiline={f.type === 'text'} commit={commitText} />
+        : <TextField label={label} now={now} placeholder={fallback} list={listOf(f, mode)} multiline={f.type === 'text'} commit={commitText} />
     const font = f.type === 'font' ? textOf(v) : null
     const note = font && !isKnownFont(font) ? previewFontWarning(scene, [font], []) : noteOf(f, v)
     const colour = f.type === 'paint' || f.key === 'oc'
@@ -232,10 +232,10 @@ function Fields({ page, selection, checker, theme, dispatch, sceneOf }: Props) {
       commit={(text, mode = 'literal', link) => void commit(key, text, mode, f, exact, link)} />
     return <div key={f.key} className={`vb-prop ${f.type === 'text' ? 'vb-prop-text' : ''}`}>
       <div className="field">
-        <label title={f.note}>{f.key}</label>
+        <label title={hint}>{label}</label>
         {control}
         {colour && paint}
-        {options.length > 1 && <select aria-label={`${f.key} mode`} value={mode} onChange={e => {
+        {options.length > 1 && <select aria-label={`${label} mode`} value={mode} onChange={e => {
           setModes(m => ({ ...m, [key]: e.target.value as Mode }))
           say(key, '')
         }}>
@@ -243,7 +243,7 @@ function Fields({ page, selection, checker, theme, dispatch, sceneOf }: Props) {
         </select>}
       </div>
       {!colour && paint}
-      {rawStyle && isStyle(node.op, key) && f.type === 'colour' && f.key !== 'oc' && <select aria-label={`${f.key} theme swatch`}
+      {rawStyle && isStyle(node.op, key) && f.type === 'colour' && f.key !== 'oc' && <select aria-label={`${label} theme swatch`}
         value={'role' in (linksOf(node)[key] ?? {}) ? (linksOf(node)[key] as { role: string }).role : ''}
         onChange={e => { if (e.target.value) void commit(key, theme.colors[e.target.value], 'literal', f, exact, { role: e.target.value }) }}>
         <option value="">Theme swatch</option>
@@ -261,7 +261,7 @@ function Fields({ page, selection, checker, theme, dispatch, sceneOf }: Props) {
   const held = new Set(all.map(keyOf).filter(k => k !== undefined))
   const fixed = all.filter(f => f.hidden && keyOf(f) !== undefined)
   const others = Object.keys(attrs).filter(k => !held.has(k))
-  const raw = (key: string): Field => ({ op, key, kind: 'S', type: 'map', group: 'other', order: 0 })   // read by the real parser
+  const raw = (key: string): Field => ({ op, key, name: key, kind: 'S', type: 'map', group: 'other', order: 0 })   // read by the real parser; a key the catalogue lacks has no other name
   const shownRows: Shown[] = [...fields.map(f => ({ key: keyOf(f) ?? f.key, exact: passedDown(f) })), ...others.map(key => ({ key, exact: false }))]
   return <aside className="vb-props" aria-label="Properties">
     <h2 className="vh">{node.op}</h2>
@@ -288,7 +288,7 @@ function Fields({ page, selection, checker, theme, dispatch, sceneOf }: Props) {
       A theme_ gradient is the builder's: a theme switch, a load, or an edit of a widget that paints with it, writes it again in the theme's colours.</div>}
     {warnings.filter(w => homeOf(w, shownRows) === undefined).map((w, k) => <div key={k} className="vb-prop-warning">{w.message}</div>)}
     {fixed.length > 0 && <details className="disc" open><summary><span className="ptitle">read-only</span><span className="unit">{fixed.length}</span></summary>{fixed.map(f =>
-      <div key={f.key} className="vb-prop"><div className="field"><label>{f.key}</label><output>{shown(attrs[keyOf(f)!])}</output></div></div>)}</details>}
+      <div key={f.key} className="vb-prop"><div className="field"><label title={f.key}>{f.name}</label><output>{shown(attrs[keyOf(f)!])}</output></div></div>)}</details>}
     {[...new Set(fields.map(f => f.group))].map(g => <details className="disc" open key={g}>
       <summary><span className="ptitle">{g}</span><span className="unit">{fields.filter(f => f.group === g).length}</span></summary>
       <div className={g === 'geometry' || g === 'transform' ? 'grid2' : undefined}>{fields.filter(f => f.group === g).map(f => row(f))}</div>

@@ -18,8 +18,9 @@ const SAMPLE = (kind: SlotKind, whole: boolean) => kind === 'number' ? 12.5 : ki
 type P = { x: number; y: number; w: number; h: number; style: string; text: string; align: string; state: boolean; keys: Record<string, string> }
 const text: WidgetModule<P> = {
   type: 'text', label: 'Text', group: 'values', prefix: 'txt', resize: 'both',
-  params: [...box(), { key: 'style', type: 'enum', enum: STYLES }, { key: 'text', type: 'template' },
-    { key: 'align', type: 'enum', enum: ['left', 'center', 'right'] }, { key: 'state', type: 'flag' }, KEYS],
+  slotName: slot => slot.startsWith('$') ? slot.slice(1) : slot === 'st' ? 'State' : undefined,
+  params: [...box(), { key: 'style', name: 'Text style', type: 'enum', enum: STYLES }, { key: 'text', name: 'Text', type: 'template' },
+    { key: 'align', name: 'Align', type: 'enum', enum: ['left', 'center', 'right'] }, { key: 'state', name: 'Colour by state', type: 'flag' }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 300, h: 1.4 * t.type.value.size, style: 'value', text: LABEL, align: 'left', state: false, keys: {} }),
   // One line tall, or ellipsis draws nothing. Any template stands: every name the mod reads from it is declared.
   fix: (p, t) => ({ ...p, h: Math.max(p.h, Math.fround(1.4 * t.type[p.style as StyleName].size)) }),

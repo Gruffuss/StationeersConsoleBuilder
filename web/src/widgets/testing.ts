@@ -177,3 +177,21 @@ export function rulesOf(root: SrcNode, defs: SrcNode[], exp: Expansion, uid: str
   for (const c of listed) if (!plates.includes(c)) out.push(`clicks: ${c} has no plate`)
   return out
 }
+
+/** A widget panel control as a test names it by key, now that rows show plain names and keep the key as the label's
+ *  hover hint: `<key>` a param, `<list> <n> <item>` a list item's param, `<slot> data name` a data name. The label found
+ *  by its hint leads to its control (htmlFor). Any other label is an accessible name, looked up as it is. */
+export function widgetControl(root: ParentNode, label: string): Element | null {
+  const hinted = (scope: ParentNode | null | undefined, key: string) =>
+    Array.from(scope?.querySelectorAll<HTMLLabelElement>(':scope .vb-prop > .field > label') ?? []).find(l => l.title === key)
+  const own = (l: HTMLLabelElement | undefined) => l ? root.querySelector(`[id="${l.htmlFor}"]`) : null   // in this panel: ids repeat across panels
+  const data = /^(\S+) data name$/.exec(label)
+  if (data) return own(hinted(root.querySelector('#vb-widget-data-names'), data[1]))
+  const item = /^(\S+) (\d+) (\S+)$/.exec(label)
+  if (item) {
+    const list = Array.from(root.querySelectorAll('fieldset.vb-widget-list')).find(f => f.querySelector(':scope > legend')?.getAttribute('title') === item[1])
+    return own(hinted(list?.querySelectorAll(':scope > .vb-widget-item')[Number(item[2]) - 1], item[3]))
+  }
+  const param = Array.from(root.querySelectorAll<HTMLLabelElement>('.vb-prop > .field > label')).find(l => l.title === label && !l.closest('fieldset.vb-widget-list, #vb-widget-data-names'))
+  return param ? own(param) : root.querySelector(`[aria-label="${label}"]`)
+}

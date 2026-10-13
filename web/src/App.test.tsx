@@ -22,6 +22,7 @@ const realAutosave = await vi.importActual<typeof autosave>('./project/autosave'
 // can read the active scene and dispatch as the pane would.
 const pane = vi.hoisted(() => ({ props: null as { scene: Scene; dispatch: (a: Action) => void } | null }))
 vi.mock('./editor/CodePane', () => ({ CodePane: (p: { scene: Scene; dispatch: (a: Action) => void }) => { pane.props = p; return null } }))
+import { widgetControl } from './widgets/testing'
 import { App } from './App'
 import { bannerSrc } from './codegen/generate'
 import * as codegen from './codegen/generate'
@@ -255,7 +256,10 @@ async function booted({ held = false, strict = false, frame, initialScene }: { h
   await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="100 percent"]')?.click())
   const checkExport = async (over: Partial<ExportReport> = {}) => {
     await loadCatalog()
-    await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="Check export"]')!.click())
+    // Opening the Export dialog checks (owner, 2026-10-13); one already open is closed first, so each call checks afresh.
+    const close = ui.container.querySelector<HTMLButtonElement>('dialog[open] [aria-label="Close"]')
+    if (close) await run(() => close.click())
+    await run(() => Array.from(ui.container.querySelectorAll<HTMLButtonElement>('header button')).find(b => b.textContent === 'Export')!.click())
     const w = exports.at(-1)!
     expect(w, ui.container.querySelector('.vb-export')?.textContent).toBeTruthy()
     await run(() => w.reply({ kind: 'ready' }))
@@ -579,7 +583,7 @@ describe('App property panel', () => {
       pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('R x=1\n') })
       pane.props!.dispatch({ type: 'select', selection: { pageId: 'p1', path: [0] } })
     })
-    const w = app.ui.container.querySelector<HTMLInputElement>('.vb-props input[aria-label="w"]')!
+    const w = app.ui.container.querySelector<HTMLInputElement>('.vb-props input[aria-label="Width"]')!
     await run(async () => {
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(w, '20')
       w.dispatchEvent(new Event('input', { bubbles: true }))
@@ -588,7 +592,7 @@ describe('App property panel', () => {
     await wait(50)
     expect(pane.props!.scene.root[0].attrs).toEqual({ x: 1, w: 20 })
     const ctrlZ = (at: Element) => run(() => { at.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true })) })
-    await ctrlZ(app.ui.container.querySelector('.vb-props input[aria-label="w"]')!)
+    await ctrlZ(app.ui.container.querySelector('.vb-props input[aria-label="Width"]')!)
     expect(pane.props!.scene.root[0].attrs).toEqual({ x: 1, w: 20 })   // the field's own undo
     await ctrlZ(document.body)
     expect(pane.props!.scene.root[0].attrs).toEqual({ x: 1 })
@@ -996,7 +1000,7 @@ describe('App widgets', () => {
       run(() => { at.dispatchEvent(new KeyboardEvent('keydown', { key: 'Delete', bubbles: true, ...init })) })
     await run(() => button('Bar').click())
     await wait(50)
-    await del(app.ui.container.querySelector('[aria-label="target"]')!)
+    await del(widgetControl(app.ui.container, 'target')!)
     await del(button('Detach'))
     await del(document, { shiftKey: true })
     const scripts = () => toggleScripts(app.ui.container)
@@ -1142,7 +1146,7 @@ describe('App reload and export behaviour', () => {
     expect(writeText.mock.calls[0][0]).toBe(exportWorker.last().lua)
     expect(app.exports).toHaveLength(1)
     await run(() => pane.props!.dispatch({ type: 'setLogic', patch: { customLua: 'local edited=1' }, transient: true }))
-    expect(app.ui.container.querySelector('[aria-label="Check export"]')).not.toBeNull()
+    expect(app.exports).toHaveLength(1)   // a transient edit is no new artifact: nothing checks again
     expect(app.ui.container.querySelector<HTMLButtonElement>('[aria-label="Copy the script"]')!.disabled).toBe(false)
     await run(() => pane.props!.dispatch({ type: 'commitDrag' }))
     expect(app.ui.container.querySelector<HTMLButtonElement>('[aria-label="Copy the script"]')!.disabled).toBe(true)
@@ -2326,7 +2330,7 @@ it('autosave commits while export preparation is held, then export checks the sa
     transfer.hold.kind = 'compress'
     const pendingCompression = transfer.nextRequest('compress')
     await run(() => ctx.dispatch({ type: 'renamePage', pageId: 'p1', name: 'local' }))
-    await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="Check export"]')!.click())
+    await run(() => Array.from(ui.container.querySelectorAll<HTMLButtonElement>('header button')).find(b => b.textContent === 'Export')!.click())
     let snapshot!: autosave.SavedProject
     await run(async () => { window.dispatchEvent(new Event('pagehide')); snapshot = await writeStarted })
     expect(JSON.parse(snapshot.text).pages[0].name).toBe('local')

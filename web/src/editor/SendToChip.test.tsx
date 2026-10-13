@@ -38,7 +38,7 @@ it('makes no request on mount, not even without a client of its own', () => {
 
 it('says to check the export first, with Send disabled, while there is no artifact', async () => {
   const p = mountPanel(fakeGame(), null)
-  expect(p.text()).toContain('Check export first')
+  expect(p.text()).toContain('Waiting for a completed export check')
   await p.click('List chips'); await p.pick('Test chip')
   expect(p.button('Send to the chosen chip')!.disabled).toBe(true)
   p.rerender(ARTIFACT)

@@ -126,7 +126,7 @@ it.each(['scene', 'node', 'def'])('rejects a changed %s between gradient pointer
     mods: { shift: false, alt: false, mod: false }, clicks: 1 }
   const gesture = TOOLS.find(t => t.id === 'gradient')!.down(press, h.ctx)
   expect(gesture).not.toBeNull()
-  // Exercise the tool's boundary itself, independently of the router's history cancellation.
+  // Exercise the tool'Stroke boundary itself, independently of the router'Stroke history cancellation.
   const change = (kind: string) => kind === 'scene' ? { ...before, header: { ...before.header, w: 480 } }
     : kind === 'node' ? { ...before, root: [node('R', { w: 200, h: 100, f: '@mine' })] }
     : { ...before, defs: [{ ...before.defs[0], attrs: { ...before.defs[0].attrs, x2: '=t' } }] }
@@ -182,40 +182,40 @@ const defs = (id = 'mine') => `DEFS { GL id=${id} units=bbox x1=0 y1=0 x2=1 y2=0
 
 it('keeps the kind and New gradient controls inside the mounted Gradient tab', async () => {
   const h = panel('R w=100 h=50 f=#336699')
-  const kind = h.get('f gradient kind'), create = h.get('f New gradient')
+  const kind = h.get('Fill gradient kind'), create = h.get('Fill New gradient')
   const pane = kind.closest<HTMLElement>('[role=tabpanel]')!
   expect(pane).not.toBeNull()
   expect(pane.contains(create)).toBe(true)
   expect(pane.hidden).toBe(true)
-  await h.click('f colour panel')
+  await h.click('Fill colour panel')
   await run(() => ui!.container.querySelector<HTMLButtonElement>(`[aria-controls="${pane.id}"]`)!.click())
   expect(pane.hidden).toBe(false)
-  await h.click('f New gradient')
+  await h.click('Fill New gradient')
   expect(h.scene().root[0].attrs.f).toBe('@gradient2')
   expect(h.state().past).toHaveLength(1)
 })
 
 it('keeps a gradient geometry draft when its colour panel closes', async () => {
   const h = panel(defs() + '\nR w=100 h=50 f=@mine')
-  await h.click('f colour panel')
-  const field = h.get('f gradient x2'), pane = field.closest('[role=tabpanel]')!
+  await h.click('Fill colour panel')
+  const field = h.get('Fill gradient End X'), pane = field.closest('[role=tabpanel]')!
   await run(() => {
     ui!.container.querySelector<HTMLButtonElement>(`[aria-controls="${pane.id}"]`)!.click()
     field.focus()
     Object.getOwnPropertyDescriptor(Object.getPrototypeOf(field), 'value')!.set!.call(field, '2')
     field.dispatchEvent(new Event('input', { bubbles: true }))
   })
-  await h.click('f colour panel')
+  await h.click('Fill colour panel')
   expect(h.scene().defs[0].attrs.x2).toBe(1)
   expect(h.state().past).toHaveLength(0)
-  await h.click('f colour panel')
-  expect(h.get('f gradient x2')).toBe(field)
+  await h.click('Fill colour panel')
+  expect(h.get('Fill gradient End X')).toBe(field)
   expect(field.value).toBe('2')
 })
 
 it('keeps shared gradient geometry expressions and reports dropped keys when changing kind', async () => {
   const h = panel('DEFS { GR id=mine units=bbox cx="=$centre" cy=0.3 r="=$radius" stops=[[0,#336699],[1,#ffffff]] }\nR w=100 h=50 f=@mine')
-  await h.edit('f gradient kind', 'GC')
+  await h.edit('Fill gradient kind', 'GC')
   expect(h.scene().defs[0].attrs.cx).toBe('=$centre')
   expect(h.scene().defs[0].attrs.cy).toBeCloseTo(0.3)
   expect(h.scene().defs[0].attrs.r).toBeUndefined()
@@ -223,50 +223,50 @@ it('keeps shared gradient geometry expressions and reports dropped keys when cha
 })
 it('reports that units changes keep the authored numbers', async () => {
   const h = panel(defs() + '\nR w=100 h=50 f=@mine')
-  await h.edit('f gradient units', 'scene')
+  await h.edit('Fill gradient units', 'scene')
   expect(h.scene().defs[0].attrs.x2).toBe(1)
   expect(h.text()).toContain('Geometry values kept; their units are now scene')
-  await h.edit('f gradient units', 'bbox')
+  await h.edit('Fill gradient units', 'bbox')
   expect(h.text()).toContain('Geometry values kept; their units are now bbox')
 })
 
 it('creates a bbox GL from the current fill and theme text colour in one undo step', async () => {
   const h = panel('R w=100 h=50 f=#336699')
-  await h.click('f New gradient')
+  await h.click('Fill New gradient')
   const d = h.scene().defs[0]
   expect(d.op).toBe('GL'); expect(d.attrs.units).toBe('bbox')
   expect(d.attrs.stops).toEqual([[0, '#336699'], [1, h.theme.colors.text]])
   expect(h.scene().root[0].attrs.f).toBe('@' + first(d, 'ID'))
   expect(h.state().past).toHaveLength(1)
-  await h.click('f Add stop')
+  await h.click('Fill Add stop')
   expect(h.scene().defs[0].attrs.stops).toEqual([[0, '#336699'], [1, h.theme.colors.text], [0.5, '#336699']])
   expect(h.state().past).toHaveLength(2)
 })
 it.each(['GL', 'GR', 'GC'])('creates and edits %s geometry, units and applicable spread without the code pane', async kind => {
   const h = panel('R w=100 h=50 f=#336699 s=#123456')
-  await h.edit('s gradient kind', kind); await h.click('s New gradient')
+  await h.edit('Stroke gradient kind', kind); await h.click('Stroke New gradient')
   expect(h.scene().defs[0].op).toBe(kind)
   const key = kind === 'GL' ? 'x2' : kind === 'GR' ? 'r' : 'a'
-  await h.edit(`s gradient ${key}`, '0.75')
+  await h.edit(`Stroke gradient ${{ x2: 'End X', r: 'Radius', a: 'Start angle' }[key]}`, '0.75')
   expect(h.scene().defs[0].attrs[key]).toBe(0.75)
-  await h.edit('s gradient units', 'scene'); expect(h.scene().defs[0].attrs.units).toBeUndefined()
-  if (kind !== 'GC') { await h.edit('s gradient spread', 'reflect'); expect(h.scene().defs[0].attrs.spread).toBe('reflect') }
+  await h.edit('Stroke gradient units', 'scene'); expect(h.scene().defs[0].attrs.units).toBeUndefined()
+  if (kind !== 'GC') { await h.edit('Stroke gradient spread', 'reflect'); expect(h.scene().defs[0].attrs.spread).toBe('reflect') }
   expect(h.state().past).toHaveLength(kind === 'GC' ? 3 : 4)
   if (kind === 'GL') coreFixture(h.scene())
 }, 30000)
 it('edits literal stop colours, supports equal positions and moves/removes rows', async () => {
   const h = panel(defs() + '\nR w=100 h=50 f=@mine')
-  await h.edit('f Stop 2 position', '0'); await h.edit('f Stop 2 colour', '#123456')
-  await h.click('f Stop 2 up')
+  await h.edit('Fill Stop 2 position', '0'); await h.edit('Fill Stop 2 colour', '#123456')
+  await h.click('Fill Stop 2 up')
   expect(h.scene().defs[0].attrs.stops).toEqual([[0, '#123456'], [0, '#336699']])
-  await h.click('f Stop 1 down'); await h.click('f Stop 2 remove')
+  await h.click('Fill Stop 1 down'); await h.click('Fill Stop 2 remove')
   expect(h.scene().defs[0].attrs.stops).toEqual([[0, '#336699']]); expect(h.state().past).toHaveLength(5)
 })
 it('names shared users and Make independent leaves the other node and original def untouched', async () => {
   const h = panel(defs() + '\nR w=100 h=50 f=@mine\nR x=120 w=100 h=50 f=@mine')
   expect(h.text()).toContain('2 nodes use this gradient')
   const d = h.scene().defs[0]
-  await h.click('f Make independent')
+  await h.click('Fill Make independent')
   expect(h.scene().defs).toHaveLength(2); expect(h.scene().defs[0]).toBe(d)
   expect(h.scene().root[1].attrs.f).toBe('@mine'); expect(h.scene().root[0].attrs.f).not.toBe('@mine')
   expect(h.state().past).toHaveLength(1)
@@ -274,7 +274,7 @@ it('names shared users and Make independent leaves the other node and original d
 it('clones theme defs on their first edit, clearing only this key’s style link', async () => {
   const h = panel(defs('theme_row') + '\n# style {"f":{"gradient":"row"},"s":{"role":"border"}}\nR w=100 h=50 f=@theme_row s=#5A5A69')
   const d = h.scene().defs[0]
-  await h.edit('f gradient x2', '0.75')
+  await h.edit('Fill gradient End X', '0.75')
   expect(h.scene().defs[0]).toBe(d); expect(h.scene().defs[1].attrs.x2).toBe(0.75)
   expect(h.scene().root[0].attrs.f).not.toBe('@theme_row')
   expect(h.scene().root[0].comments?.join(' ')).not.toContain('"gradient":"row"')
@@ -283,26 +283,26 @@ it('clones theme defs on their first edit, clearing only this key’s style link
 })
 it('does not replace a paint expression by New gradient', async () => {
   const h = panel('R w=100 h=50 f="=if(1,#336699,#ffffff)"')
-  expect((h.get('f New gradient') as unknown as HTMLButtonElement).disabled).toBe(true)
+  expect((h.get('Fill New gradient') as unknown as HTMLButtonElement).disabled).toBe(true)
   expect(h.state().past).toHaveLength(0)
 })
 it('keeps a bound stop colour during position, geometry and stop-order edits', async () => {
   const h = panel('DEFS { GL id=mine units=bbox stops=[[0,$colour],[1,#ffffff]] }\nR w=100 h=50 f=@mine')
-  await h.edit('f Stop 1 position', '0.25')
-  await h.edit('f gradient x2', '0.75')
-  await h.click('f Stop 1 down')
+  await h.edit('Fill Stop 1 position', '0.25')
+  await h.edit('Fill gradient End X', '0.75')
+  await h.click('Fill Stop 1 down')
   expect(h.scene().defs[0].attrs.stops).toEqual([[1, '#ffffff'], [0.25, '$colour']])
   expect(h.state().past).toHaveLength(3)
 })
 it('protects a selected theme def from in-place catalogue edits and directs the author to a referencing shape', async () => {
   const h = panel(defs('theme_row') + '\nR w=100 h=50 f=@theme_row', true), d = h.scene().defs[0]
-  await h.edit('x2', '0.75')
+  await h.edit('End X', '0.75')
   expect(h.scene().defs[0]).toBe(d); expect(h.state().past).toHaveLength(0)
   expect(h.text()).toContain('Select a shape that uses this theme gradient')
 })
 it('repoints a shape inside a symbol def when creating its gradient', async () => {
   const h = panel('DEFS { SYM id=icon { R w=100 h=50 f=#336699 } }\nUSE ref=icon', true, [0, 0])
-  await h.click('f New gradient')
+  await h.click('Fill New gradient')
   expect(h.scene().defs[0].c![0].attrs.f).toBe('@' + first(h.scene().defs[1], 'ID'))
   expect(h.state().past).toHaveLength(1)
 })

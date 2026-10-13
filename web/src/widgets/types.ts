@@ -8,7 +8,8 @@ export type Params = Record<string, Json>
 export type Box = { x: number; y: number; w: number; h: number }
 
 /** One parameter: how the panel edits it, and how an untrusted value is read back (core.ts sanitize). */
-export type Param =
+/** name: what the widget panel calls it; the key stays its hover hint (owner, 2026-10-13: plain words, not keys). */
+export type Param = { name?: string } & (
   | { key: string; type: 'num'; min?: number; max?: number; int?: true }
   | { key: string; type: 'flag' }
   | { key: string; type: 'enum'; enum: readonly string[]; tokens?: true }
@@ -18,7 +19,7 @@ export type Param =
   | { key: string; type: 'numbers'; min?: number; max?: number }
   | { key: string; type: 'keys' }       // { slot: data name } overrides of <uid>_<slot>
   | { key: string; type: 'page' }       // a page id
-  | { key: string; type: 'list'; item: Param[]; min: number }   // items are flat: an item's params are never lists
+  | { key: string; type: 'list'; item: Param[]; min: number })   // items are flat: an item's params are never lists
 
 /** What a data name carries. state: 0 idle, 1 ok, 2 warn, 3 crit (Q4). text: a number or a string, for a name labels alone
  *  read (the mod prints a string as it is and a number through the label's format: Tessellator BindText, BindTemplate).
@@ -43,6 +44,8 @@ export interface WidgetModule<P extends Params = Params> {
   resize: 'both' | 'width' | 'none'       // which canvas handles it gets
   native?: true                           // lives in Page.natives, not in src (Q10)
   params: Param[]                         // x y w h first, always
+  /** A data-name slot in plain words, for the widget panel; the slot key stays the hover hint. */
+  slotName?(slot: string, p: P): string | undefined
   defaults(t: Theme, ctx: Ctx): P
   fix?(p: P, t: Theme): P                 // derived params (a height that follows rows), after every change
   migrate?(raw: Record<string, unknown>, p: P, t: Theme): P // validated legacy params omitted by new instances

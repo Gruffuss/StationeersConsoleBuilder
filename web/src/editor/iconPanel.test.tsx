@@ -7,7 +7,7 @@ import { SceneChecker } from '../srctext/checker'
 import { checkWorkers } from '../srctext/testing'
 import { mount, run } from '../testing'
 import { vanillaPlus as t } from '../theme/vanillaPlus'
-import { instance } from '../widgets/testing'
+import { instance, widgetControl } from '../widgets/testing'
 import { WidgetPanel } from './WidgetPanel'
 
 function panel(kind: string, name: string, boundName = false) {
@@ -19,7 +19,7 @@ function panel(kind: string, name: string, boundName = false) {
     checker={new SceneChecker(checkWorkers().make)} theme={t} themeNow={() => t} sceneOf={() => page().scene}
     pageNow={() => page()} dispatch={a => { state = reducer(state, a); ui.rerender(render()) }} />
   const ui = mount(render())
-  const field = () => ui.container.querySelector<HTMLInputElement | HTMLTextAreaElement>('[aria-label="name"]')!
+  const field = () => widgetControl(ui.container, 'name') as HTMLInputElement | HTMLTextAreaElement
   return { ui, field, names: () => page().natives![0].params.name,
     options: () => Array.from(ui.container.querySelectorAll('datalist option'), e => e.getAttribute('value')),
     warning: () => ui.container.querySelector('[role=status]')?.textContent,

@@ -26,34 +26,37 @@ import { Dialog } from '../ui/Dialog'
 const cleanups: (() => void)[] = []
 const report = (over: Partial<ExportReport> = {}): ExportReport => ({ complete: true, issues: [], loadInstructions: 4, worstTickInstructions: 2, ticks: 20, visited: ['p1'], ...over })
 const scene = (text: string) => parseSrc(text).scene!
-it('links every dependency in load order with the current Vector floor and conditional Fonts note', () => {
-  const a = mountExport(), script = a.ui.container.querySelector('section[aria-label="Script"]')!
-  const links = Array.from(script.querySelectorAll<HTMLAnchorElement>('a'))
-  expect(links.map(link => [link.textContent, link.getAttribute('href')])).toEqual([
-    ['BepInEx 5.x', 'https://github.com/BepInEx/BepInEx'],
-    ['StationeersLaunchPad', 'https://github.com/StationeersLaunchPad/StationeersLaunchPad'],
-    ['IC10 Editor', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3592775931'],
-    ['StationeersLua', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3659911735'],
-    ['ScriptedScreens', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3666779631'],
-    [`ScriptedScreens Vector, ${VECTOR_FLOOR} or newer`, 'https://steamcommunity.com/sharedfiles/filedetails/?id=3787517570'],
-    ['ScriptedScreens Fonts', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3803224901'],
+it('lists the required mods last, in load order: each a link, the Vector floor and the Fonts condition as secondary text', () => {
+  // Owner, 2026-10-13: moved to the bottom, and "make it look better not a slaped in list".
+  const a = mountExport(), mods = a.ui.container.querySelector('section[aria-label="Required mods"]')!
+  expect(a.ui.container.querySelector('.vb-export')!.lastElementChild).toBe(mods)
+  expect(a.ui.container.querySelector('section[aria-label="Script"]')!.textContent).not.toContain('Required mods')
+  const rows = Array.from(mods.querySelectorAll('ol > li'))
+  expect(rows.map(li => [li.querySelector('a')!.textContent, li.querySelector('a')!.getAttribute('href'), li.querySelector('.unit')?.textContent ?? ''])).toEqual([
+    ['BepInEx 5.x', 'https://github.com/BepInEx/BepInEx', ''],
+    ['StationeersLaunchPad', 'https://github.com/StationeersLaunchPad/StationeersLaunchPad', ''],
+    ['IC10 Editor', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3592775931', ''],
+    ['StationeersLua', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3659911735', ''],
+    ['ScriptedScreens', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3666779631', ''],
+    ['ScriptedScreens Vector', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3787517570', `${VECTOR_FLOOR} or newer`],
+    ['ScriptedScreens Fonts', 'https://steamcommunity.com/sharedfiles/filedetails/?id=3803224901', "only when the screen uses a font other than the game's own or a web font"],
   ])
-  for (const link of links) {
+  for (const link of Array.from(mods.querySelectorAll<HTMLAnchorElement>('a'))) {
     expect(link.target).toBe('_blank')
     expect(link.rel).toBe('noopener noreferrer')
   }
-  expect(links.at(-1)!.parentElement!.textContent).toContain("only when the screen uses a font other than the game's own or a web font")
-  expect(script.textContent).toContain('A console on an older mod shows a banner on every page instead of the screen.')
+  expect(mods.textContent).toContain('A console on an older mod shows a banner on every page instead of the screen.')
 })
+
 it('lays out Script, Check, leveled issues and the final actions without changing issue text', async () => {
   const a = mountExport({ verdict: s => ({ ...checkScene(s), errors: [{ message: 'located error', ref: { path: [0], inDefs: false } }] }) })
   expect(a.ui.container.querySelector('section[aria-label="Script"]')).not.toBeNull()
   expect(a.ui.container.querySelector('section[aria-label="Check"]')).not.toBeNull()
-  expect(a.ui.container.querySelector('[aria-label="Check export"]')!.closest('[aria-live]')).toBeNull()
-  expect(a.ui.container.textContent).toContain(`ScriptedScreens Vector, ${VECTOR_FLOOR} or newer`)
+  expect(a.ui.container.querySelector('[aria-label="Check export"]')).toBeNull()
+  expect(a.ui.container.querySelector('section[aria-label="Required mods"]')!.textContent).toContain(`${VECTOR_FLOOR} or newer`)
   const actions = a.ui.container.querySelector('.vb-export-actions')!
   expect(Array.from(actions.querySelectorAll('button')).map(b => b.getAttribute('aria-label'))).toEqual(['Download JSON fallback', 'Copy the script', 'Download the script'])
-  await a.click('Check export')
+  await a.open()
   const chip = a.ui.container.querySelector('.chip.crit')!
   expect(chip.textContent).toBe('error')
   expect(chip.parentElement!.textContent).toBe('error: p1: located errorSelect')
@@ -67,7 +70,7 @@ it('styles warning and information issue levels', async () => {
 beforeEach(async () => { localStorage.clear(); await loadCatalog() })
 afterEach(() => { for (const f of cleanups.splice(0)) f(); vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers() })
 
-function mountExport({ p = newProject(), verdict, strict = false, absent = false, send, modal = false }: { p?: Project; verdict?: (s: Project['pages'][number]['scene']) => Checked; strict?: boolean; absent?: boolean; send?: (ready: { lua: string; name: string } | null) => import('react').ReactNode; modal?: boolean } = {}) {
+function mountExport({ p = newProject(), verdict, strict = false, absent = false, send, modal = false, opened = false }: { p?: Project; verdict?: (s: Project['pages'][number]['scene']) => Checked; strict?: boolean; absent?: boolean; opened?: boolean; send?: (ready: { lua: string; name: string } | null) => import('react').ReactNode; modal?: boolean } = {}) {
   const checks = checkWorkers(verdict), checker = absent ? null : new SceneChecker(checks.make)
   const transfer = new ProjectTransfer(() => { throw Error('unused transfer worker') })
   const compress = vi.spyOn(transfer, 'compress').mockResolvedValue('1.YWJj')
@@ -76,8 +79,8 @@ function mountExport({ p = newProject(), verdict, strict = false, absent = false
   const workers: FakeWorker[] = [], notice = vi.fn()
   const makeWorker = () => { const w = new FakeWorker(); workers.push(w); return w as unknown as Worker }
   const render = (project: Project) => {
-    const controls = <ExportControls project={project} checker={checker} makeWorker={makeWorker} transfer={transfer} onNotice={notice} send={send} />
-    const ui = modal ? <Dialog open title="Export" onClose={() => {}}>{controls}</Dialog> : controls
+    const controls = <ExportControls open={opened} project={project} checker={checker} makeWorker={makeWorker} transfer={transfer} onNotice={notice} send={send} />
+    const ui = modal ? <Dialog open={opened} title="Export" onClose={() => {}}>{controls}</Dialog> : controls
     return strict ? <StrictMode>{ui}</StrictMode> : ui
   }
   const ui = mount(render(p))
@@ -86,31 +89,33 @@ function mountExport({ p = newProject(), verdict, strict = false, absent = false
   const click = async (label: string) => { expect(button(label), label).toBeTruthy(); await run(() => button(label).click()) }
   const ready = async () => { const w = workers.at(-1)!; expect(w).toBeTruthy(); await run(() => w.reply({ kind: 'ready' })); return w }
   const finish = async (r = report()) => { const w = await ready(); await run(() => w.reply({ id: 1, kind: 'exportReport', report: r })); return w }
-  const check = async (r = report()) => { await click('Check export'); return finish(r) }
-  return { ui, workers, checks, checker, transfer, compress, sources, text, notice, button, click, ready, finish, check,
+  const open = async () => { if (!opened) { opened = true; await run(() => ui.rerender(render(p))) } }
+  const close = async () => { opened = false; await run(() => ui.rerender(render(p))) }
+  const check = async (r = report()) => { await open(); return finish(r) }
+  return { ui, workers, checks, checker, transfer, compress, sources, text, notice, button, click, ready, finish, check, open, close,
     replace: (next: Project) => { p = next; ui.rerender(render(p)) }, project: () => p,
     embed: async () => { await run(() => ui.container.querySelector<HTMLInputElement>('[aria-label="Embed project"]')!.click()) } }
 }
 
-it('returns lost focus to Check export when its check finishes inside the open dialog', async () => {
-  const a = mountExport({ modal: true }), button = a.button('Check export')
-  button.focus()
-  await a.click('Check export')
-  // happy-dom cannot blur a disabled button; reproduce the browser's lost focus.
-  button.disabled = false; button.blur(); button.disabled = true
-  expect(document.activeElement).toBe(document.body)
+it('checks when the dialog opens, cancels when it closes, and checks the new artifact after a change while open', async () => {
+  // Owner, 2026-10-13: the check runs on its own when the Export dialog opens (it was an explicit Check export, M4 Q13).
+  const a = mountExport({ modal: true })
+  expect(a.workers).toHaveLength(0)
+  expect(a.ui.container.querySelector('[aria-label="Check export"]')).toBeNull()
+  await a.open()
+  expect(a.ui.container.querySelector('[aria-live]')!.textContent).toContain('Checking export…')
+  const first = await a.ready()
+  await a.close()
+  expect(first.terminated).toBe(true)
+  await a.open(); await a.finish()
+  expect(a.button('Download the script').disabled).toBe(false); expect(a.button('Copy the script').disabled).toBe(false)
+  const done = a.workers.length
+  await a.embed()
+  expect(a.button('Download the script').disabled).toBe(true)
+  expect(a.ui.container.querySelector('[aria-live]')!.textContent).toContain('Checking export…')
   await a.finish()
-  expect(document.activeElement === button).toBe(true)
-  await a.click('Check export')
-  const embed = a.ui.container.querySelector<HTMLInputElement>('[aria-label="Embed project"]')!
-  embed.focus()
-  await a.finish()
-  expect(document.activeElement).toBe(embed)
-  await a.click('Check export')
-  embed.blur()
-  a.ui.container.querySelector<HTMLDialogElement>('dialog')!.open = false
-  await a.finish()
-  expect(document.activeElement).toBe(document.body)
+  expect(a.workers.length).toBe(done + 1)
+  expect(a.button('Download the script').disabled).toBe(false)
 })
 
 it('passes the enabled artifact or null to the optional send slot below Download and Copy', async () => {
@@ -122,7 +127,7 @@ it('passes the enabled artifact or null to the optional send slot below Download
   const w = await a.check()
   expect(a.button('Download the script').disabled || a.button('Copy the script').disabled).toBe(false)
   expect(send).toHaveBeenLastCalledWith({ lua: w.last().lua, name: p.name })
-  await a.click('Check export')
+  await a.close(); await a.open()
   expect(send).toHaveBeenLastCalledWith(null)
   const retry = await a.finish(report({ complete: false }))
   expect(send).toHaveBeenLastCalledWith(null)
@@ -131,13 +136,13 @@ it('passes the enabled artifact or null to the optional send slot below Download
   await a.embed()
   expect(send).toHaveBeenLastCalledWith(null)
   const plain = mountExport()
-  expect(plain.ui.container.querySelector('.vb-export-actions')?.nextElementSibling).toBeNull()
+  expect(plain.ui.container.querySelector('.vb-export-actions')?.nextElementSibling?.getAttribute('aria-label')).toBe('Required mods')   // no slot: the mods list follows
 })
 
 it('nonempty_generated_error_gates_both_actions', async () => {
   const real = generate
   vi.spyOn(codegen, 'generate').mockImplementation((...args) => { const g = real(...args); return { ...g, problems: [...g.problems, { level: 'error', message: 'generated failure' }] } })
-  const a = mountExport(); await a.click('Check export')
+  const a = mountExport(); await a.open()
   expect(a.ui.container.textContent).toContain('generated failure')
   expect(a.button('Download the script').disabled).toBe(true)
   expect(a.button('Copy the script').disabled).toBe(true)
@@ -248,7 +253,7 @@ it('export_never_grants_font_consent', async () => {
 })
 
 it('late_report_ignored and aborts old worker', async () => {
-  const a = mountExport(); await a.click('Check export'); const w = await a.ready(), oldReply = w.onmessage!
+  const a = mountExport(); await a.open(); const w = await a.ready(), oldReply = w.onmessage!
   a.replace({ ...a.project(), name: 'new' })
   expect(w.terminated).toBe(true)
   await run(() => oldReply({ data: { id: 1, kind: 'exportReport', report: report() } } as MessageEvent))
@@ -285,7 +290,7 @@ it('runtime_strings_have_no_bogus_node_link', async () => {
 
 it('custom_parse_error_maps_to_custom_code_line', async () => {
   const p = newProject(); p.customLua = 'local a=1\nlocal b=)'
-  const a = mountExport({ p }); await a.click('Check export'); const w = await a.ready()
+  const a = mountExport({ p }); await a.open(); const w = await a.ready()
   const line = generate(p, pg => printChecked(pg.scene)).map.find(e => e.part === 'custom')!.first + 1
   await run(() => w.reply({ id: 1, kind: 'exportReport', report: report({ issues: [{ level: 'error', message: `compile: [string "chip"]:${line}: unexpected symbol near ')'` }] }) }))
   expect(a.ui.container.textContent).toContain('custom code line 2')
@@ -293,13 +298,13 @@ it('custom_parse_error_maps_to_custom_code_line', async () => {
 })
 
 it('StrictMode/dispose aborts only its own attempt', async () => {
-  const a = mountExport({ strict: true }); await a.click('Check export'); const w = await a.ready()
+  const a = mountExport({ strict: true }); await a.open(); const w = await a.ready()
   a.ui.unmount(); cleanups.splice(0).forEach(f => { a.checker?.dispose(); a.transfer.dispose() })
   expect(w.terminated).toBe(true)
 })
 
 it('preparation after unavailable scene check remains explicitly unchecked', async () => {
-  const a = mountExport({ absent: true }); await a.click('Check export')
+  const a = mountExport({ absent: true }); await a.open()
   expect(a.button('Copy the script').disabled).toBe(true)
   await a.click('Export unchecked')
   expect(a.sources).toHaveBeenCalled()
@@ -310,7 +315,7 @@ it('preparation after unavailable scene check remains explicitly unchecked', asy
 })
 
 it('new generator errors cancel incomplete escape', async () => {
-  const a = mountExport({ absent: true }); await a.click('Check export')
+  const a = mountExport({ absent: true }); await a.open()
   const real = generate
   vi.spyOn(codegen, 'generate').mockImplementation((...args) => ({ ...real(...args), problems: [{ level: 'error', message: 'new generator error' }] }))
   await a.click('Export unchecked'); expect(a.button('Copy the script').disabled).toBe(true)
@@ -320,7 +325,7 @@ it('new generator errors cancel incomplete escape', async () => {
 
 it('compression failure retains JSON, Retry and embedding off', async () => {
   const a = mountExport(); a.compress.mockRejectedValue(Error('compression unavailable'))
-  await a.click('Check export')
+  await a.open()
   expect(a.ui.container.textContent).toContain('compression unavailable')
   expect(a.button('Copy the script').disabled).toBe(true)
   expect(a.button('Retry')).toBeTruthy(); expect(a.button('Download JSON fallback')).toBeTruthy()
@@ -329,7 +334,7 @@ it('compression failure retains JSON, Retry and embedding off', async () => {
 
 it('transfer timeout keeps JSON rescue and retries missing sources', async () => {
   const a = mountExport({ verdict: () => tooLarge('timeout') }); a.sources.mockRejectedValueOnce(Error('use the original JSON file'))
-  await a.click('Check export')
+  await a.open()
   expect(a.ui.container.textContent).toContain('use the original JSON file')
   expect(a.button('Download JSON fallback').disabled).toBe(false)
   await a.click('Export unchecked'); expect(a.sources).toHaveBeenCalledTimes(2)
@@ -362,7 +367,7 @@ it('discloses sample limits even on complete success', async () => {
 
 it('an incomplete retry cannot erase already known runtime errors', async () => {
   const a = mountExport(); await a.check(report({ issues: [{ level: 'error', message: 'known compile error' }] }))
-  await a.click('Check export'); const w = a.workers.at(-1)!
+  await a.open(); const w = a.workers.at(-1)!
   await run(() => w.reply({ kind: 'crashed', why: 'boot failed' }))
   expect(a.ui.container.textContent).toContain('known compile error')
   expect(a.button('Export unchecked')).toBeNull()
@@ -381,7 +386,7 @@ it('a late clipboard rejection after a new check does not select or report the w
   let reject!: (e: Error) => void
   vi.stubGlobal('navigator', { clipboard: { writeText: () => new Promise<void>((_, no) => { reject = no }) } })
   const a = mountExport(); await a.check(); await a.click('Copy the script')
-  await a.check(); await run(() => reject(Error('stale clipboard failure')))
+  await a.close(); await a.check(); await run(() => reject(Error('stale clipboard failure')))
   expect(a.notice).not.toHaveBeenCalled()
   expect(a.ui.container.textContent).not.toContain('stale clipboard failure')
 })
@@ -389,7 +394,7 @@ it('a late clipboard rejection after a new check does not select or report the w
 it('pending checks gate actions and await every authored page', async () => {
   const p = newProject(); p.pages.push(newPage(p)); const a = mountExport({ p })
   a.checks.made[0].held = true
-  await a.click('Check export')
+  await a.open()
   expect(a.workers).toHaveLength(0)
   expect(a.button('Download the script').disabled && a.button('Copy the script').disabled).toBe(true)
   expect(a.button('Export unchecked')).toBeNull()
@@ -399,12 +404,12 @@ it('pending checks gate actions and await every authored page', async () => {
 })
 
 it('invalid scene and static errors gate export and still allow JSON rescue', async () => {
-  const a = mountExport({ verdict: () => invalid('authored scene is invalid') }); await a.click('Check export')
+  const a = mountExport({ verdict: () => invalid('authored scene is invalid') }); await a.open()
   expect(a.ui.container.textContent).toContain('authored scene is invalid')
   expect(a.button('Copy the script').disabled).toBe(true); expect(a.button('Export unchecked')).toBeNull()
   const p = newProject(); p.state = Array.from({ length: 85 }, (_, i) => ({ name: `v${i}`, type: 'number', init: 0 }))
   a.checks.made[0].verdict = checkScene
-  a.replace(p); await a.click('Check export')
+  await run(() => a.replace(p))   // a change while the dialog is open checks the new project
   expect(a.ui.container.textContent).toContain('chip-memory mirror')
   expect(a.workers).toHaveLength(0); expect(a.button('Download JSON fallback').disabled).toBe(false)
 })
@@ -412,20 +417,21 @@ it('invalid scene and static errors gate export and still allow JSON rescue', as
 it('edits during compression prevent a worker from checking stale sources', async () => {
   const a = mountExport(); let finish!: (token: string) => void
   a.compress.mockImplementationOnce(() => new Promise<string>(resolve => { finish = resolve }))
-  await a.click('Check export'); a.replace({ ...a.project(), name: 'changed' })
-  await run(() => finish('1.YWJj'))
-  expect(a.workers).toHaveLength(0); expect(a.button('Copy the script').disabled).toBe(true)
+  await a.open(); await run(() => a.replace({ ...a.project(), name: 'changed' }))   // a change while open checks the changed project
+  const made = a.workers.length
+  await run(() => finish('1.YWJj'))   // the stale attempt's compression ends after the change
+  expect(a.workers).toHaveLength(made); expect(a.button('Copy the script').disabled).toBe(true)
 })
 
 it('embed changes while the worker boots dispose it and ignore late replies', async () => {
-  const a = mountExport(); await a.click('Check export'); const w = a.workers[0], reply = w.onmessage!
+  const a = mountExport(); await a.open(); const w = a.workers[0], reply = w.onmessage!
   await a.embed(); expect(w.terminated).toBe(true)
   await run(() => reply({ data: { kind: 'ready' } } as MessageEvent))
   expect(w.posted).toHaveLength(0); expect(a.button('Copy the script').disabled).toBe(true)
 })
 
 it('runtime watchdog leaves an explicit unchecked escape with exact prepared bytes', async () => {
-  vi.useFakeTimers(); const a = mountExport(); await a.click('Check export'); const w = await a.ready()
+  vi.useFakeTimers(); const a = mountExport(); await a.open(); const w = await a.ready()
   await run(async () => { await vi.advanceTimersByTimeAsync(50000) })
   expect(w.terminated).toBe(true); expect(a.button('Copy the script').disabled).toBe(true)
   expect(a.ui.container.textContent).toContain('50-second check allowance')

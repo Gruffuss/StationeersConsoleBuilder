@@ -323,3 +323,13 @@ it('derives the sets the validator and fromProps kept by hand', () => {
     'ml', 'dash', 'dofs', 'size', 'font', 'weight', 'cspace', 'kern', 'align', 'valign', 'fit', 'min_size'])
   expect(sorted(HEADER)).toEqual(sorted(['W', 'H', 'FIT', 'ZTEXT', 'NOFILL', 'NOFEATHER', 'NOPIXELEDGES', 'NOEVAL']))
 })
+
+// Owner, 2026-10-13: the panels' rows "should read as what they are not the code".
+it('names every row in plain words: never its code, and no two rows of one op alike', () => {
+  for (const op of OPS) {
+    const fields = fieldsFor(op)
+    for (const f of fields) expect([op, f.key, typeof f.name === 'string' && f.name.trim() !== '' && f.name !== f.key]).toEqual([op, f.key, true])
+    const names = fields.map(f => f.name)
+    expect([op, names.filter((n, i) => names.indexOf(n) !== i)]).toEqual([op, []])
+  }
+})

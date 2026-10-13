@@ -3,14 +3,15 @@
 // groups: a stepper narrower than its parts (or with tall, square buttons) lays a body over the value or the name, and
 // the game draws in order (E5). No hint line (ruling 10). press and down: 0.11.36 (every down: arrives from 0.11.37;
 // before, two within 0.25 s arrived as one).
-import { body, box, el, KEYS, keyOf, label, literal, num, oneLine } from '../paint'
+import { body, box, el, KEYS, keyOf, label, literal, num, oneLine, named } from '../paint'
 import type { WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; name: string; fmt: string; by: number; min: number; max: number; keys: Record<string, string> }
 const stepper: WidgetModule<P> = {
   type: 'stepper', label: 'Stepper', group: 'controls', prefix: 'stp', resize: 'both',
   // Any height, or one value line with a name: the name has fit=ellipsis, no other label has. The buttons stay square.
-  params: [...box(), { key: 'name', type: 'text' }, { key: 'fmt', type: 'fmt' }, { key: 'by', type: 'num' }, { key: 'min', type: 'num' }, { key: 'max', type: 'num' }, KEYS],
+  slotName: named({ v: 'Value' }),
+  params: [...box(), { key: 'name', name: 'Name', type: 'text' }, { key: 'fmt', name: 'Number format', type: 'fmt' }, { key: 'by', name: 'Step', type: 'num' }, { key: 'min', name: 'Minimum', type: 'num' }, { key: 'max', name: 'Maximum', type: 'num' }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: t.geo.size.control, name: 'Value', fmt: '%.0f', by: 1, min: 0, max: 100, keys: {} }),
   fix: (p, t) => p.name ? { ...p, h: Math.max(p.h, oneLine(t, 'value')) } : p,
   expand(p, t, uid) {

@@ -28,8 +28,8 @@ function draw(p: P, t: Theme): SrcNode[] {
 }
 const glyph: WidgetModule<P> = {
   type: 'glyph', label: 'Vector glyph', group: 'icons', prefix: 'gl', resize: 'none',
-  params: [...box(), { key: 'glyph', type: 'enum', enum: ['cog', 'arrow', 'check', 'cross'] }, { key: 'dir', type: 'enum', enum: ['right', 'left', 'up', 'down'] },
-    { key: 'ink', type: 'enum', enum: ROLES, tokens: true }],
+  params: [...box(), { key: 'glyph', name: 'Shape', type: 'enum', enum: ['cog', 'arrow', 'check', 'cross'] }, { key: 'dir', name: 'Arrow direction', type: 'enum', enum: ['right', 'left', 'up', 'down'] },
+    { key: 'ink', name: 'Colour', type: 'enum', enum: ROLES, tokens: true }],
   defaults: () => ({ x: 24, y: 24, w: 18.2, h: 18.2, glyph: 'cog', dir: 'right', ink: 'text-secondary' }),   // 18.2: button-label's cap height
   fix: p => ({ ...p, h: p.w }),
   migrate: (raw, p, t) => Object.hasOwn(raw, 'hole') && typeof raw.hole === 'string' && Object.hasOwn(t.colors, raw.hole) ? { ...p, hole: raw.hole } : p,

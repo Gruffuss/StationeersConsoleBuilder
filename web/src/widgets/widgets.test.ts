@@ -130,3 +130,19 @@ describe('every widget', () => {
     expect(JSON.parse(readFileSync(model, 'utf8'))).toEqual(JSON.parse(projectText(p)))
   })
 })
+
+// Owner, 2026-10-13: the widget panel's rows "should read as what they are": every param, a list's item params too, and
+// every data-name slot any variant makes, has a plain name that is not its key.
+it.each(Object.keys(WIDGETS))('names every %s param and data name in plain words', type => {
+  const m = WIDGETS[type], unnamed: string[] = []
+  for (const p of m.params) for (const q of [p, ...(p.type === 'list' ? p.item : [])])
+    if (!q.name?.trim() || q.name === q.key) unnamed.push(q.key)
+  for (const over of variants(type)) {
+    const w = instance(type, over)
+    for (const s of m.expand(w.params, t, w.uid).slots) {
+      const name = m.slotName?.(s.slot, w.params)
+      if (!name?.trim() || name === s.slot) unnamed.push(s.slot)
+    }
+  }
+  expect([...new Set(unnamed)]).toEqual([])
+})

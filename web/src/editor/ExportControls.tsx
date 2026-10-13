@@ -23,12 +23,9 @@ type Prepared = { project: Project; embed: boolean; at: Date; sources: Map<strin
 const PREFERENCE = 'vectorbuilder-export-embed'
 const message = (e: unknown) => e instanceof Error ? e.message : String(e)
 const hasErrors = (p: Prepared) => p.issues.some(i => i.level === 'error')
-// The mods an export needs, in load order, from the one list the export header and the README use.
-const DEPENDENCIES = REQUIREMENTS.map(r => ({ name: r.name + (r.version ? ` ${r.version}` : '') + (r.floor ? `, ${r.floor} or newer` : ''), href: r.url,
-  note: r.fonts ? "only when the screen uses a font other than the game's own or a web font" : undefined }))
 
-export function ExportControls({ project, checker, makeWorker, transfer, onNotice, send }: {
-  project: Project; checker: SceneChecker | null; makeWorker: () => Worker; transfer: ProjectTransfer;
+export function ExportControls({ open, project, checker, makeWorker, transfer, onNotice, send }: {
+  open: boolean; project: Project; checker: SceneChecker | null; makeWorker: () => Worker; transfer: ProjectTransfer;
   onNotice: (message: string, selection?: Selection) => void
   send?: (ready: { lua: string; name: string } | null) => ReactNode
 }) {
@@ -38,19 +35,18 @@ export function ExportControls({ project, checker, makeWorker, transfer, onNotic
   const [pending, setPending] = useState(false)
   const [copyNotice, setCopyNotice] = useState('')
   const lua = useRef<HTMLTextAreaElement>(null)
-  const checkButton = useRef<HTMLButtonElement>(null)
   const identity = useRef({ project, embed })
   identity.current = { project, embed }
   const attempt = useRef<AbortController | null>(null)
+  // Opening the dialog checks the export, and a new artifact while it is open (an edit, Embed project) is checked again;
+  // closing it cancels the check (owner, 2026-10-13: the check runs on its own; it was an explicit Check export, M4 Q13).
   useEffect(() => {
     setPrepared(null); setPending(false); setCopyNotice('')
+    if (open) void start()
     return () => { attempt.current?.abort(); attempt.current = null }
-  }, [project, embed])
+  }, [project, embed, open])
   const current = prepared?.project === project && prepared.embed === embed ? prepared : null
   const enabled = !pending && !!current?.artifact?.lua && !hasErrors(current) && (current.report?.complete || current.acknowledged)
-  useEffect(() => {
-    if (!pending && current && document.activeElement === document.body && checkButton.current?.closest('dialog[open]')) checkButton.current.focus()
-  }, [pending, current])
   const active = (p: Prepared, abort: AbortController) => attempt.current === abort && !abort.signal.aborted
     && identity.current.project === p.project && identity.current.embed === p.embed
 
@@ -154,10 +150,6 @@ export function ExportControls({ project, checker, makeWorker, transfer, onNotic
   return <div className="vb-export">
     <section className="sunk" aria-label="Script">
       <h3 className="ptitle">Script</h3>
-      <div className="raised">Required mods, in load order
-        <ol>{DEPENDENCIES.map(mod => <li key={mod.name}><a href={mod.href} target="_blank" rel="noopener noreferrer">{mod.name}</a>{mod.note && <span className="unit"> — {mod.note}</span>}</li>)}</ol>
-      </div>
-      <p className="unit">A console on an older mod shows a banner on every page instead of the screen.</p>
     <label className="chk raised"><input type="checkbox" aria-label="Embed project" checked={embed} onChange={e => {
       const value = e.target.checked
       setEmbed(value)
@@ -167,10 +159,9 @@ export function ExportControls({ project, checker, makeWorker, transfer, onNotic
     </section>
     <section className="sunk" aria-label="Check">
     <h3 className="ptitle">Check</h3>
-    <button ref={checkButton} className="btn" type="button" aria-label="Check export" disabled={pending} onClick={() => void start()}><Icon name="reset" />Check export</button>
     <div aria-live="polite">
-      {pending ? 'Checking export…' : current ? current.acknowledged ? `Unchecked: ${current.unfinished.join('; ')}`
-        : hasErrors(current) ? 'Export blocked by known errors.' : current.report?.complete ? 'Export check complete.' : `Incomplete: ${current.unfinished.join('; ')}` : 'Check export before Download or Copy.'}
+      {pending ? 'Checking export… (0.6–4.7 s in the projects measured)' : current ? current.acknowledged ? `Unchecked: ${current.unfinished.join('; ')}`
+        : hasErrors(current) ? 'Export blocked by known errors.' : current.report?.complete ? 'Export check complete.' : `Incomplete: ${current.unfinished.join('; ')}` : ''}
       {copyNotice && <div>{copyNotice}</div>}
       {current?.issues.map((i, k) => <div className="raised vb-export-issue" key={k}><span className={'chip ' + (i.level === 'error' ? 'crit' : i.level === 'warning' ? 'warn' : 'info')}>{i.level}</span>: {i.page && `${i.page}: `}{i.message}
         {i.location && <button className="btn flat" type="button" aria-label="Select export problem" onClick={() => {
@@ -201,5 +192,15 @@ export function ExportControls({ project, checker, makeWorker, transfer, onNotic
       }}><Icon name="download" />Download</button>
     </div>
     {send?.(enabled && current?.artifact ? { lua: current.artifact.lua, name: project.name } : null)}
+    {/* The mods an export needs, from the one list the export header and the README use; last, out of the way (owner,
+        2026-10-13: it "takes waaaaaay to much space at the top"). */}
+    <section className="sunk vb-mods" aria-label="Required mods">
+      <h3 className="ptitle">Required mods <span className="unit">in load order</span></h3>
+      <ol>{REQUIREMENTS.map(r => <li key={r.name}>
+        <a href={r.url} target="_blank" rel="noopener noreferrer">{r.name}{r.version && ` ${r.version}`}</a>
+        {(r.floor || r.fonts) && <span className="unit">{r.floor ? `${r.floor} or newer` : "only when the screen uses a font other than the game's own or a web font"}</span>}
+      </li>)}</ol>
+      <p className="unit">A console on an older mod shows a banner on every page instead of the screen.</p>
+    </section>
   </div>
 }

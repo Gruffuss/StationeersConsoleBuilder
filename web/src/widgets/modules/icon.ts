@@ -16,7 +16,7 @@ export function iconWarning(kind: string, name: string): string | undefined {
 type P = { x: number; y: number; w: number; h: number; kind: string; name: string }
 const icon: WidgetModule<P> = {
   type: 'icon', label: 'Item / gas icon', group: 'icons', prefix: 'ico', resize: 'both', native: true,
-  params: [...box(), { key: 'kind', type: 'enum', enum: ['gas', 'slot', 'prefab'] }, { key: 'name', type: 'template' }],
+  params: [...box(), { key: 'kind', name: 'Icon type', type: 'enum', enum: ['gas', 'slot', 'prefab'] }, { key: 'name', name: 'Icon name', type: 'template' }],
   defaults: t => ({ x: 24, y: 24, w: t.metrics['icon.size'], h: t.metrics['icon.size'], kind: 'gas', name: 'Oxygen' }),
   expand: p => ({ nodes: [], slots: [], natives: [{ type: 'icon', box: { x: p.x, y: p.y, w: p.w, h: p.h },
     props: { icon_type: p.kind, name: p.name, z_index: 6 }, style: {} }] }),

@@ -16,5 +16,6 @@ export default defineConfig({
   // es2022: main.ts and the worker use top-level await. The eager editor and templates exceed the 900 kB warning budget.
   // Keep that budget visible as the bundle grows.
   build: { target: 'es2022', chunkSizeWarningLimit: 900 },
-  test: { environment: 'node' },
+  // At most 4 test workers: more made the owner's PC unusable during full runs (owner, 2026-10-13).
+  test: { environment: 'node', maxWorkers: 4 },
 })

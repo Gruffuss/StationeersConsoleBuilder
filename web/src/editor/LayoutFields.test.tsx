@@ -119,7 +119,7 @@ it('edits each margin, permits negatives, and fills the parent box outside the f
 })
 it('reflows a raw child resized through the existing property catalogue', async () => {
   const h = panel([group()], [0, 0])
-  await h.edit('w', '30')
+  await h.edit('Width', '30')
   expect(h.scene().root[0].c![1].attrs.x).toBe(44)
   expect(h.state().past).toHaveLength(1)
 })
@@ -162,7 +162,7 @@ it('exposes margins in the actual widget panel and reflows its parameter edits',
   const h = panel([g], [0, 0], w.defs, true)
   await h.edit('Margin left', '7')
   expect(widgetAt(h.scene(), [0, 0], vanillaPlus)!.params.x).toBe(15)
-  await h.edit('w', '300')
+  await h.edit('Width', '300')
   expect(h.scene().root[0].c![1].attrs.x).toBe(321)
   expect(h.state().past).toHaveLength(2)
 })

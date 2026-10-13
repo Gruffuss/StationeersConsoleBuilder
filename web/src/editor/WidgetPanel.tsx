@@ -129,8 +129,9 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
   // Font tags use real preview faces; other TMP styling is omitted (spec §5.3).
   const rich = (p: Param, v: Json) => (p.type === 'template' || p.type === 'text' || p.type === 'fmt') && !native && typeof v === 'string'
     && stripRichText(v) !== v ? <div className="vb-prop-info">The preview uses real font, bold, italic and weight faces; missing styles use faux bold. Other TMP rich-text styling is omitted.</div> : null
-  const control = (p: Param, v: Json, id: string, put: (v: Json) => void) => <>
-    <WidgetParam param={p} value={v} label={id} id={idOf(id)} theme={theme} pages={pages} onChange={put} onError={message => say(id, message)}
+  // id keys the row, its element and its messages; label is its accessible name (x, y, w, h show plain names).
+  const control = (p: Param, v: Json, id: string, put: (v: Json) => void, label = id) => <>
+    <WidgetParam param={p} value={v} label={label} id={idOf(id)} theme={theme} pages={pages} onChange={put} onError={message => say(id, message)}
       list={icon && id === 'name' ? 'vb-icon-names' : undefined} multiline={!(icon && id === 'name') && (p.type === 'text' || p.type === 'template')} />
     {icon && id === 'name' && <datalist id="vb-icon-names">{names.map(name => <option key={name} value={name} />)}</datalist>}
     {rich(p, v)}</>
@@ -139,8 +140,8 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
     const message = errors[id]?.message || warning, info = errors[id]?.message ? errors[id].info : true
     return message && (info ? <div role="status" className="vb-prop-info">{message}</div> : <div role="alert">{message}</div>)
   }
-  const row = (id: string, name: string, c: ReactNode) =>
-    <div key={id} className="vb-prop"><div className="field"><label htmlFor={idOf(id)}>{name}</label>{c}</div>{said(id)}</div>
+  const row = (id: string, name: string, c: ReactNode, hint?: string) =>
+    <div key={id} className="vb-prop"><div className="field"><label htmlFor={idOf(id)} title={hint}>{name}</label>{c}</div>{said(id)}</div>
   const list = (p: Extract<Param, { type: 'list' }>) => {
     const items = widget.params[p.key] as Params[]
     const put = (f: (items: Params[], w: WidgetRef) => Params[]) => void commit(p.key, (ps, w) => ({ ...ps, [p.key]: f(ps[p.key] as Params[], w) }))
@@ -178,10 +179,11 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
           ...(owned.size && { keys: Object.fromEntries(Object.entries(keys).filter(([s]) => !owned.has(s))) }) }
       })
     }
-    return <fieldset key={p.key} className="vb-widget-list raised"><legend>{p.key}</legend>
+    const list = p.name ?? p.key
+    return <fieldset key={p.key} className="vb-widget-list raised"><legend title={p.key}>{list}</legend>
       {items.map((item, k) => <div key={k} className="vb-widget-item raised">
-        {p.item.map(q => row(`${p.key} ${k + 1} ${q.key}`, q.key,
-          control(q, item[q.key], `${p.key} ${k + 1} ${q.key}`, v => put(l => l.map((x, j) => j === k ? { ...x, [q.key]: v } : x)))))}
+        {p.item.map(q => row(`${p.key} ${k + 1} ${q.key}`, q.name ?? q.key,
+          control(q, item[q.key], `${p.key} ${k + 1} ${q.key}`, v => put(l => l.map((x, j) => j === k ? { ...x, [q.key]: v } : x)), `${list} ${k + 1} ${q.name ?? q.key}`), q.key))}
         <button type="button" disabled={items.length <= p.min} onClick={() => remove(item, k)}>Remove</button>
       </div>)}
       <button type="button" onClick={() => put(add)}>Add</button>
@@ -191,6 +193,7 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
   // The data names a player renames: a slot whose name is its <uid>_<slot> or its rename (the Text widget's are its
   // template's: `$<name>` slots, never renamed). The field shows the name in force, blank for the default.
   const own = (s: Slot) => `${widget.uid}_${s.slot}`
+  const slotName = (slot: string) => m.slotName?.(slot, widget.params) ?? slot
   const named = m.params.some(p => p.type === 'keys') ? slots.filter(s => !s.runtime && (s.key === own(s) || (Object.hasOwn(keys, s.slot) && s.key === keys[s.slot]))) : []
   // Whether the slot reads `name` back where it reads it (keyOf), with the widget's params as shown.
   const fits = (slot: string, name: string) =>
@@ -221,15 +224,15 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
       {!Object.keys(widget.edit?.parts ?? {}).length && <p>No part overrides</p>}
     </details>}
     <details className="disc" open><summary><span className="ptitle">Transform</span><span className="unit">4</span></summary>
-      <div className="grid2">{m.params.slice(0, 4).map(p => row(p.key, p.key,
-        control(p, widget.params[p.key], p.key, v => void commit(p.key, ps => ({ ...ps, [p.key]: v })))))}</div>
+      <div className="grid2">{m.params.slice(0, 4).map(p => row(p.key, p.name ?? p.key,
+        control(p, widget.params[p.key], p.key, v => void commit(p.key, ps => ({ ...ps, [p.key]: v })), p.name ?? p.key), p.key))}</div>
     </details>
     <details className="disc" open><summary><span className="ptitle">parameters</span><span className="unit">{m.params.slice(4).filter(p => p.type !== 'keys').length}</span></summary>
       {m.params.slice(4).map(p => p.type === 'list' ? list(p) : p.type === 'keys' ? null
-        : row(p.key, p.key, control(p, widget.params[p.key], p.key, v => void commit(p.key, ps => ({ ...ps, [p.key]: v })))))}
+        : row(p.key, p.name ?? p.key, control(p, widget.params[p.key], p.key, v => void commit(p.key, ps => ({ ...ps, [p.key]: v })), p.name ?? p.key), p.key))}
     </details>
-    {named.length > 0 && <details className="disc" open id="vb-widget-data-names"><summary><span className="ptitle">data names</span><span className="unit">{named.length}</span></summary>{named.map(s => row(`${s.slot} data name`, s.slot,
-      <TextField id={idOf(`${s.slot} data name`)} label={`${s.slot} data name`} now={s.key === own(s) ? '' : s.key} placeholder={own(s)}
+    {named.length > 0 && <details className="disc" open id="vb-widget-data-names"><summary><span className="ptitle">data names</span><span className="unit">{named.length}</span></summary>{named.map(s => row(`${s.slot} data name`, slotName(s.slot),
+      <TextField id={idOf(`${s.slot} data name`)} label={`${slotName(s.slot)} data name`} now={s.key === own(s) ? '' : s.key} placeholder={own(s)}
         multiline={false} commit={text => {
           // Any name the slot reads back (final-wave ruling 2: `constructor`, `room kPa` in a label); one it would not, said.
           const name = text.trim(), id = `${s.slot} data name`
@@ -241,7 +244,7 @@ export function WidgetPanel({ page, pages, widget, checker, theme, dispatch, sce
             else delete k[s.slot]
             return { ...ps, keys: k }
           })
-        }} />))}</details>}
+        }} />, s.slot))}</details>}
     {values.length > 0 && <details className="disc" open><summary><span className="ptitle">preview values</span><span className="unit">{values.length}</span></summary>{values.map(s => {
       const id = `${s.key} preview value`, now = shownSample(pinned(s.key) ? page.preview![s.key] : s.sample)
       return row(id, s.key, <>

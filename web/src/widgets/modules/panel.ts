@@ -6,7 +6,7 @@ import type { WidgetModule } from '../types'
 type P = { x: number; y: number; w: number; h: number; title: string; unit: string }
 const panel: WidgetModule<P> = {
   type: 'panel', label: 'Panel', group: 'chrome', prefix: 'pnl', resize: 'both',
-  params: [...box(), { key: 'title', type: 'text' }, { key: 'unit', type: 'text' }],
+  params: [...box(), { key: 'title', name: 'Title', type: 'text' }, { key: 'unit', name: 'Unit', type: 'text' }],
   defaults: () => ({ x: 24, y: 24, w: 440, h: 300, title: 'Title', unit: '' }),
   expand(p, t) {
     const { x, y, w, h } = p, pad = t.geo.space[4], unitW = t.metrics['panel.unitW']

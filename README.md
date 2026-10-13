@@ -4,7 +4,7 @@ VectorBuilder is a free web editor for Stationeers console screens. Draw a scree
 
 **Open the builder:** [https://gruffuss.github.io/StationeersConsoleBuilder/](https://gruffuss.github.io/StationeersConsoleBuilder/). Everything runs in your browser; projects are not uploaded.
 
-**Status:** release 6: the console size menus list sizes, not every console model (consoles within 2% of each other share one size). Release 5 put game icons and text inputs inside the layer group they sit on, acting on the canvas as any other element. Exports need ScriptedScreens Vector 0.11.118 or newer.
+**Status:** release 7: the Inspector's rows and every widget setting have plain names instead of codes, the export check runs as soon as the Export dialog opens, the required mods are listed at its end, and resizing a selection carries every widget along. Release 6 made the console size menus list sizes, not every console model. Exports need ScriptedScreens Vector 0.11.118 or newer.
 
 ## What your game needs
 
@@ -29,7 +29,7 @@ The builder's checks pass, and console pushes, script sizes and embedded project
 ## Export a screen
 
 1. Open a template or example, then edit the scene, widgets, data, logic and simulated inputs.
-2. Click **Check export**. After a completed check without errors, use a separate **Download** or **Copy** click. Both use the exact checked artifact, including its fixed UTC timestamp and builder version.
+2. Open **Export**: the check runs on its own (0.6–4.7 s in the projects measured) and again after any change while the dialog is open. After a completed check without errors, use a separate **Download** or **Copy** click. Both use the exact checked artifact, including its fixed UTC timestamp and builder version.
 3. **Embed project** defaults on. The last Lua comment contains recoverable project data; the UI shows exact comment and total UTF-8 bytes. You can turn embedding off. Scripts larger than the previously measured 1,057,682 bytes get information, not a size cap.
 
 Known errors block Lua export. Warnings do not: nothing the mod accepts is refused. A timeout, cancellation or worker failure is an incomplete check. **Export unchecked** is available only after incompletion, with no known errors, and explicitly acknowledges the named unfinished checks. It does not claim a pass. Retry or download JSON whenever you need to rescue work. If clipboard access fails, the current Lua remains selectable.

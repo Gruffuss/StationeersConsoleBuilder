@@ -44,7 +44,7 @@ function usersOf(scene: Scene, id: string) {
 export function GradientFields({ scene, node, paintKey, commit, theme }:
   { scene: Scene; node: SrcNode; paintKey: string; commit: (edit: GradientEdit) => void; theme: Theme }) {
   const [kind, setKind] = useState('GL'), [error, setError] = useState(''), [notice, setNotice] = useState('')
-  const def = gradientOf(scene, node, paintKey), label = paintKey
+  const def = gradientOf(scene, node, paintKey), label = fieldOf(node.op, paintKey)?.name ?? paintKey
   const apply = (change: (d: SrcNode) => SrcNode, independent = false) => {
     const edit = gradientEdit(scene, node, paintKey, change, independent)
     if (edit) { setError(''); commit(edit) }
@@ -83,7 +83,7 @@ export function GradientFields({ scene, node, paintKey, commit, theme }:
       <p role="status">{usersOf(scene, String(first(def, 'ID')))} nodes use this gradient; edits change all of them.</p>
       {String(first(def, 'ID')).startsWith('theme_') && <p className="vb-prop-info">The first edit makes an independent copy of this theme gradient.</p>}
       <button aria-label={`${label} Make independent`} onClick={() => apply(d => d, true)}>Make independent</button>
-      {geometry.map(k => <label key={k}>{k} <TextField label={`${label} gradient ${k}`} now={shown(first(def, foldKey(k)))} placeholder="default" multiline={false} commit={text => {
+      {geometry.map(k => <label key={k} title={k}>{fieldOf(def.op, k)?.name ?? k} <TextField label={`${label} gradient ${fieldOf(def.op, k)?.name ?? k}`} now={shown(first(def, foldKey(k)))} placeholder="default" multiline={false} commit={text => {
         const result = read(text, 'literal', fieldOf(def.op, k)!)
         if ('error' in result) return setError(result.error)
         apply(d => withAttr(d, k, result.value))

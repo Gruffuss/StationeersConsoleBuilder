@@ -42,6 +42,9 @@ export function ColourFields({ label, value, commit, theme, role = '', gradient,
   { label: string; value: Value | undefined; commit: PaintCommit; theme?: Theme; role?: string; gradient?: ReactNode; inline?: boolean }) {
   useSyncExternalStore(subscribeColours, () => coloursVersion)
   const id = useId(), button = useRef<HTMLButtonElement>(null)
+  // "Fill colour" (its panel "Fill colour panel"); a row that is a colour already keeps its name, and its picker is
+  // "Outline colour picker", so no name says colour twice.
+  const base = / colour$/.test(label) ? label : `${label} colour`, colour = base === label ? `${label} picker` : base
   const [open, setOpen] = useState(false), [tab, setTab] = useState(theme ? 'theme' : 'custom')
   const close = () => { setOpen(false); button.current?.focus() }
   const tabs = [...(theme ? [{ id: 'theme', label: 'Theme' }] : []), { id: 'custom', label: 'Custom' },
@@ -83,12 +86,12 @@ export function ColourFields({ label, value, commit, theme, role = '', gradient,
   return <div className="vb-paint-fields vb-colour-fields" onKeyDown={e => {
     if (open && e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close() }
   }}>
-    {!inline && <button ref={button} type="button" className="ibtn sw" aria-label={`${label} colour panel`} aria-expanded={open} aria-controls={`${id}-colour-panel`}
-      title={`${label} colour panel`} style={{ background: hex ?? 'var(--surface-well)' }}
+    {!inline && <button ref={button} type="button" className="ibtn sw" aria-label={`${base} panel`} aria-expanded={open} aria-controls={`${id}-colour-panel`}
+      title={`${base} panel`} style={{ background: hex ?? 'var(--surface-well)' }}
       onMouseDown={e => e.preventDefault()} onClick={() => open ? close() : setOpen(true)} />}
     <div id={`${id}-colour-panel`} className={inline ? 'vb-colour-inline' : 'float vb-colour-panel'} hidden={!open && !inline}
       onBlurCapture={e => { if (e.relatedTarget === button.current) e.stopPropagation() }}>
-      <Tabs label={`${label} colour`} tabs={tabs} value={tab} onChange={setTab} idPrefix={id} />
+      <Tabs label={colour} tabs={tabs} value={tab} onChange={setTab} idPrefix={id} />
       {theme && <div role="tabpanel" id={`${id}-panel-theme`} aria-labelledby={`${id}-tab-theme`} hidden={tab !== 'theme'}>
         <div role="radiogroup" aria-label={`${label} theme swatch`} onKeyDown={radioKeys}>
           <p className="unit">UI roles</p>{swatches(ROLES.filter(name => Object.hasOwn(theme.colors, name)))}
@@ -100,7 +103,7 @@ export function ColourFields({ label, value, commit, theme, role = '', gradient,
       </div>}
       <div role="tabpanel" id={`${id}-panel-custom`} aria-labelledby={`${id}-tab-custom`} hidden={tab !== 'custom'}>
         <div className="grid2">
-          <label>Colour <input type="color" aria-label={`${label} colour`} value={picker?.text.slice(0, 7) ?? hex?.slice(0, 7) ?? '#000000'}
+          <label>Colour <input type="color" aria-label={colour} value={picker?.text.slice(0, 7) ?? hex?.slice(0, 7) ?? '#000000'}
             onChange={e => {
               const text = e.target.value + (hex?.length === 9 ? hex.slice(7) : '')
               if (picker) pendingColours.delete(picker.text)
@@ -133,7 +136,7 @@ export function PaintFields({ node, field, commit, theme, gradient }:
   const value = passedDown(field) ? node.attrs[field.key] : first(node, field.key.toUpperCase())
   if (field.type === 'paint' || field.key === 'oc') {
     const link = linksOf(node)[field.key]
-    return <ColourFields label={field.key} value={value} theme={theme} role={link && 'role' in link ? link.role : ''} commit={commit} gradient={gradient} />
+    return <ColourFields label={field.name} value={value} theme={theme} role={link && 'role' in link ? link.role : ''} commit={commit} gradient={gradient} />
   }
   if (field.key === 'join') return <p className="vb-prop-info unit">Joins use a clamped miter; round and bevel are hints, not true round or bevel geometry.</p>
   if (field.key === 'dofs') {
@@ -162,7 +165,7 @@ export function PaintFields({ node, field, commit, theme, gradient }:
   return <div className="vb-paint-fields">
     {rows.map((row, i) => <fieldset className="raised" key={i}><legend>Shadow {i + 1}</legend>
       <div className="grid2">
-        {['dx', 'dy', 'blur', 'spread'].map((k, at) => <label key={k}>{k} <TextField label={`Shadow ${i + 1} ${k}`} now={shown(row[at])}
+        {['Offset X', 'Offset Y', 'Blur', 'Spread'].map((k, at) => <label key={k}>{k} <TextField label={`Shadow ${i + 1} ${k}`} now={shown(row[at])}
           placeholder="0" multiline={false} commit={s => {
             const v = Math.fround(Number(s))
             if (!s.trim() || !Number.isFinite(v)) return setError('A finite number is expected')

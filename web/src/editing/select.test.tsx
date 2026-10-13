@@ -6,7 +6,7 @@ import { node } from '../model/testing'
 import { decodeFrame } from '../runtime/frame'
 import { vbf1 } from '../runtime/testing'
 import { vanillaPlus } from '../theme/vanillaPlus'
-import { putWidget } from '../widgets/core'
+import { putWidget, widgetOf } from '../widgets/core'
 import { instance } from '../widgets/testing'
 import { cornersOf, handleAt, handleFrame, marqueeHits, setFrame, SetOutlines } from './select'
 import * as canvasSelect from './select'
@@ -115,13 +115,19 @@ describe('the select tool\'s geometry', () => {
     const html = renderToStaticMarkup(<SetOutlines ctx={h.ctx} o={{ zoom: 1, frame: h.ctx.frame(), view: h.ctx.view() }} />)
     expect(html).not.toContain('vb-handle'); expect(html).not.toContain('vb-knob')
   })
-  it('offers width handles to a set made entirely of width-only widgets', () => {
-    const s = putWidget(putWidget({ ...scene, root: [] }, instance('readout', { x: 100, y: 100 }, 'kpi1'), vanillaPlus),
-      instance('readout', { x: 300, y: 100 }, 'kpi2'), vanillaPlus)
+  it('offers corner handles to a width-only set and carries each fixed-height widget through a corner resize', () => {
+    const s = putWidget(putWidget({ ...scene, root: [] }, instance('readoutrow', { x: 100, y: 100, w: 100, h: 50 }, 'row1'), vanillaPlus),
+      instance('readoutrow', { x: 300, y: 200, w: 100, h: 50 }, 'row2'), vanillaPlus)
     const h = harness(s, { sel: sel(1), also: [sel(0)] })
-    const html = renderToStaticMarkup(<SetOutlines ctx={h.ctx} o={{ zoom: 1, frame: h.ctx.frame(), view: h.ctx.view() }} />)
-    expect(html.split('vb-handle').length - 1).toBe(2)
-    expect(html).toContain('vb-knob')
+    try {
+      const html = renderToStaticMarkup(<SetOutlines ctx={h.ctx} o={{ zoom: 1, frame: h.ctx.frame(), view: h.ctx.view() }} />)
+      expect(html.split('vb-handle').length - 1).toBe(8)
+      expect(html).toContain('vb-knob')
+      h.drag({ x: 400, y: 250 }, { x: 250, y: 175 }, { ctrlKey: true })
+      expect(widgetOf(h.root()[0], vanillaPlus)?.params).toMatchObject({ x: 100, y: 88, w: 50, h: 50 })
+      expect(widgetOf(h.root()[1], vanillaPlus)?.params).toMatchObject({ x: 200, y: 138, w: 50, h: 50 })
+      expect(h.status()).toMatch(/height kept/)
+    } finally { h.checker.dispose() }
   })
   it('finds the handle under a point (within half a handle and 2 px), the knob, or none', () => {
     expect(handleAt(scene, sel(0), rect, 1, { x: 141, y: 121 }, vanillaPlus)).toBe('se')

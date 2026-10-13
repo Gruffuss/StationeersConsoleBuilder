@@ -29,10 +29,11 @@ it('opens counted Design sections and keeps the hidden heading and field order',
   }
   const x = h.input('x'), field = x.closest('.field')!
   expect(field).not.toBeNull()
-  expect(field.querySelector('label')?.textContent).toBe('x')
-  expect(field.lastElementChild?.getAttribute('aria-label')).toBe('x mode')
+  expect(field.querySelector('label')?.textContent).toBe('X position')   // the plain name; the code is the hover hint
+  expect(field.querySelector('label')?.getAttribute('title')).toBe('x')
+  expect(field.lastElementChild?.getAttribute('aria-label')).toBe('X position mode')
   expect(field.closest('.grid2')).not.toBeNull()
-  expect(h.box.querySelector('[aria-label="f colour panel"]')?.closest('.field')).toBe(h.input('f').closest('.field'))
+  expect(h.box.querySelector('[aria-label="Fill colour panel"]')?.closest('.field')).toBe(h.input('f').closest('.field'))
 })
 
 it.each([false, true])('names a widget part, edits it without detaching, and Reset part restores the expansion (nested: %s)', async nested => {
@@ -47,9 +48,9 @@ it.each([false, true])('names a widget part, edits it without detaching, and Res
     sceneOf={() => state.project.pages[0].scene} dispatch={a => { state = reducer(state, a) }} />
   ui = mount(draw())
   expect(ui.container.textContent).toContain(`part body of ${w.uid}`)
-  await run(async () => { const field = ui!.container.querySelector<HTMLInputElement>('input[aria-label="f"]')!; setValue(field, '#123456'); enter(field); await settle() })
+  await run(async () => { const field = ui!.container.querySelector<HTMLInputElement>('input[aria-label="Fill"]')!; setValue(field, '#123456'); enter(field); await settle() })
   expect(widgetOf(nodeAt(state.project.pages[0].scene.root, root)!, vanillaPlus)?.edit?.parts.body.attrs?.f).toBe('#123456')
-  await run(async () => { const field = ui!.container.querySelector<HTMLInputElement>('input[aria-label="w"]')!; setValue(field, '300'); enter(field); await settle() })
+  await run(async () => { const field = ui!.container.querySelector<HTMLInputElement>('input[aria-label="Width"]')!; setValue(field, '300'); enter(field); await settle() })
   expect(nodeAt(state.project.pages[0].scene.root, path)!.attrs.w).toBe(300)
   await run(() => ui!.rerender(draw()))
   await run(async () => { ui!.container.querySelector<HTMLButtonElement>('button[aria-label="Reset part"]')!.click(); await settle() })
@@ -145,16 +146,26 @@ function panel(first: Scene | string, path: number[] | null, { verdict, inDefs }
   ui?.unmount()
   ui = mount(draw())
   const box = ui.container
-  const input = (key: string) => box.querySelector<Typed>(`input[aria-label="${key}"], textarea[aria-label="${key}"]`)!
+  // A row by its code, which the label's hover hint starts with (the label shows the plain name); a key no row shows is
+  // looked up as it is, so a missing row still fails where it is used.
+  const rowByKey = (key: string) => Array.from(box.querySelectorAll(':scope .vb-prop')).find(r => {
+    const hint = r.querySelector(':scope > .field > label')?.getAttribute('title') ?? ''
+    return hint === key || hint.startsWith(key + ':')
+  })
+  const nameOf = (key: string) => rowByKey(key)?.querySelector(':scope > .field > label')?.textContent ?? key
+  /** A label as a test writes it: a code, then any words after it ("f theme swatch"), the code read as the row's name. */
+  const named = (label: string) => { const [key, ...rest] = label.split(' '); return [nameOf(key), ...rest].join(' ') }
+  const input = (key: string) => box.querySelector<Typed>(`input[aria-label="${nameOf(key)}"], textarea[aria-label="${nameOf(key)}"]`)!
   return {
     actions, checker, box, input, scene: current,
     worker: () => workers.made[0],
     sets: () => actions.flatMap(a => a.type === 'setScene' ? [a.scene] : []),
-    /** The keys listed under the heading `title`. */
+    /** The keys listed under the heading `title`, read from their rows' hover hints. */
     section: (title: string) => Array.from(Array.from(box.querySelectorAll('aside > details.disc')).find(s => s.querySelector('summary .ptitle')?.textContent === title)
-      ?.querySelectorAll('.vb-prop > .field > label') ?? [], l => l.textContent),
+      ?.querySelectorAll('.vb-prop > .field > label') ?? [], l => (l.getAttribute('title') ?? '').split(':')[0]),
     /** The texts of the row of `key`. */
-    rowOf: (key: string) => box.querySelector(`[aria-label="${key}"]`)!.closest('.vb-prop')!,
+    rowOf: (key: string) => rowByKey(key)!,
+    nameOf,
     texts: (selector: string, at: ParentNode = box) => Array.from(at.querySelectorAll(selector), e => e.textContent),
     alerts: () => Array.from(box.querySelectorAll('[role=alert]'), e => e.textContent),
     type: (key: string, text: string) => run(async () => {
@@ -163,13 +174,13 @@ function panel(first: Scene | string, path: number[] | null, { verdict, inDefs }
       await settle()
     }),
     pick: (label: string, value: string) => run(async () => {
-      const group = box.querySelector(`[role=radiogroup][aria-label="${label}"]`)
+      const group = box.querySelector(`[role=radiogroup][aria-label="${named(label)}"]`)
       if (group) {
         const row = group.closest('.vb-colour-fields')!
         row.querySelector<HTMLButtonElement>(':scope > button')!.click()
         Array.from(row.querySelectorAll<HTMLButtonElement>('[role=tab]')).find(b => b.textContent === 'Theme')!.click()
         group.querySelector<HTMLButtonElement>(`[role=radio][aria-label="${value}"]`)!.click()
-      } else setValue(box.querySelector<HTMLSelectElement>(`select[aria-label="${label}"]`)!, value)
+      } else setValue(box.querySelector<HTMLSelectElement>(`select[aria-label="${named(label)}"]`)!, value)
       await settle()
     }),
     /** Shows the page's scene now, or `s` set from outside (the code pane, undo). */
@@ -280,7 +291,7 @@ it('gives the picture URL field one matching visible and accessible name', () =>
 
   it("edits a T's text bound to data as text, line breaks and all", async () => {
     const p = panel('T text="$tank[i]"', [0])
-    expect(p.box.querySelector('select[aria-label="text mode"]')).toBeNull()
+    expect(p.box.querySelector('select[aria-label="Text mode"]')).toBeNull()
     await p.type('text', '$other[j]')
     await p.rerender()
     const q = panel('T text="a\\nb"', [0])
@@ -293,13 +304,13 @@ it('gives the picture URL field one matching visible and accessible name', () =>
   it('offers no mode toggle on a plain number or a pair; a count the mod rounds is kept, with a note', async () => {
     const p = panel('RP n=3 {\n    R\n}', [0])
     expect(p.input('n').value).toBe('3')
-    expect(p.box.querySelector('select[aria-label="n mode"]')).toBeNull()
+    expect(p.box.querySelector('select[aria-label="Repeat count mode"]')).toBeNull()
     await p.type('n', '2.5')
     await p.rerender()
     expect(p.sets().map(s => s.root[0].attrs.n)).toEqual([2.5])
     expect(p.texts('.vb-prop-info', p.rowOf('n'))).toEqual(['the mod rounds this to a whole number'])
     const g = panel('G t=[1,2] {\n    R\n}', [0])
-    expect(g.box.querySelector('select[aria-label="t mode"]')).toBeNull()
+    expect(g.box.querySelector('select[aria-label="Position mode"]')).toBeNull()
     await g.type('t', '["=t*10",0]')
     expect(g.sets().map(s => s.root[0].attrs.t)).toEqual([['=t*10', 0]])
   })
@@ -309,22 +320,22 @@ it('gives the picture URL field one matching visible and accessible name', () =>
     expect(p.input('size').placeholder).toBe('inherited')
     expect(p.input('o').placeholder).toBe('1')   // the G's own
     // a flag passed down is a choice that can go back to inherited
-    expect(Array.from(p.box.querySelectorAll('select[aria-label="kern"] option'), o => o.textContent)).toEqual(['(default: inherited)', '1', '0'])
-    expect(p.box.querySelector('select[aria-label="cap"] option')!.textContent).toBe('(default: inherited)')
+    expect(Array.from(p.box.querySelectorAll('select[aria-label="Kerning"] option'), o => o.textContent)).toEqual(['(default: inherited)', '1', '0'])
+    expect(p.box.querySelector('select[aria-label="Line ends"] option')!.textContent).toBe('(default: inherited)')
   })
 
   it('takes a passed-down flag back to inherited, and shows kern as the mod reads it (not 0)', async () => {
     const p = panel('G kern=0 {\n    T\n}', [0])
     await p.pick('kern', '')
     expect(p.sets().map(s => s.root[0].attrs)).toEqual([{}])
-    expect(panel('T kern=0.3', [0]).box.querySelector<HTMLInputElement>('input[aria-label="kern"]')!.checked).toBe(true)
+    expect(panel('T kern=0.3', [0]).box.querySelector<HTMLInputElement>('input[aria-label="Kerning"]')!.checked).toBe(true)
   })
 
   it('shows and replaces a flag holding a list 100,000 deep', async () => {
     let deep: Value = [0.3]
     for (let k = 0; k < 100_000; k++) deep = [deep]
     const p = panel({ header: {}, defs: [], root: [node('T', { kern: deep })] }, [0])
-    const box = p.box.querySelector<HTMLInputElement>('input[aria-label="kern"]')!
+    const box = p.box.querySelector<HTMLInputElement>('input[aria-label="Kerning"]')!
     expect(box.checked).toBe(true)   // Number reads [[0.3]] as 0.3
     await run(async () => { box.click(); await settle() })
     expect(p.sets().map(s => s.root[0].attrs)).toEqual([{ kern: 0 }])
@@ -365,7 +376,7 @@ it('gives the picture URL field one matching visible and accessible name', () =>
     expect(lower.section('other keys')).toEqual([])
     // the header's defaults, and those a block passes down from an op that does not read the key itself (RP's fo)
     const header = panel('SCENE w=10 h=10 F=#ff0000 FIT=contain\nR', null)
-    expect([header.input('f').value, header.box.querySelector<HTMLSelectElement>('select[aria-label="fit"]')!.value]).toEqual(['', 'contain'])
+    expect([header.input('f').value, header.box.querySelector<HTMLSelectElement>('select[aria-label="Fit to screen"]')!.value]).toEqual(['', 'contain'])
     expect(header.section('other keys')).toEqual(['F'])
     const rp = panel('RP n=2 FO=0.5 {\n    R\n}', [0])
     expect(rp.input('fo').value).toBe('')
@@ -556,6 +567,6 @@ it('gives the picture URL field one matching visible and accessible name', () =>
 })
 it.each([['true', true], ['false', false]] as const)('shows literal flag %s as the mod reads it', (word, checked) => {
   const p = panel(`T kern=${word} wrap=${word}`, [0])
-  expect(p.box.querySelector<HTMLInputElement>('input[aria-label="kern"]')!.checked).toBe(checked)
-  expect(p.box.querySelector<HTMLInputElement>('input[aria-label="wrap"]')!.checked).toBe(checked)
+  expect(p.box.querySelector<HTMLInputElement>('input[aria-label="Kerning"]')!.checked).toBe(checked)
+  expect(p.box.querySelector<HTMLInputElement>('input[aria-label="Wrap lines"]')!.checked).toBe(checked)
 })

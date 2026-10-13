@@ -801,7 +801,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
       </Inspector>), [scripts, tab, committed, fitKey, JSON.stringify(state.entered), checker, theme, chosen?.uid, catalog, writes, hostNotes, pictures.version, picturePage, editor.ctx, editor.ctx.tool(), editor.ctx.settings()])
   const dialogChrome = useMemo(() => {
     const fonts = <FontImport key={chipRevision} page={page} project={project} dispatch={dispatch} />
-    const exporter = exportTransfer && <ExportControls project={committed} checker={checker} makeWorker={makeExportWorker} transfer={exportTransfer}
+    const exporter = (open: boolean) => exportTransfer && <ExportControls open={open} project={committed} checker={checker} makeWorker={makeExportWorker} transfer={exportTransfer}
       onNotice={(message, selection) => { if (selection) { setDialog(null); dispatch({ type: 'setActivePage', pageId: selection.pageId }); dispatch({ type: 'select', selection }) } else setNote(message) }}
       send={ready => <SendSection ready={ready} scenes={exportScenes(committed)} link={game} />} />
     const importer = <ThemeImport names={themeNames} taken={themeTaken} pages={project.pages} onAdd={theme => dispatch({ type: 'addTheme', theme })} onKeep={theme => {
@@ -813,7 +813,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
     const examples = <div><span className="chip idle">DEV</span><ExamplePicker onPick={p => { onLoad(p); setProjectDialog(null) }} /></div>
     return <>
     <DialogHost dialogs={dialogs} name="fonts">{open => <Dialog open={open} title="Fonts" size="lg" onClose={() => setDialog(null)}>{fonts}</Dialog>}</DialogHost>
-    <DialogHost dialogs={dialogs} name="export">{open => <Dialog open={open} title="Export" size="lg" onClose={() => setDialog(null)} headExtra={<span className="unit">{project.pages.length} pages · {theme.name}</span>}>{exporter}</Dialog>}</DialogHost>
+    <DialogHost dialogs={dialogs} name="export">{open => <Dialog open={open} title="Export" size="lg" onClose={() => setDialog(null)} headExtra={<span className="unit">{project.pages.length} pages · {theme.name}</span>}>{exporter(open)}</Dialog>}</DialogHost>
     <DialogHost dialogs={dialogs} name="import">{open => <Dialog open={open} title="Import a design system" size="xl" onClose={() => setDialog(null)}>{importer}</Dialog>}</DialogHost>
     <DialogHost dialogs={dialogs} name="game">{open => <Dialog open={open} title="Game link" size="md" onClose={() => setDialog(null)}><GameLink link={game} page={page} dispatch={dispatch} /></Dialog>}</DialogHost>
     <DialogHost dialogs={dialogs} name="shortcuts">{open => <ShortcutsDialog open={open} onClose={() => setDialog(null)} ctx={editor.ctx} />}</DialogHost>

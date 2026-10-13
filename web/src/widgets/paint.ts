@@ -36,11 +36,14 @@ export const pressedOf = (t: Theme) => '=1-' + num(t.pressed) + '*down'
 /** x y w h, the four params every module starts with: any size the mod draws, 0 included (ruling 13). A module whose
  *  fit=ellipsis labels need a height gets it in its fix, from its theme's type sizes (oneLine). */
 export const box = (): Param[] =>
-  [{ key: 'x', type: 'num' }, { key: 'y', type: 'num' }, { key: 'w', type: 'num', min: 0 }, { key: 'h', type: 'num', min: 0 }]
+  [{ key: 'x', name: 'X position', type: 'num' }, { key: 'y', name: 'Y position', type: 'num' }, { key: 'w', name: 'Width', type: 'num', min: 0 },
+    { key: 'h', name: 'Height', type: 'num', min: 0 }]
 /** The height a fit=ellipsis label in any of `styles` needs to draw its line: 1.4 × the style's size, TMP's limit (ruling
  *  13), read from the theme so a preset with other sizes keeps it (E9). */
 export const oneLine = (t: Theme, ...styles: StyleName[]) => Math.max(0, ...styles.map(s => 1.4 * t.type[s].size))
-export const KEYS: Param = { key: 'keys', type: 'keys' }
+export const KEYS: Param = { key: 'keys', name: 'Data names', type: 'keys' }
+/** A module's slotName from a table of its slot keys. */
+export const named = (names: Record<string, string>) => (slot: string): string | undefined => Object.hasOwn(names, slot) ? names[slot] : undefined
 /** How labels alone read a slot's data name: the label text written for a name (`$name`, `{$name:%.1f}`, `$name[i]`). */
 export type LabelText = (name: string) => string
 /** Whether `name`, written where the slot reads it, reads back as that one name: in an expression (no `text`) a name of

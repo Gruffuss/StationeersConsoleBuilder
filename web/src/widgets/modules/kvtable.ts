@@ -11,9 +11,9 @@ type Row = { caption: string; fmt: string; state: boolean; key: number }
 type P = { x: number; y: number; w: number; h: number; rows: Row[]; rowH: number; gap: number; valueW: number; keys: Record<string, string> }
 const kvtable: WidgetModule<P> = {
   type: 'kvtable', label: 'Key–value table', group: 'chrome', prefix: 'kv', resize: 'width',
-  params: [...box(), { key: 'rows', type: 'list', min: 1, item: [{ key: 'caption', type: 'text' }, { key: 'fmt', type: 'fmt' }, { key: 'state', type: 'flag' },
-    { key: 'key', type: 'num', min: 0, int: true }] },
-    { key: 'rowH', type: 'num', min: 0 }, { key: 'gap', type: 'num', min: 0 }, { key: 'valueW', type: 'num', min: 0 }, KEYS],
+  params: [...box(), { key: 'rows', name: 'Rows', type: 'list', min: 1, item: [{ key: 'caption', name: 'Caption', type: 'text' }, { key: 'fmt', name: 'Number format', type: 'fmt' }, { key: 'state', name: 'Colour by state', type: 'flag' },
+    { key: 'key', name: 'Row id', type: 'num', min: 0, int: true }] },
+    { key: 'rowH', name: 'Row height', type: 'num', min: 0 }, { key: 'gap', name: 'Row gap', type: 'num', min: 0 }, { key: 'valueW', name: 'Value width', type: 'num', min: 0 }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: 0, rows: [{ caption: 'Label 1', fmt: '%.1f', state: true, key: 0 }, { caption: 'Label 2', fmt: '%.1f', state: false, key: 1 },
     { caption: 'Label 3', fmt: '', state: false, key: 2 }], rowH: t.geo.size.row, gap: t.geo.space[2], valueW: t.metrics['table.valueW'], keys: {} }),
   // A row is at least one line of its fit=ellipsis labels (the caption, the value); the height follows the rows.
@@ -22,6 +22,10 @@ const kvtable: WidgetModule<P> = {
     return { ...p, rowH, rows: keyed(p.rows), h: p.rows.length * rowH + (p.rows.length - 1) * p.gap }
   },
   itemSlots: (_, row) => [`v${row.key}`, `s${row.key}`],
+  slotName: (slot, p) => {
+    const m = /^([vs])(\d+)$/.exec(slot), at = m ? p.rows.findIndex(r => String(r.key) === m[2]) : -1
+    return at < 0 ? undefined : `${p.rows[at].caption || `Row ${at + 1}`} ${m![1] === 'v' ? 'value' : 'state'}`
+  },
   expand(p, t, uid) {
     const pad = t.geo.space[4], gap = t.geo.space[3], nodes: SrcNode[] = [], slots: Slot[] = []
     // ponytail: the value slot is valueW wide; an over-wide value is cut by the ellipsis ('12345…'). Widen valueW for it.

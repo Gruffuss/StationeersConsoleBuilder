@@ -290,7 +290,14 @@ may overturn any, and those marked *owner* are the owner's answers to the M2c qu
   a named style; resize and rotate handles are for a single node. E1 adds resize and rotate
   of a multi-selection about its union box (owner, 2026-10-12: "yes yes", superseding Q5);
   expressions and locks stay where they are and are named; natives move and scale with the
-  set but stay upright (owner, 2026-10-13).
+  set but stay upright (owner, 2026-10-13). Every widget follows a set transform that writes
+  its parameters: width-only widgets take the scaled width and keep their height, centred
+  vertically in the intended box; fixed-size widgets keep their size, centred in that box.
+  A widget that cannot mirror, turn or resize without skew still follows the transformed
+  centre while keeping the unsupported orientation or size. Supported turns keep their
+  existing rules. A visible editing note names the widget and what was kept; single-widget
+  handles keep their module's restrictions, and a set made only of width-only widgets offers
+  corner handles too (my derivation, 2026-10-13, from the owner's "also why can;t i resize widgets?").
 - **Drawing:** a draw tool inserts at the top of the page root and switches back to Select
   after one shape. E1: at the top of the entered group, in its frame.
 - **Picking:** where the mesh hits nothing, the smallest closed shape with its own fill or
@@ -358,7 +365,8 @@ The builder's UI was a rough, functional prototype until these utilities existed
 then designed the final UI, built on 2026-10-12 (`docs/ui.md`); a cleanup pass follows once he
 has worked with it.
 
-**Property panel.** E1 adds the paint and layout controls above, labelled and usable from the
+**Property panel.** Rows show plain names, the attribute code only as the row's hover hint (owner,
+2026-10-13); a widget's settings and data-name slots too, each named by its module. E1 adds the paint and layout controls above, labelled and usable from the
 keyboard, beside the generated fields. Generated from the op/attribute catalogue, so every key the parser
 accepts is offered with its type, default and enum values. The catalogue is extracted from the pinned
 parser and cross-checked against the mod's `REFERENCE.md`. A disagreement between the code
@@ -1506,7 +1514,9 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   1,057,682 total bytes, show information that larger scripts are unmeasured; never impose
   a guessed source-size cap. The block includes all authored project fields, custom Lua,
   simulated setup and exact font names/URLs, never chip stores, font bytes or consent.
-- **Check export**, then separate **Download**/**Copy** clicks on the same artifact. Project
+- The export check runs when the Export dialog opens (owner, 2026-10-13), is cancelled by
+  closing it and re-runs on a change while it is open; then separate **Download**/**Copy**
+  clicks on the same artifact. Project
   identity and embed preference identify it; authored edits, undo/redo/load and checkbox
   changes abort/invalidate the attempt. Selection, frames, ticks and preview font delivery
   do not. Clipboard failure leaves labelled selectable Lua. Compression failure retains
@@ -1977,3 +1987,7 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-13 · Game icons on the canvas (§5.1), owner, answering the icons-in-groups questions: an icon "should act as any other element" (select, drag with snapping, nudge with the arrow keys, resize, multi-select, align), always upright since the game cannot turn it; hiding an icon, or a group around it, leaves it out of the export and the editor. Planned with icons in groups.
 - 2026-10-13 · Natives in groups built (§§4, 5.1): membership by group id, Layers rows marked drawn above, following the group upright, acting as any other element on the canvas (picking group-first, sets, drag, nudge, resize, the commands), hidden natives left out of the export; the console starters' icons seated in their cards with every generated Lua byte unchanged.
 - 2026-10-13 · Console size menus (§5.4), owner: "here you should only have the sizes not all the consoles most of the are the same size, why ahve  the same size 2 times?": the menus list 16 sizes plus Custom; models within 2% a side share a size; every model keeps its key and exact px underneath. Supersedes the picker part of 2026-10-06's "each its own picker entry (the real sizes differ)".
+- 2026-10-13 · Set widget transforms (§4), my derivation from the owner's "also why can;t i resize widgets?" (a selection resize skipped a width-only readout row): every widget follows a set transform that writes its parameters. Width-only widgets take the width while keeping their height centred in the intended box; fixed-size widgets keep their size centred there. Unsupported mirror, turn or skew carries the centre while keeping the unsupported size or orientation. Name what was kept in a visible editing note after mouse release; single-widget handles stay restricted.
+- 2026-10-13 · Plain labels (§4), owner: "also these should read as what they are not the code, for regular people those mean absolutely nothing": every Inspector row shows a plain name from the vector reference, the code only as its hover hint; a test fails on any label equal to its code.
+- 2026-10-13 · Export dialog (§8), owner: the check runs when the dialog opens ("yes"), superseding M4 Q13's explicit Check export; the required mods are listed last, numbered in load order ("c) moved to the bottom? and make it look better not a slaped in list").
+- 2026-10-13 · Plain labels for widgets (§4), the same request: every widget setting, list item and data-name slot shows a plain name from its module's code, the key as hover hint; tests fail on any label equal to its key.

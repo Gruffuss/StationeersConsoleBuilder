@@ -10,6 +10,9 @@ import { worldBox } from '../bounds'
 import { spanBox } from '../select'
 import { harness } from '../testing'
 import type { Pt } from '../types'
+import { templateProject } from '../../project/templateData'
+import { widgetOf } from '../../widgets/core'
+import { THEMES } from '../../theme'
 
 // One unit per px: a 460 header on the 460 px page, zoom 1. A press picks the innermost node whose box holds the point.
 function inner(scene: Scene, px: Pt): Selection | null {
@@ -30,6 +33,21 @@ const at = (...path: number[]) => ({ pageId: 'p1', path })
 const C = node('C', { cx: 200, cy: 200, rx: 10 }), R = node('R', { x: 100, y: 100, w: 40, h: 20 })
 
 describe('the set transform handles', () => {
+  it('keeps the fixed-height Airlock row with its set and reports the constraint after mouse release', () => {
+    const base = templateProject('airlock').pages[0].scene
+    const h = harness(base)
+    try {
+      h.ctx.dispatch({ type: 'setTheme', theme: 'neutral' })
+      h.key({ key: 'a', ctrlKey: true })
+      expect(h.state().also).toHaveLength(7)
+      const from = { x: 437, y: 435 }, to = { x: 230, y: 213.15 } // 460/480 view scale
+      h.down(from, { ctrlKey: true }); h.move(to, { ctrlKey: true })
+      h.up(to, { ctrlKey: true })
+      expect(h.status()).toMatch(/Room pressure kPa.*height kept.*width only/)
+      expect(widgetOf(h.root()[1], THEMES.neutral)?.params).toMatchObject({ x: 24, y: 71, w: 216, h: 50 })
+      expect(h.state().past).toHaveLength(2) // theme choice and the one gesture
+    } finally { h.checker.dispose() }
+  })
   const pair = () => page([node('R', { x: 100, y: 100, w: 10, h: 10 }), node('R', { x: 120, y: 100, w: 10, h: 10 })], { sel: at(1), also: [at(0)] })
   it('resizes the set from its union handle as one undo step and restores the set on undo', () => {
     const h = pair(), before = h.state().project

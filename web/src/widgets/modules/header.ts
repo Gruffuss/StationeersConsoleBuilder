@@ -3,13 +3,14 @@
 // (a glowing lamp and a three-digit number, hidden at 0; a hidden crit count leaves a gap). No buttons, tabs or cog (Q9).
 // Placeholders: 0.11.34.
 import type { SrcNode } from '../../model/scene'
-import { box, el, KEYS, keyOf, label, literal, oneLine, partCircle, partRect, WHOLE } from '../paint'
+import { box, el, KEYS, keyOf, label, literal, oneLine, partCircle, partRect, WHOLE, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; title: string; clock: boolean; counts: boolean; keys: Record<string, string> }
 const header: WidgetModule<P> = {
   type: 'header', label: 'Header bar', group: 'chrome', prefix: 'hdr', resize: 'both',
-  params: [...box(), { key: 'title', type: 'text' }, { key: 'clock', type: 'flag' }, { key: 'counts', type: 'flag' }, KEYS],
+  slotName: named({ crit: 'Critical count', warn: 'Warning count', clock: 'Clock' }),
+  params: [...box(), { key: 'title', name: 'Title', type: 'text' }, { key: 'clock', name: 'Show clock', type: 'flag' }, { key: 'counts', name: 'Show alarm counts', type: 'flag' }, KEYS],
   defaults: (t, ctx) => ({ x: 24, y: 24, w: ctx.size.w - 48, h: t.geo.size.header, title: 'Title', clock: false, counts: true, keys: {} }),
   // The title's and the clock's boxes (h - 12, centred) each hold one line with fit=ellipsis; with neither, any height.
   fix: (p, t) => ({ ...p, h: Math.max(p.h, p.title ? oneLine(t, 'screen-title') + 2 * t.metrics['header.inset'] : 0, p.clock ? oneLine(t, 'clock') + 2 * t.metrics['header.inset'] : 0) }),

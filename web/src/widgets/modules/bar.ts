@@ -3,17 +3,18 @@
 // Colour expressions: 0.11.79.
 import type { SrcNode, Value } from '../../model/scene'
 import { shortestFloat } from '../../srctext/print'
-import { box, el, KEYS, keyOf, levelPaint, num, paintOf, partRect, pos, well } from '../paint'
+import { box, el, KEYS, keyOf, levelPaint, num, paintOf, partRect, pos, well, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; orient: string; stateMode: string; marks: number[]; target: boolean
   floor: number; critBelow: number; warnBelow: number; cells: number; keys: Record<string, string> }
 const bar: WidgetModule<P> = {
   type: 'bar', label: 'Bar', group: 'values', prefix: 'bar', resize: 'both',
-  params: [...box(), { key: 'orient', type: 'enum', enum: ['h', 'v'] }, { key: 'stateMode', type: 'enum', enum: ['bound', 'auto', 'ok'] },
-    { key: 'marks', type: 'numbers', min: 0, max: 1 }, { key: 'target', type: 'flag' }, { key: 'floor', type: 'num', min: 0, max: 1 },
-    { key: 'critBelow', type: 'num', min: 0, max: 1 }, { key: 'warnBelow', type: 'num', min: 0, max: 1 },
-    { key: 'cells', type: 'num', min: 0, int: true }, KEYS],
+  slotName: named({ lvl: 'Level', st: 'State', tgt: 'Target' }),
+  params: [...box(), { key: 'orient', name: 'Direction', type: 'enum', enum: ['h', 'v'] }, { key: 'stateMode', name: 'Colour from', type: 'enum', enum: ['bound', 'auto', 'ok'] },
+    { key: 'marks', name: 'Marks', type: 'numbers', min: 0, max: 1 }, { key: 'target', name: 'Show target', type: 'flag' }, { key: 'floor', name: 'Lowest level shown', type: 'num', min: 0, max: 1 },
+    { key: 'critBelow', name: 'Critical below', type: 'num', min: 0, max: 1 }, { key: 'warnBelow', name: 'Warning below', type: 'num', min: 0, max: 1 },
+    { key: 'cells', name: 'Cells', type: 'num', min: 0, int: true }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 400, h: t.geo.size.bar, orient: 'h', stateMode: 'bound', marks: [], target: false, floor: 0, critBelow: 0.1, warnBelow: 0.25, cells: 0, keys: {} }),
   fix: p => ({ ...p, warnBelow: Math.max(p.critBelow, p.warnBelow) }),
   expand(p, t, uid) {

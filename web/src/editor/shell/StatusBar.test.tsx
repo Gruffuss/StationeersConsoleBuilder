@@ -4,8 +4,25 @@ import { mount, run } from '../../testing'
 import { harness } from '../../editing/testing'
 import { StatusBar } from './StatusBar'
 import { pointerStore } from './pointer'
+import { templateProject } from '../../project/templateData'
 
 afterEach(() => pointerStore.reset())
+
+it('visibly shows the editing note left by a mouse set resize while Messages is closed', () => {
+  const h = harness(templateProject('airlock', 'vanilla-plus').pages[0].scene)
+  let ui: ReturnType<typeof mount> | undefined
+  try {
+    h.key({ key: 'a', ctrlKey: true })
+    h.drag({ x: 437, y: 435 }, { x: 230, y: 213.15 }, { ctrlKey: true })
+    expect(h.status()).not.toBe('')
+    ui = mount(<StatusBar ctx={h.ctx} play={false} gap="10" onGap={vi.fn()} source={false} onSource={vi.fn()}
+      messagesOpen={false} onMessages={vi.fn()} setViewSlot={vi.fn()}
+      messages={[{ level: 'info', source: 'Editing', text: h.status() }]}
+      status={{ shown: 'Running (7 instructions)', spoken: h.status() }} />)
+    expect(ui.container.querySelector('.vb-run-line')!.textContent).toContain(h.status())
+    expect(ui.container.querySelector('.vb-run-line')!.getAttribute('title')).toContain(h.status())
+  } finally { ui?.unmount(); h.checker.dispose() }
+})
 
 it('keeps an empty game slot mounted and renders optional game content after Source', () => {
   const h = harness({ header: {}, defs: [], root: [] })

@@ -1,13 +1,14 @@
 // Alert (Vanilla + Alert): hidden at state 0 (an unpainted R holds its box: paint.ts holder); the raised row behind it
 // (Q8, builder-defined, on by default), the status chip (OK/WARN/CRIT) at the left padding and the message on one line.
 // At most two on an overview: a layout rule, not this widget's. Colour expressions: 0.11.79.
-import { box, chip, el, holder, KEYS, keyOf, label, oneLine, raised, WHOLE } from '../paint'
+import { box, chip, el, holder, KEYS, keyOf, label, oneLine, raised, WHOLE, named } from '../paint'
 import type { WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; row: boolean; keys: Record<string, string> }
 const alert: WidgetModule<P> = {
   type: 'alert', label: 'Alert', group: 'values', prefix: 'al', resize: 'width',
-  params: [...box(), { key: 'row', type: 'flag' }, KEYS],
+  slotName: named({ st: 'State', msg: 'Message' }),
+  params: [...box(), { key: 'row', name: 'Row background', type: 'flag' }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 440, h: t.geo.size.row, row: true, keys: {} }),
   // At least one message line: its box (42, or the row when lower) holds the message with fit=ellipsis.
   fix: (p, t) => ({ ...p, h: Math.max(p.h, oneLine(t, 'message')) }),

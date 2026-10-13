@@ -58,7 +58,7 @@ it('the widget panel edits a native through setWidget, unchecked, from the store
   const now = { ...page, natives: [{ ...page.natives[0], params: { ...page.natives[0].params, y: 50 } }] }
   const ui = mount(<WidgetPanel page={page} pages={[]} widget={page.natives[0]} native checker={new SceneChecker(checkWorkers().make)} theme={t}
     dispatch={a => actions.push(a)} sceneOf={() => page.scene} themeNow={() => t} pageNow={() => now} />)
-  const x = ui.container.querySelector<HTMLInputElement>('[aria-label="x"]')!
+  const x = ui.container.querySelector<HTMLInputElement>('[aria-label="X position"]')!
   await run(() => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(x, '10')
     x.dispatchEvent(new Event('input', { bubbles: true }))
@@ -73,7 +73,7 @@ it('a native commit reads only the store: a page the store no longer has is not 
   const page = { ...p.pages[0], natives: [instance('icon')] }
   const ui = mount(<WidgetPanel page={page} pages={[]} widget={page.natives[0]} native checker={new SceneChecker(checkWorkers().make)} theme={t}
     dispatch={a => actions.push(a)} sceneOf={() => undefined} themeNow={() => t} pageNow={() => undefined} />)
-  const x = ui.container.querySelector<HTMLInputElement>('[aria-label="x"]')!
+  const x = ui.container.querySelector<HTMLInputElement>('[aria-label="X position"]')!
   await run(() => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(x, '10')
     x.dispatchEvent(new Event('input', { bubbles: true }))

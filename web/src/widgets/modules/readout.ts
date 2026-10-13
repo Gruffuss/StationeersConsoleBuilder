@@ -3,7 +3,7 @@
 // (a light, a name, the state word). Colour expressions: 0.11.79.
 import type { SrcNode } from '../../model/scene'
 import type { Theme } from '../../theme/types'
-import { box, KEYS, keyOf, label, lights, literal, num, oneLine, partRect, placeholder, pos, st4, well, WHOLE, type LabelText } from '../paint'
+import { box, KEYS, keyOf, label, lights, literal, num, oneLine, partRect, placeholder, pos, st4, well, WHOLE, type LabelText, named } from '../paint'
 import type { Json, Slot, SlotKind, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; variant: string; caption: string; unit: string; fmt: string; bar: boolean
@@ -16,8 +16,9 @@ const gauge = (t: Theme) => { const l = lines(t); return l.cap + l.val + t.metri
 const heightOf = (variant: string, t: Theme) => variant === 'hero' ? t.metrics['hero.statusY'] + lines(t).line : variant === 'kpi' ? gauge(t) + t.metrics['kpi.meterH'] : lines(t).line
 const readout: WidgetModule<P> = {
   type: 'readout', label: 'Readout tile', group: 'values', prefix: 'ro', resize: 'width',
-  params: [...box(), { key: 'variant', type: 'enum', enum: ['hero', 'kpi', 'compact'] }, { key: 'caption', type: 'text' },
-    { key: 'unit', type: 'text' }, { key: 'fmt', type: 'fmt' }, { key: 'bar', type: 'flag' }, { key: 'subFmt', type: 'fmt' }, KEYS],
+  slotName: named({ v: 'Value', lvl: 'Bar level', st: 'State', status: 'Status word', sub: 'Second value' }),
+  params: [...box(), { key: 'variant', name: 'Style', type: 'enum', enum: ['hero', 'kpi', 'compact'] }, { key: 'caption', name: 'Caption', type: 'text' },
+    { key: 'unit', name: 'Unit', type: 'text' }, { key: 'fmt', name: 'Number format', type: 'fmt' }, { key: 'bar', name: 'Show bar', type: 'flag' }, { key: 'subFmt', name: 'Second value format', type: 'fmt' }, KEYS],
   defaults: t => ({ x: 24, y: 24, w: 345, h: heightOf('hero', t), variant: 'hero', caption: 'Label', unit: '', fmt: '%.0f', bar: true, subFmt: '%.1f', keys: {} }),
   fix: (p, t) => ({ ...p, h: heightOf(p.variant, t) }),
   expand(p, t, uid) {

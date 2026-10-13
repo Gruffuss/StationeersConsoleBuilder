@@ -129,7 +129,7 @@ export function SendToChip({ artifact, client, link, origin }: { artifact: { lua
   return <section className="vb-send" aria-label="Send to chip">
     <p>Send to chip pushes the checked script to a chip in your running game through StationeersLua's MCP endpoint ({game.endpoint}).
       Send replaces the chip's program; its current code is not kept.</p>
-    <p>{artifact ? `Ready: the checked script of "${artifact.name}".` : 'Check export first: Send pushes only the checked script that Download and Copy give.'}</p>
+    <p>{artifact ? `Ready: the checked script of "${artifact.name}".` : 'Waiting for a completed export check: Send pushes only the checked script that Download and Copy give.'}</p>
     {linked ? <p>Sends to {linked.name}, the linked chip.</p> : <>
     <div className="vb-game-actions"><button className="btn" type="button" aria-label="List chips" disabled={busy} onClick={() => void list()}>List chips</button></div>
     {chips && (chips.list

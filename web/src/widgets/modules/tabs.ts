@@ -8,8 +8,8 @@ type Tab = { label: string; page: string; key: number }
 type P = { x: number; y: number; w: number; h: number; tabs: Tab[]; active: string; gap: number }
 const tabs: WidgetModule<P> = {
   type: 'tabs', label: 'Page tabs', group: 'chrome', prefix: 'nav', resize: 'both',
-  params: [...box(), { key: 'tabs', type: 'list', min: 1, item: [{ key: 'label', type: 'text' }, { key: 'page', type: 'page' }, { key: 'key', type: 'num', min: 0, int: true }] },
-    { key: 'active', type: 'page' }, { key: 'gap', type: 'num', min: 0 }],
+  params: [...box(), { key: 'tabs', name: 'Tabs', type: 'list', min: 1, item: [{ key: 'label', name: 'Label', type: 'text' }, { key: 'page', name: 'Page', type: 'page' }, { key: 'key', name: 'Tab id', type: 'num', min: 0, int: true }] },
+    { key: 'active', name: 'Highlighted page', type: 'page' }, { key: 'gap', name: 'Gap', type: 'num', min: 0 }],
   defaults: (t, ctx) => ({ x: 24, y: 24, w: ctx.size.w - 48, h: t.geo.size.control,
     // A page name a label cannot show as written (a leading $, a closed {$ or {= placeholder) starts its tab blank, for the
     // player to name, rather than sanitize's fallback (the first default tab's label, the wrong text).

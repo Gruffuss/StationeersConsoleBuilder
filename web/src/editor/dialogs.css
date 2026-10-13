@@ -8,6 +8,12 @@
 .vb-export-actions { display: flex; flex-wrap: wrap; gap: var(--sp3); align-items: center; }
 .vb-export-actions > :first-child { margin-right: auto; }
 .vb-export textarea { min-height: calc(var(--h-row) * 6); }
+.vb-mods h3 .unit { margin-left: var(--sp2); text-transform: none; letter-spacing: normal; }
+.vb-mods ol { display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: var(--sp4); row-gap: var(--sp1); margin: 0; padding: 0; counter-reset: mod; }
+.vb-mods li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: baseline; counter-increment: mod; }
+.vb-mods li::before { content: counter(mod); font: var(--f-unit); color: var(--text-muted); text-align: right; }
+.vb-mods a { color: var(--text); text-decoration-color: var(--border-strong); text-underline-offset: 2px; }
+.vb-mods a:hover { text-decoration-color: currentColor; }
 .vb-fonts .raised { padding: var(--sp4); overflow-wrap: anywhere; }
 .vb-fonts ul { display: flex; flex-direction: column; gap: var(--sp3); }
 .vb-fonts .lrow button { margin-left: auto; }

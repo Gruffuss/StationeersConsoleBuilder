@@ -1,16 +1,17 @@
 import type { SrcNode } from '../../model/scene'
 import { shortestFloat } from '../../srctext/print'
 import { dress } from '../dress'
-import { box, el, KEYS, keyOf, label, literal, num, oneLine, paintOf, partCircle, pos, st4, tag } from '../paint'
+import { box, el, KEYS, keyOf, label, literal, num, oneLine, paintOf, partCircle, pos, st4, tag, named } from '../paint'
 import type { Slot, WidgetModule } from '../types'
 
 type P = { x: number; y: number; w: number; h: number; label: string; unit: string; min: number; max: number
   start: number; end: number; ticks: number; fmt: string; value: boolean; state: boolean; keys: Record<string, string> }
 const gauge: WidgetModule<P> = {
   type: 'gauge', label: 'Gauge', group: 'values', prefix: 'gauge', resize: 'both',
-  params: [...box(), { key: 'label', type: 'text' }, { key: 'unit', type: 'text' }, { key: 'min', type: 'num' },
-    { key: 'max', type: 'num' }, { key: 'start', type: 'num' }, { key: 'end', type: 'num' },
-    { key: 'ticks', type: 'num', min: 0, int: true }, { key: 'fmt', type: 'fmt' }, { key: 'value', type: 'flag' }, { key: 'state', type: 'flag' }, KEYS],
+  slotName: named({ v: 'Value', st: 'State' }),
+  params: [...box(), { key: 'label', name: 'Label', type: 'text' }, { key: 'unit', name: 'Unit', type: 'text' }, { key: 'min', name: 'Minimum', type: 'num' },
+    { key: 'max', name: 'Maximum', type: 'num' }, { key: 'start', name: 'Start angle', type: 'num' }, { key: 'end', name: 'End angle', type: 'num' },
+    { key: 'ticks', name: 'Tick count', type: 'num', min: 0, int: true }, { key: 'fmt', name: 'Number format', type: 'fmt' }, { key: 'value', name: 'Show value', type: 'flag' }, { key: 'state', name: 'Colour by state', type: 'flag' }, KEYS],
   defaults: () => ({ x: 24, y: 24, w: 300, h: 300, label: 'Label', unit: '', min: 0, max: 100, start: -135, end: 135,
     ticks: 5, fmt: '%.0f', value: true, state: true, keys: {} }),
   fix: (p, t) => ({ ...p, h: Math.max(p.h, oneLine(t, 'unit')) }),

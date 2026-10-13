@@ -14,7 +14,7 @@ import { neutral as light } from '../theme/neutral'
 import { vanillaPlus as t } from '../theme/vanillaPlus'
 import { detach, dropWidget, expandRoot, putWidget, reassociate, sanitize, widgetOf } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
-import { bracket, instance } from '../widgets/testing'
+import { bracket, instance, widgetControl } from '../widgets/testing'
 import type { Json, Params, Slot, WidgetRef } from '../widgets/types'
 import { EXPR_NAME, LABEL_NAME, readParam, readSample, WIDGET_GONE, WidgetPanel } from './WidgetPanel'
 import { WidgetPalette } from './WidgetPalette'
@@ -81,7 +81,7 @@ function setup(w: WidgetRef, preview?: Record<string, Json>, verdict?: (s: Scene
     checker={checker} theme={theme} sceneOf={id => id === 'p1' ? current : undefined} themeNow={() => theme}
     pageNow={id => id === 'p1' ? page() : undefined} dispatch={a => { actions.push(a); if (a.type === 'setScene') current = a.scene }} />
   const ui = mount(panel())
-  const field = (label: string) => ui.container.querySelector(`[aria-label="${label}"]`) as Field
+  const field = (label: string) => widgetControl(ui.container, label) as Field   // by key, through the row's hover hint
   const type = (label: string, text: string) => run(async () => {
     setValue(field(label), text)
     field(label).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
@@ -143,7 +143,7 @@ it('edits the parameters of a widget nested in an ordinary group', async () => {
   const w = instance('bar'), h = setup(w), s = h.scene()
   await h.move({ ...s, root: [node('G', { t: [100, 50] }, s.root)] })
   expect(h.ui.container.textContent).toContain('bar1_lvl')
-  await h.type('w', '330')
+  await h.type('Width', '330')
   expect(widgetOf(h.scene().root[0].c![0], t)?.params.w).toBe(330)
   expect(h.alerts()).toEqual([])
   h.ui.unmount(); h.workers.made.forEach(w => w.terminate())
@@ -176,21 +176,21 @@ describe('WidgetPanel', () => {
   it('re-expands the widget from a typed param, checks it, and dispatches one setScene', async () => {
     const s = setup(instance('bar', { x: 24, y: 300 }))
     expect(s.ui.container.querySelector('h2')!.textContent).toBe('Bar bar1')
-    await s.type('w', '300')
+    await s.type('Width', '300')
     expect(s.params()).toMatchObject({ w: 300 })
     expect(s.sets()[0].root.at(-1)!.c![1].attrs.w).toBe('=clamp($bar1_lvl,0,1)*290')
   })
   it('dispatches nothing for a field left as it was: a blur, Enter again, a blur after Enter', async () => {
     const s = setup(instance('bar'), { bar1_st: 2 })
-    await s.blur('w')
-    await s.type('w', String(s.field('w').value))
+    await s.blur('Width')
+    await s.type('Width', String(s.field('Width').value))
     await s.blur('bar1_lvl preview value')   // the sample stays followed, not pinned
     await s.blur('bar1_st preview value')
     await s.blur('lvl data name')
     await s.type('marks', String(s.field('marks').value))
     expect(s.actions).toEqual([])
-    await s.type('w', '300')
-    await s.blur('w')
+    await s.type('Width', '300')
+    await s.blur('Width')
     expect(s.actions).toHaveLength(1)
   })
   it('dispatches nothing for an unchanged data name that is not the last renamed', async () => {
@@ -201,7 +201,7 @@ describe('WidgetPanel', () => {
   })
   it('lands an edit whose scene is too large to check here, saying so as information (final-wave ruling 1)', async () => {
     const s = setup(instance('bar'), undefined, x => x.root[0].comments?.at(-1)?.includes('"w":300') ? tooLarge('x') : checkScene(x))
-    await s.type('w', '300')
+    await s.type('Width', '300')
     expect(s.params()).toMatchObject({ w: 300 })
     expect(s.alerts()).toEqual([])
     expect(Array.from(s.ui.container.querySelectorAll('[role=status]'), e => e.textContent))
@@ -209,9 +209,9 @@ describe('WidgetPanel', () => {
   })
   it('refuses what a param cannot hold, with the reason, and dispatches nothing', async () => {
     const s = setup(instance('bar'))
-    await s.type('w', 'abc')
+    await s.type('Width', 'abc')
     expect(s.ui.container.textContent).toContain('a number is expected')
-    await s.type('w', '3.5e38')
+    await s.type('Width', '3.5e38')
     expect(s.ui.container.textContent).toContain('too large: a float32 holds at most 3.4e38 either way')
     await s.type('cells', '-1')
     expect(s.ui.container.textContent).toContain('at least 0')
@@ -219,12 +219,12 @@ describe('WidgetPanel', () => {
   })
   it('says a derived param follows the others: kept when it does not change, set when it does', async () => {
     const kv = setup(instance('kvtable'))
-    const h = kv.field('h').value
-    await kv.type('h', '100')   // the table's height follows its rows
+    const h = kv.field('Height').value
+    await kv.type('Height', '100')   // the table's height follows its rows
     expect(kv.alerts()).toEqual([`kept at ${h}: the widget sets it from its other parameters`])
     expect(kv.actions).toEqual([])
     const text = setup(instance('text', { h: 100 }))
-    await text.type('h', '1')   // at least 1.4 x its style's size
+    await text.type('Height', '1')   // at least 1.4 x its style's size
     expect(text.params().h).toBeGreaterThan(1)
     expect(text.alerts()).toEqual([`set to ${shortestFloat(text.params().h as number)}: the widget sets it from its other parameters`])
   })
@@ -247,7 +247,7 @@ describe('WidgetPanel', () => {
     }
   })
   it('shows a number as the marker writes it, and notes real rich-text faces and unavailable styles in any label', () => {
-    expect(setup(instance('text', { h: 39.2 })).field('h').value).toBe('39.2')
+    expect(setup(instance('text', { h: 39.2 })).field('Height').value).toBe('39.2')
     expect(setup(instance('text', { text: '<b>Hi</b>' })).ui.container.textContent).toContain('missing styles use faux bold')
     expect(setup(instance('panel', { title: '<b>Hi</b>' })).ui.container.textContent).toContain('missing styles use faux bold')
     expect(setup(instance('kvtable', { rows: [{ caption: '<i>a</i>', fmt: '%.1f', state: false }] })).ui.container.textContent)
@@ -257,7 +257,7 @@ describe('WidgetPanel', () => {
   it('shows the checker’s error for an edit that would make the scene invalid', async () => {
     // Every param the light takes is a float32, but its centre x + w/2 then overflows one: the checker refuses Infinity.
     const s = setup(instance('light', { x: 3.4e38 }))
-    await s.type('w', '3.4e38')
+    await s.type('Width', '3.4e38')
     expect(s.actions).toEqual([])
     expect(s.alerts()[0]).toContain('cannot be written')
   })
@@ -300,7 +300,7 @@ describe('WidgetPanel', () => {
   it('makes an edit again on the newer scene when the page changed while it was checked', async () => {
     const s = setup(instance('bar'))
     s.workers.made[0].held = true
-    await s.type('w', '300')
+    await s.type('Width', '300')
     const other = node('R', { x: 0, y: 0, w: 1, h: 1 })
     await s.move({ ...s.scene(), root: [other, ...s.scene().root] })   // the code pane, meanwhile
     await s.release()
@@ -311,7 +311,7 @@ describe('WidgetPanel', () => {
   it('makes an edit again in the new theme when the theme switched while it was checked', async () => {
     const s = setup(instance('bar'))
     s.workers.made[0].held = true
-    await s.type('w', '300')
+    await s.type('Width', '300')
     await s.retheme(light)
     const switched = s.scene()
     await s.release()
@@ -333,14 +333,14 @@ describe('WidgetPanel', () => {
   it('does not apply an edit to a widget deleted or detached while it was checked, even once the panel is gone', async () => {
     const d = setup(instance('bar'))
     d.workers.made[0].held = true
-    await d.type('w', '333')
+    await d.type('Width', '333')
     await run(() => d.ui.unmount())
     await d.move(dropWidget(d.scene(), 'bar1', t), false)
     await d.release()
     expect(d.actions).toEqual([])
     const x = setup(instance('bar'))
     x.workers.made[0].held = true
-    await x.type('w', '333')
+    await x.type('Width', '333')
     await x.move(detach(x.scene(), 'bar1', t))
     await x.release()
     expect(x.actions).toEqual([])
@@ -349,7 +349,7 @@ describe('WidgetPanel', () => {
   it('applies an edit whose check lands after the panel is gone (another node selected), once', async () => {
     const s = setup(instance('bar'))
     s.workers.made[0].held = true
-    await s.type('w', '333')
+    await s.type('Width', '333')
     await run(() => s.ui.unmount())   // its text goes in again on unmount: the same edit
     await s.release()
     expect(s.sets()).toHaveLength(1)
@@ -425,13 +425,13 @@ describe('WidgetPanel', () => {
     await s.click('Remove', 1)
     expect((s.params().rows as { caption: string }[]).map(r => r.caption)).toEqual(['Label 1', 'Label 3'])
     expect(s.alerts()).toHaveLength(1)
-    expect(s.ui.container.querySelector('[aria-label="rows 1 fmt"]')!.closest('.vb-prop')!.querySelector('[role=alert]')).not.toBeNull()
+    expect(s.field('rows 1 fmt')!.closest('.vb-prop')!.querySelector('[role=alert]')).not.toBeNull()
   })
   it('lands a field typed and left by pressing Detach or Delete before the widget goes', async () => {
     for (const button of ['Detach', 'Delete']) {
       const s = setup(instance('bar'))
       await run(async () => {
-        const w = s.field('w') as HTMLInputElement
+        const w = s.field('Width') as HTMLInputElement
         w.focus()
         setValue(w, '321')
         w.blur()   // pressing the button takes the focus: the field commits on its blur

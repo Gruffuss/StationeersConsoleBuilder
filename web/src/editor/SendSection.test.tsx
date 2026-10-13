@@ -40,9 +40,9 @@ it('is hidden until the per-browser checkbox is ticked, and the tick survives a 
 it('gives the panel exactly the artifact the export hands it, and nothing while there is none', async () => {
   localStorage.setItem('vb.sendToChip', 'true')
   const a = mountSection(null)
-  expect(a.ui.container.textContent).toContain('Check export first')
+  expect(a.ui.container.textContent).toContain('Waiting for a completed export check')
   a.rerender(ARTIFACT)
   expect(a.ui.container.textContent).toContain('Ready: the checked script of "Panel".')
   a.rerender(null)
-  expect(a.ui.container.textContent).toContain('Check export first')
+  expect(a.ui.container.textContent).toContain('Waiting for a completed export check')
 })

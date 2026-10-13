@@ -30,7 +30,9 @@ export type Group = typeof GROUPS[number]
  *   met by its own s or an enclosing s_, a G's sw by its own s_ or an enclosing s_, and an SC's sov by its own so only.
  *   Line numbers are SceneModel.cs's at v0.11.118.
  */
-export type Field = { op: string; key: string; kind: Kind; type: FieldType; group: Group; order: number; default?: Value;
+/** name: what the row is called in the panels, plain words from REFERENCE.md (owner, 2026-10-13: "these should read as
+ *  what they are not the code"); the key stays the row's hover hint for people who edit the scene text. */
+export type Field = { op: string; key: string; name: string; kind: Kind; type: FieldType; group: Group; order: number; default?: Value;
   defaultFrom?: string; defaultNote?: string; enum?: string[]; alias?: Record<string, string>; range?: [number, number];
   requires?: string; requiresAbove?: string; since?: string; note?: string; hidden?: true }
 export type Row = Omit<Field, 'op' | 'kind' | 'requiresAbove'> & { ops: string[]; kind?: Kind }

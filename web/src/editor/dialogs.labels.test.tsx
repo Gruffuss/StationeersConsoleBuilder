@@ -2,7 +2,7 @@
 import { expect, it, vi } from 'vitest'
 import { mount, run } from '../testing'
 import { controlNames } from '../ui/testing'
-import { newProject, VECTOR_FLOOR } from '../model/project'
+import { newProject } from '../model/project'
 import { ProjectTransfer } from '../project/transfer'
 import { SceneChecker } from '../srctext/checker'
 import { checkWorkers } from '../srctext/testing'
@@ -26,20 +26,21 @@ it('keeps the starting dialog controls before, after an error, and after an inco
   vi.spyOn(transfer, 'sources').mockResolvedValue([{ page: 'p1', src: 'R id=box' }])
   vi.spyOn(transfer, 'compress').mockResolvedValue('1.YWJj')
   const workers: FakeWorker[] = []
-  const draw = () => <ExportControls project={project} checker={checker} transfer={transfer} makeWorker={() => {
+  let open = false   // opening the dialog checks; a change while it is open checks again
+  const draw = () => <ExportControls open={open} project={project} checker={checker} transfer={transfer} makeWorker={() => {
     const worker = new FakeWorker(); workers.push(worker); return worker as unknown as Worker
   }} onNotice={() => {}} />
   const ui = mount(draw())
   try {
-    const before = ['Check export', 'Copy the script', 'Download JSON fallback', 'Download the script', 'Embed project',
-      'BepInEx 5.x', 'StationeersLaunchPad', 'IC10 Editor', 'StationeersLua', 'ScriptedScreens', `ScriptedScreens Vector, ${VECTOR_FLOOR} or newer`, 'ScriptedScreens Fonts'].sort()
+    const before = ['Copy the script', 'Download JSON fallback', 'Download the script', 'Embed project',
+      'BepInEx 5.x', 'StationeersLaunchPad', 'IC10 Editor', 'StationeersLua', 'ScriptedScreens', 'ScriptedScreens Vector', 'ScriptedScreens Fonts'].sort()
     expect(controlNames(ui.container)).toEqual(before)
-    await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="Check export"]')!.click())
+    open = true
+    await run(() => ui.rerender(draw()))
     expect(controlNames(ui.container)).toEqual([...before, 'Select export problem'].sort())
     checks.made[0].verdict = checkScene
     project = { ...project, pages: [{ ...project.pages[0], scene: parseSrc('R id=box').scene! }] }
-    ui.rerender(draw())
-    await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="Check export"]')!.click())
+    await run(() => ui.rerender(draw()))
     await run(() => workers.at(-1)!.reply({ kind: 'ready' }))
     await run(() => workers.at(-1)!.reply({ id: 1, kind: 'exportReport', report: { complete: false, issues: [{ level: 'info', message: 'unfinished' }], ticks: 0, loadInstructions: 0, worstTickInstructions: 0, visited: [] } }))
     expect(controlNames(ui.container)).toEqual([...before, 'Export unchecked', 'Retry'].sort())
