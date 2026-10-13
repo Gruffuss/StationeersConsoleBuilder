@@ -162,3 +162,13 @@ local function tick() error("custom local tick reached") end
   }
   return projects
 }
+
+export function emptyPageProjects(): Record<string, Project> {
+  const blank = newProject()
+  blank.pages[0].background = undefined
+  const firstNode = structuredClone(blank), problemNode = structuredClone(blank), hiddenNode = structuredClone(blank)
+  firstNode.pages[0].scene = parseSrc('SCENE w=480 h=480\nR x=20 y=20 w=40 h=40 f=#FFFFFF\n').scene!
+  problemNode.pages[0].scene = parseSrc('SCENE w=480 h=480\nR x=20 y=20 w=40 h=40 f=@missing\n').scene!
+  hiddenNode.pages[0].scene = parseSrc('SCENE w=480 h=480\nR x=20 y=20 w=40 h=40 v=0\n').scene!
+  return { blank, 'first-node': firstNode, 'problem-node': problemNode, 'hidden-node': hiddenNode }
+}

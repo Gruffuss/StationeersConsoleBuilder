@@ -265,10 +265,12 @@ static class FixtureTests
             }
             check(chip.State == ChipState.Running, $"codegen {name}: runs 20 ticks with every page visited {chip.Error}".TrimEnd());
             check(chip.Screens.LostWrites.Count == 0, $"codegen {name}: no write lost to the flush rule at load or in any tick ({string.Join("; ", chip.Screens.LostWrites.Take(5))})");
-            if (lua.Contains("type = \"icon\""))
+            // Every native type the export holds is declared (the Hydro farm starter has icons and no text input).
+            var natives = new[] { "icon", "textinput" }.Where(type => lua.Contains($"type = \"{type}\"")).ToArray();
+            if (natives.Length > 0)
             {
                 var types = chip.Screens.SurfaceNames.SelectMany(s => chip.Screens.ElementsOf(s)).Select(e => e.Type).ToHashSet();
-                check(types.Contains("icon") && types.Contains("textinput"), $"codegen {name}: the natives are declared");
+                check(natives.All(types.Contains), $"codegen {name}: the natives are declared");
             }
             if (name == "custom")
             {

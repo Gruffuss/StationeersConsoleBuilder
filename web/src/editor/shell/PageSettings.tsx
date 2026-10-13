@@ -16,9 +16,9 @@ export function PageSettings(p: { page: Page; pages: Page[]; dispatch(a: Action)
     const next = [...(p.page.background ?? [])]; next[index] = text
     setBackground(next)
   }
-  return <section className="vb-page-settings" aria-label="Page"><h3 className="ptitle">Page</h3>
+  return <section className="vb-page-settings" aria-label="Page">
     <label className="field left">Name<input aria-label="Name" value={name} onChange={e => setName(e.target.value)} onBlur={commit} onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') { e.preventDefault(); setName(p.page.name) } }} /></label>
-    <PageShape key={p.page.id} page={p.page} dispatch={p.dispatch} />
+    <label className="field left">Console size<PageShape key={p.page.id} page={p.page} dispatch={p.dispatch} /></label>
     <div className="vb-props">
       <label className="field left">Background<select aria-label="Page background" value={background === undefined ? 'none' : background.length > 1 ? 'gradient' : 'colour'}
         onChange={e => setBackground(e.target.value === 'none' ? undefined : e.target.value === 'gradient'

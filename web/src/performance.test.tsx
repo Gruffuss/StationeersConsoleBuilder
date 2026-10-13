@@ -51,7 +51,7 @@ async function boot(project: Project) {
 }
 
 
-import { templateProject } from './project/templates'
+import { templateProject } from './project/templateData'
 const renders = vi.hoisted(() => ({} as Record<string, number>))
 const timings = vi.hoisted(() => ({} as Record<string, number[]>))
 vi.mock('./editor/Canvas', async original => {

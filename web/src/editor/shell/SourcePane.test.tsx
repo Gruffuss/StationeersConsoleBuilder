@@ -14,6 +14,6 @@ it('keeps source content mounted when hidden and shows page, diagnostic counts a
     ui.rerender(<SourcePane name="Main" open={false} counts={{ errors: 0, warnings: 0 }} onClose={close}><input /></SourcePane>)
     expect(ui.container.querySelector('input')).toBe(input); expect(ui.container.querySelector('section')!.hidden).toBe(true)
   } finally { ui.unmount() }
-  const frame = mount(<FrameLabel page={newProject().pages[0]} />)
+  const frame = mount(<FrameLabel page={newProject().pages[0]} dispatch={() => {}} onCustom={() => {}} />)
   try { expect(frame.container.textContent).toBe('Main · Square (1×1)') } finally { frame.unmount() }
 })

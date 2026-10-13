@@ -16,7 +16,9 @@
 .vb-templates label.raised { display: grid; grid-template-columns: auto 1fr; gap: var(--sp3); padding: var(--sp4); cursor: pointer; }
 .vb-templates label.raised .unit { grid-column: 2; overflow-wrap: anywhere; }
 .vb-templates label:has(:checked) { box-shadow: var(--focus-ring); }
-.vb-templates > button { align-self: flex-end; }
+/* The status line keeps one line of height whether it says anything or not, so the dialog never moves while it loads. */
+.vb-templates-foot { display: flex; align-items: center; justify-content: flex-end; gap: var(--sp4); }
+.vb-templates-status { flex: 1; min-height: 1lh; text-align: right; }
 
 /* The import and adoption components keep their own markup and callbacks. */
 .vb-project, .vb-adopt-offer { min-width: 0; max-width: 100%; }

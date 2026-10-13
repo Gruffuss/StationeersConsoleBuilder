@@ -4,7 +4,7 @@ VectorBuilder is a free web editor for Stationeers console screens. Draw a scree
 
 **Open the builder:** [https://gruffuss.github.io/StationeersConsoleBuilder/](https://gruffuss.github.io/StationeersConsoleBuilder/). Everything runs in your browser; projects are not uploaded.
 
-**Status:** the first public release. Exports need ScriptedScreens Vector 0.11.118 or newer.
+**Status:** release 2, adding the Power wall (3×2 and 2×3) and Hydro farm (3×2) starters; a blank page now shows nothing. Exports need ScriptedScreens Vector 0.11.118 or newer.
 
 ## What your game needs
 
@@ -57,7 +57,7 @@ Storage failure and another tab's newer revision pause saving visibly. Download 
 
 ## Templates and themes
 
-All seven square-console starters follow the current **Neutral** or **Vanilla +** theme. Neutral uses the game's own face, previewed with Liberation Sans; its widget-only exports need no Fonts mod. The owner's consoles and the corpus fixtures are examples only, not appearance specifications for these starters.
+All ten starters follow the current **Neutral** or **Vanilla +** theme. Neutral uses the game's own face, previewed with Liberation Sans; its widget-only exports need no Fonts mod. The seven square-console starters are the builder's own; the corpus fixtures are examples only, not appearance specifications for them. The two Power walls and the Hydro farm rebuild the owner's two working console scripts from widgets, at the consoles they were made for: their behaviour follows the scripts and their look the theme ([docs/templates-power-farm.md](docs/templates-power-farm.md) maps each script and lists what is built differently).
 
 | Starter | Intent |
 |---|---|
@@ -66,8 +66,11 @@ All seven square-console starters follow the current **Neutral** or **Vanilla +*
 | Power | Generator Auto/On/Off overrides; Auto turns on below 0.1 charge fraction, off above 0.25, and holds between them. |
 | Airlock | One door open at a time: the other door must read shut and settled, 1.5 s after it was commanded shut. Holds both doors in Logic mode and unlocked and writes Open and Setting together; the button on a door asks for it; boot leaves the doors as they are. The two door roles never bind the same airlock. No automatic pressure cycle or physical-safety claim. |
 | Solar | Read-only Charge/Maximum monitor; sample raw output 3,000 and maximum 5,000. Electrical units remain unverified; no kW conversion or tracking. |
-| Blank | Empty project; the mod's drew-nothing marker is intentional until something is drawn. |
+| Blank | Empty project; a blank page shows nothing. |
 | Needle gauge | Plain-shape pressure dial: 0/50/100 kPa points left/up/right; values above 100 clamp right and missing/out-of-range readings hide the needle. This starter is separate from E1's Gauge widget. |
+| Power wall (3×2) | A station power wall on a 3×2 console (MoreConsoles, landscape): battery storage with a cell per battery, what is made and used now and yesterday, solar panels by type with tracking and Park, solid fuel generators with Auto/On/Off (on below 0.1 charge, off above 0.25) and their vent, the sun, and the coal reserve. |
+| Power wall (2×3) | The same power wall laid out for the vertical 3×2 console (two wide, three tall): the same devices, logic and controls. |
+| Hydro farm (3×2) | A hydroponics farm on a 3×2 console: runs the LArRE harvester along the trays (harvest, dump, replant, Pause, Send home, Dump now), the grow-light day by plant (Auto/On/Off, Skip) and the export bin door; a 90-pot growth strip, a plant picker and a settings page. |
 
 **Open example** still opens vector examples 01–19 as editable projects, including examples 18/19. The raw **Example scripts (dev)** route also remains.
 

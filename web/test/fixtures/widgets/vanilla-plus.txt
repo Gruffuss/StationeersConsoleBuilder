@@ -537,7 +537,7 @@ SCENE w=480 h=480 fit=contain
 DEFS {
     GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
 }
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=330
     RP n=6 {
@@ -559,7 +559,7 @@ SCENE w=480 h=480 fit=contain
 DEFS {
     GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
 }
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=330
     RP n=6 {
@@ -578,7 +578,7 @@ G id=rep1 {
 
 repeater {"item":"text"}
 SCENE w=480 h=480 fit=contain
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":319.2,"max":6,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":319.2,"max":6,"layout":"list","cols":2,"pitch":56,"item":"text","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=319.2
     RP n=6 {
@@ -591,7 +591,7 @@ G id=rep1 {
 
 repeater {"item":"bar"}
 SCENE w=480 h=480 fit=contain
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":310,"max":6,"layout":"list","cols":2,"pitch":56,"item":"bar","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":310,"max":6,"layout":"list","cols":2,"pitch":56,"item":"bar","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=310
     RP n=6 {
@@ -605,7 +605,7 @@ G id=rep1 {
 
 repeater {"item":"light"}
 SCENE w=480 h=480 fit=contain
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":298,"max":6,"layout":"list","cols":2,"pitch":56,"item":"light","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":298,"max":6,"layout":"list","cols":2,"pitch":56,"item":"light","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=298
     RP n=6 {
@@ -624,7 +624,7 @@ SCENE w=480 h=480 fit=contain
 DEFS {
     GL id=theme_row units=bbox x1=0 y1=0 x2=0 y2=1 stops=[[0,#3B3B45],[1,#32323A]]
 }
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":162,"max":6,"layout":"grid","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":162,"max":6,"layout":"grid","cols":2,"pitch":56,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=162
     RP n=6 {

@@ -3,7 +3,7 @@ import { expect, it } from 'vitest'
 import { mount } from '../testing'
 import { Icon, type IconName } from './icons'
 
-const names: IconName[] = ['select', 'points', 'pen', 'path', 'rect', 'ellipse', 'polygon', 'line', 'text', 'image', 'gradient', 'add', 'remove', 'close', 'chevron-down', 'chevron-right', 'chevron-up', 'play', 'stop', 'export', 'download', 'upload', 'eye', 'eye-off', 'lock', 'unlock', 'group', 'widget', 'page', 'detach', 'trash', 'more', 'reset', 'copy', 'link', 'code', 'check', 'warn', 'info', 'file', 'pan-left', 'pan-right', 'pan-up', 'pan-down', 'align-left', 'align-centre', 'align-right', 'align-top', 'align-middle', 'align-bottom', 'distribute-h', 'distribute-v']
+const names: IconName[] = ['select', 'points', 'pen', 'path', 'rect', 'ellipse', 'polygon', 'line', 'text', 'image', 'gradient', 'add', 'remove', 'close', 'chevron-down', 'chevron-right', 'chevron-up', 'play', 'stop', 'export', 'download', 'upload', 'eye', 'eye-off', 'lock', 'unlock', 'group', 'widget', 'page', 'detach', 'trash', 'more', 'reset', 'copy', 'link', 'code', 'check', 'magnet', 'warn', 'info', 'file', 'pan-left', 'pan-right', 'pan-up', 'pan-down', 'align-left', 'align-centre', 'align-right', 'align-top', 'align-middle', 'align-bottom', 'distribute-h', 'distribute-v']
 
 it('distinguishes export from download and points from select', () => {
   const ui = mount(<><Icon name="export" /><Icon name="download" /><Icon name="points" /><Icon name="select" /></>)

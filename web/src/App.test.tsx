@@ -41,7 +41,8 @@ import { ProjectTransfer } from './project/transfer'
 import { Pictures } from './editor/pictures'
 import type { ExportReport } from './runtime/exportCheck'
 import { loadCatalog } from './catalog'
-import { TEMPLATES, templateProject } from './project/templates'
+import { TEMPLATES } from './project/templates'
+import { templateProject } from './project/templateData'
 import { projectOf } from './editor/ExamplePicker'
 import { imported } from './theme/testing'
 import { themeFileOf } from './theme/file'
@@ -145,8 +146,16 @@ const toggleScripts = async (box: HTMLElement) => {
   await run(() => Array.from(box.querySelectorAll<HTMLButtonElement>('[role="menubar"] button')).find(b => b.textContent === 'Help')!.click())
   await run(() => Array.from(box.querySelectorAll<HTMLButtonElement>('[role="menuitemcheckbox"]')).find(b => b.textContent?.startsWith('Example scripts'))!.click())
 }
+// As a player does: the New dialog open (its opening loads the starters' projects), then the choice.
 const pickTemplate = async (box: HTMLElement, id: string) => {
   const name = TEMPLATES.find(t => t.id === id)!.name
+  const dialog = () => Array.from(box.querySelectorAll<HTMLDialogElement>('dialog')).find(d => d.open && d.querySelector('h2')?.textContent === 'New and open')
+  if (!dialog()) {
+    await run(() => Array.from(box.querySelectorAll<HTMLButtonElement>('header button')).find(b => b.textContent === 'Project')!.click())
+    await run(() => Array.from(box.querySelectorAll<HTMLButtonElement>('[role=menu] button')).find(b => b.textContent?.startsWith('New from template'))!.click())
+  }
+  for (let k = 0; k < 200 && box.querySelector('.vb-templates [role="status"]')?.textContent; k++) await run(() => new Promise(r => setTimeout(r, 10)))
+  expect(box.querySelector('.vb-templates [role="status"]')?.textContent).toBe('')
   const choice = Array.from(box.querySelectorAll('[role="radiogroup"][aria-label="Open template"] label')).find(l => l.textContent?.startsWith(name))!.querySelector<HTMLInputElement>('input')!
   await run(() => choice.click())
 }
@@ -223,8 +232,12 @@ function server(w: FakeWorker, frame: (before: Sent) => ArrayBuffer = () => vbf1
 
 /** App with fake workers, booted and past the load's 150 ms debounce, every core request answered; `held`: checks wait;
  *  `frame`: what every frame holds. */
-async function booted({ held = false, strict = false, frame }: { held?: boolean; strict?: boolean; frame?: (before: Sent) => ArrayBuffer } = {}) {
+async function booted({ held = false, strict = false, frame, initialScene }: { held?: boolean; strict?: boolean; frame?: (before: Sent) => ArrayBuffer; initialScene?: string } = {}) {
   errors()
+  if (initialScene !== undefined) {
+    const project = newProject(); project.pages[0].scene = scene(initialScene)
+    vi.mocked(autosave.readAutosave).mockResolvedValue({ kind: 'ready', current: recordOf(project), recovery: null })
+  }
   const workers: FakeWorker[] = [], exports: FakeWorker[] = [], captures: FakeWorker[] = [], checks = checkWorkers()
   const makeCheck = () => { const worker = checks.make(); checks.made.at(-1)!.held = held; return worker }
   const app = <App makeTransferWorker={transferWorkers().make} makeWorker={() => { const w = new FakeWorker(); workers.push(w); return w as unknown as Worker }} makeCheckWorker={makeCheck}
@@ -477,9 +490,9 @@ describe('App scene checks', () => {
     expect(app.sent('load').at(-1)!.lua).toContain('U.x = 2')
   })
   it("loads the project once its pages checked clean, with each page's printed scene", async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'R w=10 h=10' })
     expect(app.sent('load')).toHaveLength(1)
-    expect(app.sent('load')[0].lua).toContain(printSrc(newProject().pages[0].scene))
+    expect(app.sent('load')[0].lua).toContain(printSrc(scene('R w=10 h=10')))
   })
 
   it('loads under StrictMode, whose second effect run replaces the first checker', async () => {
@@ -496,7 +509,7 @@ describe('App scene checks', () => {
   })
 
   it('sends no patch for an edit until its check lands, then one patch with the checked text', async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'R w=10 h=10' })
     app.check().held = true
     const next = scene('R x=1 y=2 w=3 h=4\n')
     await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: next }))
@@ -508,7 +521,7 @@ describe('App scene checks', () => {
   })
 
   it('while the newest scene waits for its check, patches the newest one whose check landed (a drag keeps drawing)', async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'R w=10 h=10' })
     app.check().held = true
     const one = scene('R x=1 y=2 w=3 h=4\n'), two = scene('R x=2 y=2 w=3 h=4\n')
     await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: one }))
@@ -582,6 +595,33 @@ describe('App property panel', () => {
   })
 })
 
+describe('blank page scene transitions', () => {
+  it('loads no scene, reloads once for its first node, patches later edits, and reloads when cleared', async () => {
+    const app = await booted()
+    expect(String(app.sent('load').at(-1)!.lua)).toContain('empty = true')
+    const loads = app.sent('load').length
+    await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('R w=20 h=20') }))
+    await wait(50); await app.serve()
+    expect(app.sent('patch')).toHaveLength(0)
+    // Another edit before the reload must not patch a scene which does not exist yet.
+    await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('R w=30 h=20') }))
+    await wait(50); await app.serve()
+    expect(app.sent('patch')).toHaveLength(0)
+    await wait(200); await app.serve()
+    expect(app.sent('load')).toHaveLength(loads + 1)
+    expect(String(app.sent('load').at(-1)!.lua)).toContain('R w=30 h=20')
+    await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('R w=40 h=20') }))
+    await wait(200); await app.serve()
+    expect(app.sent('load')).toHaveLength(loads + 1)
+    expect(app.sent('patch')).toHaveLength(1)
+    await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('SCENE w=480 h=480 fit=contain\n') }))
+    await wait(200); await app.serve()
+    expect(app.sent('load')).toHaveLength(loads + 2)
+    expect(String(app.sent('load').at(-1)!.lua)).toContain('empty = true')
+    expect(app.sent('patch')).toHaveLength(1)
+  })
+})
+
 describe('App page shapes', () => {
   it("loads each surface's own size, and loads again when a page's shape changes", async () => {
     const app = await booted()
@@ -590,7 +630,7 @@ describe('App page shapes', () => {
     await app.serve()
     const loads = app.sent('load').length
     expect(app.sent('load').at(-1)).toMatchObject({ w: 460, h: 460, sizes: '{"main":[460,460],"page2":[460,460]}' })
-    const select = app.ui.container.querySelector<HTMLSelectElement>('select[aria-label="Page shape"]')!
+    const select = app.ui.container.querySelector<HTMLSelectElement>('select[aria-label="Console size"]')!
     await run(() => {
       select.value = '2x1'
       select.dispatchEvent(new Event('change', { bubbles: true }))
@@ -865,7 +905,7 @@ describe('App picking while the preview shows an older tree', () => {
       observe() { this.cb([{ contentRect: { width: 460, height: 460 } }]) }
       disconnect() {}
     })
-    const app = await booted({ frame: () => drawn() })
+    const app = await booted({ frame: () => drawn(), initialScene: 'R w=10 h=10' })
     app.check().verdict = s => s.root.some(n => n.attrs.x === 777) ? invalid('bad') : checkScene(s)
     const settle = async () => { for (let k = 0; k < 5; k++) { await wait(20); await app.serve() } }
     const sel = () => (pane.props as unknown as { selection: unknown }).selection
@@ -906,7 +946,7 @@ describe('App picking while the preview shows an older tree', () => {
       disconnect() {}
     })
     // The fake core draws what it was last sent: the R second when the last load or patch printed the T first.
-    const app = await booted({ frame: before => {
+    const app = await booted({ initialScene: 'R w=10 h=10', frame: before => {
       const last = before.filter(m => m.kind === 'load' || m.kind === 'patch').at(-1), text = String(last?.src ?? last?.lua ?? '')
       return drawn(text.indexOf('T x=200') >= 0 && text.indexOf('T x=200') < text.indexOf('R x=0') ? 1 : 0)
     } })
@@ -1094,7 +1134,7 @@ describe('App reload and export behaviour', () => {
     expect(app.sent('pointer').at(-1)!.surface).toBe('main')
   })
   it('does not generate or read traps during transient drag steps, even after a pause', async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'R w=10 h=10' })
     const generated = vi.spyOn(codegen, 'generate'), traps = vi.spyOn(diagnostics, 'readTraps')
     const loads = app.sent('load').length
     for (let x = 1; x <= 3; x++) {
@@ -1112,7 +1152,7 @@ describe('App reload and export behaviour', () => {
     expect(traps).toHaveBeenCalledTimes(1)
   }, 15_000)
   it('preserves persist and memory on a restart after a scene patch', async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'SCENE w=480 h=480 fit=contain\nR w=10 h=10' })
     await run(() => pane.props!.dispatch({ type: 'setScene', pageId: 'p1', scene: scene('SCENE w=480 h=480 fit=contain\nR x=1 y=0 w=10 h=10\n') }))
     await wait(200)
     await app.serve()
@@ -1188,7 +1228,7 @@ describe('App live data (M3)', () => {
   const tab = (app: Awaited<ReturnType<typeof booted>>, name: string) => Array.from(app.ui.container.querySelectorAll('[role="tab"]')).find(b => b.textContent === name) as HTMLButtonElement
 
   it('loads the generated script with its host, then visits the editor\'s page; selecting a page visits it; a scene edit patches with the banner', async () => {
-    const app = await booted()
+    const app = await booted({ initialScene: 'R w=10 h=10' })
     const load = app.sent('load').at(-1)!
     expect(String(load.lua)).toContain('function tick(dt) VB.tick(dt) end')
     expect(JSON.parse(String(load.host))).toMatchObject({ housing: { ref: 1 }, budgets: { load: 500000, tick: 50000 } })

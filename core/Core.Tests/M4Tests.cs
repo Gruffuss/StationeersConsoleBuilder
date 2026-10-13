@@ -39,7 +39,7 @@ static class M4Tests
         if (GenerationError(dir, root) is { } generationError) { check(false, "M4: " + generationError); return; }
         check(true, "M4: generation stamp matches current inputs and exact artifact bytes");
         var files = Directory.Exists(dir) ? Directory.GetFiles(dir, "template-*.lua") : [];
-        check(files.Length == 14, "M4: exactly fourteen just-generated embedded on/off template artifacts (run web tests first)");
+        check(files.Length == 20, "M4: exactly twenty just-generated embedded on/off template artifacts (run web tests first)");
         foreach (var file in files.Append(Path.Combine(dir, "font-native-on.lua")))
         {
             if (!File.Exists(file)) { check(false, "M4: generated FONT/native-only artifact exists"); continue; }

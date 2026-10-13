@@ -9,7 +9,7 @@ export function StatusBar(p: { ctx: Ctx; play: boolean; setViewSlot(el: HTMLDivE
   return <footer className="vb-statusbar vb-status" onMouseDown={e => { if ((e.target as Element).closest('button')) e.preventDefault() }}>
     <div className="vb-view-slot" ref={p.setViewSlot}>{p.play && <span className="unit">Zoom, fit and pan are off while playing.</span>}</div>
     <span className="vb-pointer unit" hidden={p.play}>X {point ? Math.round(point.x) : '—'} Y {point ? Math.round(point.y) : '—'}</span>
-    <button className="btn" aria-pressed={settings.snap} onClick={() => p.ctx.setSettings({ snap: !settings.snap })}><Icon name="check" />Snap</button>
+    <button className="btn" aria-pressed={settings.snap} onClick={() => p.ctx.setSettings({ snap: !settings.snap })}><Icon name="magnet" />Snap</button>
     <label className="field">Grid<input aria-label="Grid" type="number" min={0} step={1} value={settings.grid} onChange={e => { const grid = Math.round(Number(e.target.value)); if (e.target.value !== '' && Number.isFinite(grid) && grid >= 0) p.ctx.setSettings({ grid }) }} /></label>
     <label className="field">Gap<input aria-label="Gap" type="number" step="any" value={p.gap} onChange={e => p.onGap(e.target.value)} /></label>
     <button className="btn" aria-label="Source" aria-pressed={p.source} onClick={() => p.onSource(!p.source)}><Icon name="code" />Source</button>

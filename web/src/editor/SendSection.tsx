@@ -7,7 +7,7 @@ import type { GameLink } from '../runtime/gameLink'
 import { SendToChip } from './SendToChip'
 import './game.css'
 
-/** `scenes`: the vector scene ids of the export `ready` is (the project's pages, and its Devices page when generated). */
+/** `scenes`: the vector scene ids of the export `ready` is (pages with nodes or FONT defs, and the generated Devices page). */
 export function SendSection({ ready, scenes, link }: { ready: { lua: string; name: string } | null; scenes: readonly string[]; link: GameLink }) {
   const [on, setOn] = useState(() => loadSendEnabled())
   return <div className="vb-send-section">

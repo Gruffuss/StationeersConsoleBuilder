@@ -1,0 +1,802 @@
+{
+ "enums": {
+  "LogicType": {
+   "Acceleration": 216,
+   "Activate": 9,
+   "AirRelease": 75,
+   "AlignmentError": 243,
+   "Altitude": 269,
+   "Apex": 238,
+   "AutoLand": 226,
+   "AutoShutOff": 218,
+   "BestContactFilter": 267,
+   "Bpm": 103,
+   "BurnTimeRemaining": 225,
+   "CelestialHash": 242,
+   "CelestialParentHash": 250,
+   "Channel0": 165,
+   "Channel1": 166,
+   "Channel2": 167,
+   "Channel3": 168,
+   "Channel4": 169,
+   "Channel5": 170,
+   "Channel6": 171,
+   "Channel7": 172,
+   "Charge": 11,
+   "Chart": 256,
+   "ChartedNavPoints": 259,
+   "ClearMemory": 62,
+   "CollectableGoods": 101,
+   "Color": 38,
+   "Combustion": 98,
+   "CombustionInput": 146,
+   "CombustionInput2": 147,
+   "CombustionLimiter": 153,
+   "CombustionOutput": 148,
+   "CombustionOutput2": 149,
+   "CompletionRatio": 61,
+   "ContactSlotIndex": 282,
+   "ContactTypeId": 198,
+   "CurrentCode": 261,
+   "CurrentNodeType": 352,
+   "CurrentResearchPodType": 93,
+   "Density": 262,
+   "DerivativeGain": 276,
+   "DestinationCode": 215,
+   "Discover": 255,
+   "Dispense": 356,
+   "DispenseSlot": 357,
+   "DistanceAu": 244,
+   "DistanceKm": 249,
+   "DrillCondition": 240,
+   "DryMass": 220,
+   "Eccentricity": 247,
+   "ElevatorLevel": 40,
+   "ElevatorSpeed": 39,
+   "EnergyConvected": 354,
+   "EnergyRadiated": 355,
+   "EntityState": 239,
+   "EnvironmentEfficiency": 104,
+   "Error": 4,
+   "ExhaustVelocity": 235,
+   "ExportCount": 63,
+   "ExportQuantity": 31,
+   "ExportSlotHash": 42,
+   "ExportSlotOccupant": 32,
+   "Extended": 272,
+   "Filtration": 74,
+   "FlightControlRule": 236,
+   "Flush": 174,
+   "ForceWrite": 85,
+   "ForwardX": 227,
+   "ForwardY": 228,
+   "ForwardZ": 229,
+   "Fuel": 99,
+   "Gravity": 358,
+   "Harvest": 69,
+   "HealthDamage": 350,
+   "Horizontal": 20,
+   "HorizontalRatio": 34,
+   "Idle": 37,
+   "ImportCount": 64,
+   "ImportQuantity": 29,
+   "ImportSlotHash": 43,
+   "ImportSlotOccupant": 30,
+   "Inclination": 246,
+   "Index": 241,
+   "IntegralGain": 275,
+   "InterrogationProgress": 157,
+   "LineNumber": 173,
+   "Lock": 10,
+   "ManualResearchRequiredPod": 94,
+   "Mass": 219,
+   "Maximum": 23,
+   "MineablesInQueue": 96,
+   "MineablesInVicinity": 95,
+   "MinedQuantity": 266,
+   "Minimum": 277,
+   "MinimumWattsToContact": 163,
+   "Mode": 3,
+   "NameHash": 268,
+   "NavPoints": 258,
+   "NetworkFault": 273,
+   "NextWeatherEventTime": 97,
+   "NextWeatherHash": 281,
+   "None": 0,
+   "On": 28,
+   "Open": 2,
+   "OperationalTemperatureEfficiency": 150,
+   "OrbitPeriod": 245,
+   "Orientation": 230,
+   "Output": 70,
+   "PassedMoles": 234,
+   "Plant": 68,
+   "PlantEfficiency1": 52,
+   "PlantEfficiency2": 53,
+   "PlantEfficiency3": 54,
+   "PlantEfficiency4": 55,
+   "PlantGrowth1": 48,
+   "PlantGrowth2": 49,
+   "PlantGrowth3": 50,
+   "PlantGrowth4": 51,
+   "PlantHash1": 56,
+   "PlantHash2": 57,
+   "PlantHash3": 58,
+   "PlantHash4": 59,
+   "PlantHealth1": 44,
+   "PlantHealth2": 45,
+   "PlantHealth3": 46,
+   "PlantHealth4": 47,
+   "PositionX": 76,
+   "PositionY": 77,
+   "PositionZ": 78,
+   "Power": 1,
+   "PowerActual": 26,
+   "PowerGeneration": 65,
+   "PowerPotential": 25,
+   "PowerRequired": 36,
+   "PrefabHash": 84,
+   "Pressure": 5,
+   "PressureEfficiency": 152,
+   "PressureExternal": 7,
+   "PressureInput": 106,
+   "PressureInput2": 116,
+   "PressureInternal": 8,
+   "PressureOutput": 126,
+   "PressureOutput2": 136,
+   "PressureSetting": 71,
+   "Progress": 214,
+   "ProportionalGain": 274,
+   "Quantity": 27,
+   "Ratio": 24,
+   "RatioCarbonDioxide": 15,
+   "RatioCarbonDioxideInput": 109,
+   "RatioCarbonDioxideInput2": 119,
+   "RatioCarbonDioxideOutput": 129,
+   "RatioCarbonDioxideOutput2": 139,
+   "RatioHelium": 286,
+   "RatioHeliumInput": 318,
+   "RatioHeliumInput2": 319,
+   "RatioHeliumOutput": 320,
+   "RatioHeliumOutput2": 321,
+   "RatioHydrazine": 283,
+   "RatioHydrazineInput": 306,
+   "RatioHydrazineInput2": 307,
+   "RatioHydrazineOutput": 308,
+   "RatioHydrazineOutput2": 309,
+   "RatioHydrochloricAcid": 290,
+   "RatioHydrochloricAcidInput": 334,
+   "RatioHydrochloricAcidInput2": 335,
+   "RatioHydrochloricAcidOutput": 336,
+   "RatioHydrochloricAcidOutput2": 337,
+   "RatioHydrogen": 252,
+   "RatioHydrogenInput": 294,
+   "RatioHydrogenInput2": 295,
+   "RatioHydrogenOutput": 296,
+   "RatioHydrogenOutput2": 297,
+   "RatioLiquidAlcohol": 285,
+   "RatioLiquidAlcoholInput": 314,
+   "RatioLiquidAlcoholInput2": 315,
+   "RatioLiquidAlcoholOutput": 316,
+   "RatioLiquidAlcoholOutput2": 317,
+   "RatioLiquidCarbonDioxide": 199,
+   "RatioLiquidCarbonDioxideInput": 200,
+   "RatioLiquidCarbonDioxideInput2": 201,
+   "RatioLiquidCarbonDioxideOutput": 202,
+   "RatioLiquidCarbonDioxideOutput2": 203,
+   "RatioLiquidHydrazine": 284,
+   "RatioLiquidHydrazineInput": 310,
+   "RatioLiquidHydrazineInput2": 311,
+   "RatioLiquidHydrazineOutput": 312,
+   "RatioLiquidHydrazineOutput2": 313,
+   "RatioLiquidHydrochloricAcid": 291,
+   "RatioLiquidHydrochloricAcidInput": 338,
+   "RatioLiquidHydrochloricAcidInput2": 339,
+   "RatioLiquidHydrochloricAcidOutput": 340,
+   "RatioLiquidHydrochloricAcidOutput2": 341,
+   "RatioLiquidHydrogen": 253,
+   "RatioLiquidHydrogenInput": 298,
+   "RatioLiquidHydrogenInput2": 299,
+   "RatioLiquidHydrogenOutput": 300,
+   "RatioLiquidHydrogenOutput2": 301,
+   "RatioLiquidMethane": 188,
+   "RatioLiquidMethaneInput": 189,
+   "RatioLiquidMethaneInput2": 190,
+   "RatioLiquidMethaneOutput": 191,
+   "RatioLiquidMethaneOutput2": 192,
+   "RatioLiquidNitrogen": 177,
+   "RatioLiquidNitrogenInput": 178,
+   "RatioLiquidNitrogenInput2": 179,
+   "RatioLiquidNitrogenOutput": 180,
+   "RatioLiquidNitrogenOutput2": 181,
+   "RatioLiquidNitrousOxide": 209,
+   "RatioLiquidNitrousOxideInput": 210,
+   "RatioLiquidNitrousOxideInput2": 211,
+   "RatioLiquidNitrousOxideOutput": 212,
+   "RatioLiquidNitrousOxideOutput2": 213,
+   "RatioLiquidOxygen": 183,
+   "RatioLiquidOxygenInput": 184,
+   "RatioLiquidOxygenInput2": 185,
+   "RatioLiquidOxygenOutput": 186,
+   "RatioLiquidOxygenOutput2": 187,
+   "RatioLiquidOzone": 293,
+   "RatioLiquidOzoneInput": 346,
+   "RatioLiquidOzoneInput2": 347,
+   "RatioLiquidOzoneOutput": 348,
+   "RatioLiquidOzoneOutput2": 349,
+   "RatioLiquidPollutant": 204,
+   "RatioLiquidPollutantInput": 205,
+   "RatioLiquidPollutantInput2": 206,
+   "RatioLiquidPollutantOutput": 207,
+   "RatioLiquidPollutantOutput2": 208,
+   "RatioLiquidSilanol": 289,
+   "RatioLiquidSilanolInput": 330,
+   "RatioLiquidSilanolInput2": 331,
+   "RatioLiquidSilanolOutput": 332,
+   "RatioLiquidSilanolOutput2": 333,
+   "RatioLiquidSodiumChloride": 287,
+   "RatioLiquidSodiumChlorideInput": 322,
+   "RatioLiquidSodiumChlorideInput2": 323,
+   "RatioLiquidSodiumChlorideOutput": 324,
+   "RatioLiquidSodiumChlorideOutput2": 325,
+   "RatioMethane": 18,
+   "RatioMethaneInput": 112,
+   "RatioMethaneInput2": 122,
+   "RatioMethaneOutput": 132,
+   "RatioMethaneOutput2": 142,
+   "RatioNitrogen": 16,
+   "RatioNitrogenInput": 110,
+   "RatioNitrogenInput2": 120,
+   "RatioNitrogenOutput": 130,
+   "RatioNitrogenOutput2": 140,
+   "RatioNitrousOxide": 83,
+   "RatioNitrousOxideInput": 114,
+   "RatioNitrousOxideInput2": 124,
+   "RatioNitrousOxideOutput": 134,
+   "RatioNitrousOxideOutput2": 144,
+   "RatioOxygen": 14,
+   "RatioOxygenInput": 108,
+   "RatioOxygenInput2": 118,
+   "RatioOxygenOutput": 128,
+   "RatioOxygenOutput2": 138,
+   "RatioOzone": 292,
+   "RatioOzoneInput": 342,
+   "RatioOzoneInput2": 343,
+   "RatioOzoneOutput": 344,
+   "RatioOzoneOutput2": 345,
+   "RatioPollutant": 17,
+   "RatioPollutantInput": 111,
+   "RatioPollutantInput2": 121,
+   "RatioPollutantOutput": 131,
+   "RatioPollutantOutput2": 141,
+   "RatioPollutedWater": 254,
+   "RatioPollutedWaterInput": 302,
+   "RatioPollutedWaterInput2": 303,
+   "RatioPollutedWaterOutput": 304,
+   "RatioPollutedWaterOutput2": 305,
+   "RatioSilanol": 288,
+   "RatioSilanolInput": 326,
+   "RatioSilanolInput2": 327,
+   "RatioSilanolOutput": 328,
+   "RatioSilanolOutput2": 329,
+   "RatioSteam": 193,
+   "RatioSteamInput": 194,
+   "RatioSteamInput2": 195,
+   "RatioSteamOutput": 196,
+   "RatioSteamOutput2": 197,
+   "RatioWater": 19,
+   "RatioWaterInput": 113,
+   "RatioWaterInput2": 123,
+   "RatioWaterOutput": 133,
+   "RatioWaterOutput2": 143,
+   "ReEntryAltitude": 237,
+   "Reagents": 13,
+   "RecipeHash": 41,
+   "ReferenceId": 217,
+   "RequestHash": 60,
+   "RequiredPower": 33,
+   "Reset": 279,
+   "ReturnFuelCost": 100,
+   "Richness": 263,
+   "Rpm": 155,
+   "SemiMajorAxis": 248,
+   "Setpoint": 278,
+   "Setting": 12,
+   "SettingInput": 91,
+   "SettingOutput": 92,
+   "SignalID": 87,
+   "SignalStrength": 86,
+   "Sites": 260,
+   "Size": 264,
+   "SizeX": 160,
+   "SizeY": 161,
+   "SizeZ": 162,
+   "SolarAngle": 22,
+   "SolarIrradiance": 176,
+   "SoundAlert": 175,
+   "StackSize": 280,
+   "Stress": 156,
+   "StunDamage": 351,
+   "Survey": 257,
+   "TargetNodeType": 353,
+   "TargetPadIndex": 158,
+   "TargetPrefabHash": 271,
+   "TargetSlotIndex": 270,
+   "TargetX": 88,
+   "TargetY": 89,
+   "TargetZ": 90,
+   "Temperature": 6,
+   "TemperatureDifferentialEfficiency": 151,
+   "TemperatureExternal": 73,
+   "TemperatureInput": 107,
+   "TemperatureInput2": 117,
+   "TemperatureOutput": 127,
+   "TemperatureOutput2": 137,
+   "TemperatureSetting": 72,
+   "Throttle": 154,
+   "Thrust": 221,
+   "ThrustToWeight": 223,
+   "Time": 102,
+   "TimeToDestination": 224,
+   "TotalMoles": 66,
+   "TotalMolesInput": 115,
+   "TotalMolesInput2": 125,
+   "TotalMolesOutput": 135,
+   "TotalMolesOutput2": 145,
+   "TotalQuantity": 265,
+   "TrueAnomaly": 251,
+   "VelocityMagnitude": 79,
+   "VelocityRelativeX": 80,
+   "VelocityRelativeY": 81,
+   "VelocityRelativeZ": 82,
+   "VelocityX": 231,
+   "VelocityY": 232,
+   "VelocityZ": 233,
+   "Vertical": 21,
+   "VerticalRatio": 35,
+   "Volume": 67,
+   "VolumeOfLiquid": 182,
+   "WattsReachingContact": 164,
+   "Weight": 222,
+   "WorkingGasEfficiency": 105
+  },
+  "LogicSlotType": {
+   "Charge": 10,
+   "ChargeRatio": 11,
+   "Class": 12,
+   "Damage": 4,
+   "Efficiency": 5,
+   "FilterType": 25,
+   "FreeSlots": 31,
+   "Growth": 7,
+   "HarvestedHash": 27,
+   "Health": 6,
+   "LineNumber": 19,
+   "Lock": 23,
+   "Mature": 16,
+   "MaturityRatio": 29,
+   "MaxQuantity": 15,
+   "Mode": 28,
+   "None": 0,
+   "OccupantHash": 2,
+   "Occupied": 1,
+   "On": 22,
+   "Open": 21,
+   "PrefabHash": 17,
+   "Pressure": 8,
+   "PressureAir": 14,
+   "PressureWaste": 13,
+   "Quantity": 3,
+   "ReferenceId": 26,
+   "Seeding": 18,
+   "SeedingRatio": 30,
+   "SortingClass": 24,
+   "Temperature": 9,
+   "TotalSlots": 32,
+   "Volume": 20
+  },
+  "LogicBatchMethod": {
+   "Average": 0,
+   "Count": 4,
+   "Maximum": 3,
+   "Minimum": 2,
+   "Sum": 1
+  }
+ },
+ "devices": [
+  {
+   "ref": 2,
+   "prefab": -400115994,
+   "prefabName": "StructureBattery",
+   "name": "",
+   "logic": {
+    "1": "R",
+    "3": "R",
+    "4": "R",
+    "10": "RW",
+    "11": "R",
+    "23": "R",
+    "24": "R",
+    "25": "R",
+    "26": "R",
+    "28": "RW",
+    "29": "R",
+    "31": "R",
+    "84": "R",
+    "217": "R",
+    "268": "R"
+   },
+   "slots": 0,
+   "prefabDisplayName": "Station Battery",
+   "values": {
+    "11": {
+     "kind": "const",
+     "v": 1800000
+    },
+    "23": {
+     "kind": "const",
+     "v": 3600000
+    },
+    "26": {
+     "kind": "const",
+     "v": 9000
+    }
+   }
+  },
+  {
+   "ref": 3,
+   "prefab": -1388288459,
+   "prefabName": "StructureBatteryLarge",
+   "name": "",
+   "logic": {
+    "1": "R",
+    "3": "R",
+    "4": "R",
+    "10": "RW",
+    "11": "R",
+    "23": "R",
+    "24": "R",
+    "25": "R",
+    "26": "R",
+    "28": "RW",
+    "29": "R",
+    "31": "R",
+    "84": "R",
+    "217": "R",
+    "268": "R"
+   },
+   "slots": 0,
+   "prefabDisplayName": "Station Battery (Large)",
+   "values": {
+    "11": {
+     "kind": "const",
+     "v": 4500000
+    },
+    "23": {
+     "kind": "const",
+     "v": 9000000
+    },
+    "26": {
+     "kind": "const",
+     "v": 9000
+    }
+   }
+  },
+  {
+   "ref": 4,
+   "prefab": 813146305,
+   "prefabName": "StructureSolidFuelGenerator",
+   "name": "",
+   "logic": {
+    "10": "RW",
+    "28": "RW",
+    "62": "W",
+    "64": "R",
+    "65": "R",
+    "84": "R",
+    "217": "R",
+    "268": "R"
+   },
+   "slots": 1,
+   "prefabDisplayName": "Generator (Solid Fuel)",
+   "slotLogic": {
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "12": [
+     0
+    ],
+    "15": [
+     0
+    ],
+    "17": [
+     0
+    ],
+    "24": [
+     0
+    ],
+    "26": [
+     0
+    ],
+    "31": [
+     0
+    ],
+    "32": [
+     0
+    ]
+   },
+   "values": {
+    "28": {
+     "kind": "const",
+     "v": 0
+    },
+    "65": {
+     "kind": "const",
+     "v": 0
+    }
+   },
+   "slotValues": {
+    "0:3": {
+     "kind": "const",
+     "v": 40
+    },
+    "0:2": {
+     "kind": "const",
+     "v": 1724793494
+    }
+   }
+  },
+  {
+   "ref": 5,
+   "prefab": -2045627372,
+   "prefabName": "StructureSolarPanel",
+   "name": "",
+   "logic": {
+    "11": "R",
+    "20": "RW",
+    "21": "RW",
+    "23": "R",
+    "24": "R",
+    "84": "R",
+    "217": "R",
+    "268": "R",
+    "1221": "RW",
+    "1224": "RW"
+   },
+   "slots": 0,
+   "prefabDisplayName": "Solar Panel",
+   "values": {
+    "11": {
+     "kind": "const",
+     "v": 1150
+    },
+    "20": {
+     "kind": "const",
+     "v": 120
+    },
+    "21": {
+     "kind": "const",
+     "v": 110
+    },
+    "1221": {
+     "kind": "const",
+     "v": 0
+    },
+    "1224": {
+     "kind": "const",
+     "v": 97
+    }
+   }
+  },
+  {
+   "ref": 6,
+   "prefab": -539224550,
+   "prefabName": "StructureSolarPanelDual",
+   "name": "",
+   "logic": {
+    "11": "R",
+    "20": "RW",
+    "21": "RW",
+    "23": "R",
+    "24": "R",
+    "84": "R",
+    "217": "R",
+    "268": "R",
+    "1221": "RW",
+    "1224": "RW"
+   },
+   "slots": 0,
+   "prefabDisplayName": "Solar Panel (Dual)",
+   "values": {
+    "11": {
+     "kind": "const",
+     "v": 1300
+    },
+    "20": {
+     "kind": "const",
+     "v": 120
+    },
+    "21": {
+     "kind": "const",
+     "v": 110
+    },
+    "1221": {
+     "kind": "const",
+     "v": 0.2
+    },
+    "1224": {
+     "kind": "const",
+     "v": 88
+    }
+   }
+  },
+  {
+   "ref": 7,
+   "prefab": 1076425094,
+   "prefabName": "StructureDaylightSensor",
+   "name": "",
+   "logic": {
+    "3": "RW",
+    "9": "RW",
+    "20": "R",
+    "21": "R",
+    "22": "R",
+    "28": "RW",
+    "84": "R",
+    "176": "R",
+    "217": "R",
+    "268": "R",
+    "1110": "RW",
+    "1114": "RW"
+   },
+   "slots": 0,
+   "prefabDisplayName": "Daylight Sensor",
+   "values": {
+    "20": {
+     "kind": "const",
+     "v": 30
+    },
+    "21": {
+     "kind": "const",
+     "v": 20
+    },
+    "1110": {
+     "kind": "const",
+     "v": 0.3
+    },
+    "1114": {
+     "kind": "const",
+     "v": 1200
+    }
+   }
+  },
+  {
+   "ref": 8,
+   "prefab": -1129453144,
+   "prefabName": "StructureActiveVent",
+   "name": "GeneratorsVent",
+   "logic": {
+    "1": "R",
+    "2": "RW",
+    "3": "RW",
+    "4": "R",
+    "7": "RW",
+    "8": "RW",
+    "10": "RW",
+    "12": "RW",
+    "23": "R",
+    "24": "R",
+    "28": "RW",
+    "33": "R",
+    "84": "R",
+    "126": "R",
+    "127": "R",
+    "128": "R",
+    "129": "R",
+    "130": "R",
+    "131": "R",
+    "132": "R",
+    "133": "R",
+    "134": "R",
+    "135": "R",
+    "148": "R",
+    "180": "R",
+    "186": "R",
+    "191": "R",
+    "196": "R",
+    "202": "R",
+    "207": "R",
+    "212": "R",
+    "217": "R",
+    "268": "R",
+    "296": "R",
+    "300": "R",
+    "304": "R",
+    "308": "R",
+    "312": "R",
+    "316": "R",
+    "320": "R",
+    "324": "R",
+    "328": "R",
+    "332": "R",
+    "336": "R",
+    "340": "R",
+    "344": "R",
+    "348": "R"
+   },
+   "slots": 1,
+   "prefabDisplayName": "Active Vent",
+   "slotLogic": {
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "12": [
+     0
+    ],
+    "15": [
+     0
+    ],
+    "17": [
+     0
+    ],
+    "24": [
+     0
+    ],
+    "26": [
+     0
+    ],
+    "31": [
+     0
+    ],
+    "32": [
+     0
+    ]
+   },
+   "values": {
+    "28": {
+     "kind": "const",
+     "v": 0
+    }
+   }
+  }
+ ],
+ "housing": {
+  "ref": 1,
+  "prefab": 235638270,
+  "prefabName": "StructureConsole",
+  "name": "Console",
+  "logic": {
+   "84": "R",
+   "217": "R",
+   "268": "R"
+  },
+  "slots": 0
+ },
+ "clock": {
+  "length": 1200,
+  "start": 0.25
+ },
+ "beta": false,
+ "budgets": {
+  "load": 500000,
+  "tick": 50000
+ }
+}

@@ -13,7 +13,7 @@ html, body, #root { min-height: 100%; margin: 0; }
 .vb-center { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: var(--sp5); }
 .vb-canvas-area { position: relative; display: flex; flex: 1; min-height: 200px; background: var(--surface-screen-lo); }
 .vb-preview { display: flex; flex: 1; min-width: 0; min-height: 0; }
-.vb-source { display: flex; flex-direction: column; flex: none; height: calc(470px*var(--s)); resize: vertical; min-height: 120px; max-height: 70vh; overflow: hidden; }
+.vb-source { isolation: isolate; display: flex; flex-direction: column; flex: none; height: calc(470px*var(--s)); resize: vertical; min-height: 120px; max-height: 70vh; overflow: hidden; }
 .vb-source[hidden], .vb-messages[hidden] { display: none; }
 .vb-source-head, .vb-messages-head { display: flex; align-items: center; gap: var(--sp3); padding: var(--sp3); }
 .vb-source-head .unit { flex: 1; }
@@ -40,7 +40,7 @@ html, body, #root { min-height: 100%; margin: 0; }
 .vb-crumbs button { pointer-events: auto; }
 .vb-crumbs button[aria-current] { color: var(--text); }
 .vb-crumbs .vb-lock-reason { color: var(--status-warn); }
-.vb-page-settings .vb-shape { display: flex; flex-wrap: wrap; gap: var(--sp2); }
+.vb-page-settings .vb-shape { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp2); flex: 1; min-width: 0; }
 .vb-page-settings input { min-width: 0; max-width: 100%; }
 .vb-page-settings .vb-shape input { width: 5em; }
 @media (max-width: 840px) {
@@ -69,7 +69,10 @@ html, body, #root { min-height: 100%; margin: 0; }
 .vb-align { display: flex; flex-wrap: wrap; gap: var(--sp1); }
 .vb-style-section, .vb-page-settings { display: flex; flex-direction: column; gap: var(--sp3); padding-block: var(--sp3); }
 .vb-taskbar { position: absolute; display: flex; align-items: center; gap: var(--sp3); padding: var(--sp3); z-index: 10; white-space: nowrap; }
-.vb-frame-label { position: absolute; left: 0; top: -24px; pointer-events: none; }
+.vb-frame-label { position: absolute; left: 0; top: -24px; pointer-events: none; display: flex; align-items: center; gap: var(--sp1); }
+.vb-frame-label .vb-menu-anchor { pointer-events: auto; }
+.vb-frame-size { display: inline-flex; align-items: center; gap: var(--sp1); min-height: 0; padding: 0 var(--sp2); font: inherit; color: var(--text-secondary); background: none; border-color: transparent; }
+.vb-frame-size:hover, .vb-frame-size[aria-expanded="true"] { color: var(--text); border-color: var(--border); }
 .vb-play-banner { position: absolute; left: var(--sp4); right: var(--sp4); bottom: var(--sp4); display: flex; gap: var(--sp3); padding: var(--sp3); pointer-events: none; }
 .vb-devices-row .raised { padding: var(--sp3); }
 .vb-view-slot .vb-view-controls { padding: 0; flex-wrap: nowrap; }

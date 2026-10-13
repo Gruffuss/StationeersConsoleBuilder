@@ -216,6 +216,13 @@ it('a duplicated device has no pin or label, and value names must match the cata
     }
     await run(() => setValue(input, 'Pressure'))
     expect(add.disabled).toBe(false)
+    // A mod's LogicType by its number (#<integer>) is always accepted: the simulator carries it.
+    await run(() => setValue(input, '#1110'))
+    expect(add.disabled).toBe(false)
+    for (const wrong of ['#', '#1.5', '#x']) {
+      await run(() => setValue(input, wrong))
+      expect(add.disabled).toBe(true)
+    }
     await run(() => ui.container.querySelector<HTMLButtonElement>('[aria-label="duplicate Tank"]')!.click())
     const dup = (actions.at(-1) as Extract<Action, { type: 'setLogic' }>).patch.simDevices!.at(-1)!
     expect([dup.pin, dup.label]).toEqual([undefined, ''])

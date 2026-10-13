@@ -21,6 +21,23 @@ const project = (): Project => ({ ...newProject(), ...newLogic(), simDevices: [
   { id: 's2', prefab: 'ModThing', label: 'Mystery', ref: 3, values: {} }] })
 
 describe('hostOf', () => {
+  it('carries a numbered (mod) LogicType the catalogue does not list for a device, as it carries vanilla ones', () => {
+    const p = project(); p.simDevices[0].values = { Pressure: { kind: 'const', v: 1 }, '#1110': { kind: 'const', v: 0.3 }, '#1224': { kind: 'const', v: 97 } }
+    const d = hostOf(p, cat, null).host.devices[0]
+    expect(d.logic[1110]).toBe('RW')        // not listed: carried, read and written, as the simulated value says it exists
+    expect(d.logic[1224]).toBe('R')         // listed (an extension the catalogue knows): its own access
+    expect(d.values?.[1110]).toEqual({ kind: 'const', v: 0.3 })
+    expect(d.values?.[1224]).toEqual({ kind: 'const', v: 97 })
+    expect(hostOf(p, cat, null).notes.filter(n => n.startsWith('O2 tank'))).toEqual([])
+  })
+  it('says which simulated values it cannot carry instead of dropping them', () => {
+    const p = project()
+    p.simDevices[0].values = { Pressure: { kind: 'const', v: 1 }, TimeOfDay: { kind: 'const', v: 0.3 } }
+    p.simDevices[0].slots = { 0: { Quantity: { kind: 'const', v: 3 }, Growth: { kind: 'const', v: 2 } } }
+    expect(hostOf(p, cat, null).notes.filter(n => n.startsWith('O2 tank'))).toEqual([
+      'O2 tank: TimeOfDay is not a LogicType this catalogue numbers, so it is not simulated; a mod\'s type can be given by its number, as #<number>',
+      'O2 tank: slot 0 Growth is not a slot type this catalogue numbers, so it is not simulated'])
+  })
   it('names an unlabelled unknown prefab in notes without its generated device id', () => {
     const p = project(); p.simDevices[1].label = ''; p.simDevices[1].id = 'sim987654'
     expect(hostOf(p, cat, null).notes.join(' ')).toContain('ModThing: prefab ModThing')

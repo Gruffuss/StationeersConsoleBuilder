@@ -32,13 +32,21 @@ it('accepts provided Theme objects without storing them as imports', () => {
   expect(p.theme).toBe('vanilla-plus')
   expect(p.themes).toBeUndefined()
 })
-import { allocUid, expandRoot, nativesOf, putWidget, sanitize, widgetOf } from '../widgets/core'
+import { allocUid, expandRoot, putWidget, sanitize, widgetOf } from '../widgets/core'
 import { WIDGETS } from '../widgets/registry'
 import type { Params } from '../widgets/types'
-import { TEMPLATES, templateProject, type TemplateId } from './templates'
+import { TEMPLATES, type TemplateId } from './templates'
+import { templateProject } from './templateData'
+import { FARM_ROLES, FARM_RULES, hydroFarm, POWER_ROLES, POWER_RULES, powerWall } from './startersTesting'
+import { SHAPES } from '../model/shapes'
 
-const ids = ['overview', 'atmos-tanks', 'power', 'airlock', 'solar', 'blank', 'needle-gauge'] as const
-const names = ['Overview', 'Atmos/tanks', 'Power', 'Airlock', 'Solar', 'Blank', 'Needle gauge']
+const ids = ['overview', 'atmos-tanks', 'power', 'airlock', 'solar', 'blank', 'needle-gauge', 'power-wall-3x2', 'power-wall-2x3', 'hydro-farm'] as const
+const names = ['Overview', 'Atmos/tanks', 'Power', 'Airlock', 'Solar', 'Blank', 'Needle gauge', 'Power wall (3×2)', 'Power wall (2×3)', 'Hydro farm (3×2)']
+// The owner's two console scripts rebuilt from widgets (docs/templates-power-farm.md): their page shapes, pages and custom Lua.
+const CONSOLES = ['power-wall-3x2', 'power-wall-2x3', 'hydro-farm'] as const
+const isConsole = (id: string) => (CONSOLES as readonly string[]).includes(id)
+const shapeOf = (id: string) => id === 'power-wall-2x3' ? 'v3x2' as const : isConsole(id) ? '3x2' as const : 'square' as const
+const pagesOf = (id: string) => id === 'hydro-farm' ? [['p1', 'Main', 'main'], ['p2', 'Plant picker', 'page2'], ['p3', 'Settings', 'page3']] : [['p1', 'Main', 'main']]
 const cat = catalogOf(JSON.parse(devicesText), JSON.parse(enumsText))
 const constant = (v: number) => ({ kind: 'const' as const, v })
 
@@ -206,6 +214,9 @@ function authored(id: TemplateId): Project {
         simDevices: [1, 2].map((i) => ({ id: `s${i}`, prefab: 'StructureSolarPanel', label: '', ref: i + 1, role: 'panels', values: { Charge: constant(i * 1000), Maximum: constant(2500) } })) }
       break
     case 'blank': break
+    case 'power-wall-3x2': return powerWall(p, true)
+    case 'power-wall-2x3': return powerWall(p, false)
+    case 'hydro-farm': return hydroFarm(p)
     case 'needle-gauge': {
       const face: SrcNode = { op: 'C', attrs: { cx: 240, cy: 250, rx: 140, ry: 140, sw: 4 } }
       const ticks: SrcNode[] = [[100, 250, 120, 250], [240, 110, 240, 130], [360, 250, 380, 250]]
@@ -235,7 +246,7 @@ function authored(id: TemplateId): Project {
 function manifestOf(p: Project) {
   const t = themeOf(p)
   const pages = p.pages.map(pg => {
-    const empty = pg.scene.root.length === 0 && !pg.scene.defs.some(def => def.op.toUpperCase() === 'FONT') && nativesOf(pg, t).length > 0
+    const empty = pg.scene.root.length === 0 && !pg.scene.defs.some(def => def.op.toUpperCase() === 'FONT')
     return { id: pg.id, surface: pg.surface, empty, src: empty ? '' : printSrc(pg.scene) + bannerSrc(pg.scene.header), w: px(pg.size.w), h: px(pg.size.h) }
   })
   if (p.roles.some(r => r.pin === undefined && r.ref === undefined)) {
@@ -246,7 +257,7 @@ function manifestOf(p: Project) {
 }
 
 describe('starter templates', () => {
-  it('lists the seven starters in order and exactly both provided themes', () => {
+  it('lists the ten starters in order and exactly both provided themes', () => {
     expect(TEMPLATES.map(t => t.id)).toEqual(ids)
     expect(TEMPLATES.map(t => t.name)).toEqual(names)
     expect(Object.keys(THEMES)).toEqual(['neutral', 'vanilla-plus'])
@@ -282,30 +293,45 @@ describe('starter templates', () => {
   })
   for (const id of ids) for (const theme of Object.keys(THEMES)) {
     it(`${id} under ${theme} checks, loads, binds every control/slot and generates render fixtures`, async () => {
-      const raw = templateProject(id, theme), t = THEMES[theme]
+      const raw = templateProject(id, theme), t = THEMES[theme], shape = SHAPES[shapeOf(id)]
       const p = reducer(initialState(), { type: 'loadProject', project: raw }).project
       expect(p).toEqual(raw)
       expect(p).toMatchObject({ name: names[ids.indexOf(id)], version: 1, target: { vectorMod: VECTOR_FLOOR }, theme,
-        pages: [{ id: 'p1', name: 'Main', surface: 'main', shape: 'square', size: { w: 460, h: 460 }, background: groundOf(t), scene: { header: { w: 480, h: 480, fit: 'contain' } } }] })
-      expect(p.customLua === '').toBe(id !== 'airlock')
+        pages: pagesOf(id).map(([pid, name, surface]) => ({ id: pid, name, surface, shape: shapeOf(id), size: shape.px, background: groundOf(t),
+          scene: { header: { ...shape.units, fit: 'contain' } } })) })
+      expect(p.customLua === '').toBe(id !== 'airlock' && !isConsole(id))
       const checker = new SceneChecker(checkWorkers().make)
       try { for (const pg of p.pages) expect((await checker.check(pg.scene)).errors).toEqual([]) } finally { checker.dispose() }
-      expect(p.pages[0].scene.defs.some(n => n.op.toUpperCase() === 'FONT')).toBe(false)
-      expect(p.pages[0].natives ?? []).toEqual([])
-      const widgets = p.pages[0].scene.root.slice(id === 'needle-gauge' ? 6 : 0).map(n => widgetOf(n, t))
-      expect(widgets.every(Boolean)).toBe(true)
-      expect(widgets.length === 0).toBe(id === 'blank')
-      expect(new Set(widgets.map(w => w!.uid)).size).toBe(widgets.length)
-      const boxes = widgets.map(w => {
-        const { exp } = expandRoot(w!, t)
-        for (const slot of exp.slots) expect(p.bindings, slot.key).toHaveProperty(slot.key)
-        for (const click of exp.clicks ?? []) expect(p.actions.some(a => a.on === click.id && a.do.length > 0), click.id).toBe(true)
-        return w!.params as { x: number; y: number; w: number; h: number }
-      })
-      for (const [i, a] of boxes.entries()) {
-        expect(a.x >= 0 && a.y >= 0 && a.x + a.w <= 480 && a.y + a.h <= 480, JSON.stringify(a)).toBe(true)
-        for (const b of boxes.slice(i + 1)) expect(a.x >= b.x + b.w || b.x >= a.x + a.w || a.y >= b.y + b.h || b.y >= a.y + a.h, JSON.stringify([a, b])).toBe(true)
+      const uids: string[] = []
+      for (const pg of p.pages) {
+        expect(pg.scene.defs.some(n => n.op.toUpperCase() === 'FONT')).toBe(false)
+        expect((pg.natives ?? []).length > 0).toBe(id === 'hydro-farm' && pg.id !== 'p3')
+        const roots = pg.scene.root.map(n => widgetOf(n, t))
+        // Plain shapes: the needle gauge's six, and the Hydro farm's outlines round the Larre's pot and its legend swatch.
+        expect(roots.filter(w => !w).length).toBe(id === 'needle-gauge' ? 6 : id === 'hydro-farm' && pg.id === 'p1' ? 2 : 0)
+        const widgets = roots.filter(w => w !== null)
+        expect(widgets.length === 0).toBe(id === 'blank')
+        uids.push(...widgets.map(w => w.uid), ...(pg.natives ?? []).map(n => n.uid))
+        const boxes = [...widgets, ...pg.natives ?? []].map(w => {
+          if (!WIDGETS[w.type].native) {
+            const { exp } = expandRoot(w, t)
+            for (const slot of exp.slots) if (!slot.runtime) expect(p.bindings, slot.key).toHaveProperty(slot.key)
+            for (const click of exp.clicks ?? []) expect(p.actions.some(a => a.on === click.id && (a.page === undefined || a.page === pg.id) && a.do.length > 0), click.id).toBe(true)
+          }
+          return { type: w.type, ...(w.params as { x: number; y: number; w: number; h: number }) }
+        })
+        const { w: W, h: H } = pg.scene.header as { w: number; h: number }
+        const frames = boxes.filter(f => f.type === 'panel' || f.type === 'header')
+        for (const [i, a] of boxes.entries()) {
+          expect(a.x >= 0 && a.y >= 0 && a.x + a.w <= W && a.y + a.h <= H, JSON.stringify(a)).toBe(true)
+          // The consoles' content sits inside a panel or the header, as on the scripts' screens; other starters never overlap.
+          if (isConsole(id)) {
+            if (a.type !== 'panel' && a.type !== 'header')
+              expect(frames.some(f => a.x >= f.x - 0.01 && a.y >= f.y - 0.01 && a.x + a.w <= f.x + f.w + 0.01 && a.y + a.h <= f.y + f.h + 0.01), JSON.stringify(a)).toBe(true)
+          } else for (const c of boxes.slice(i + 1)) expect(a.x >= c.x + c.w || c.x >= a.x + a.w || a.y >= c.y + c.h || c.y >= a.y + a.h, JSON.stringify([a, c])).toBe(true)
+        }
       }
+      expect(new Set(uids).size).toBe(uids.length)
       for (const [i, sim] of p.simDevices.entries()) {
         expect(sim.id).toBe(`s${i + 1}`); expect(sim.ref).toBe(i + 2)
         const role = p.roles.find(r => r.id === sim.role)!
@@ -314,9 +340,13 @@ describe('starter templates', () => {
         expect(Object.values(sim.values).every(v => v.kind === 'const')).toBe(true)
       }
       for (const read of p.reads) {
-        const role = p.roles.find(r => r.id === read.role)!
-        const type = 'lt' in read.of && 'name' in read.of.lt ? read.of.lt.name : ''
-        for (const prefab of role.prefabs) expect(cat.byName.get(prefab)?.logic[type], read.id).toMatch(/^R/)
+        const role = p.roles.find(r => r.id === read.role)!, of = read.of
+        // A numbered type is a mod's (Stationeers Logic Extended's TimeOfDay and DayLengthSeconds): not in the catalogue.
+        if ('lt' in of && 'id' in of.lt) { expect([1110, 1114], read.id).toContain(of.lt.id); continue }
+        for (const prefab of role.prefabs) {
+          if ('slot' in of) expect(cat.byName.get(prefab)?.slots?.find(x => x.i === of.slot)?.logic, read.id).toContain(of.lst)
+          else expect(cat.byName.get(prefab)?.logic['name' in of.lt ? of.lt.name : ''], read.id).toMatch(/^R/)
+        }
       }
       for (const rule of p.rules) for (const prefab of p.roles.find(r => r.id === rule.role)!.prefabs) expect(cat.byName.get(prefab)?.logic['name' in rule.lt ? rule.lt.name : '']).toBe('RW')
       const g = generate(p, pg => printSrc(pg.scene))
@@ -327,9 +357,9 @@ describe('starter templates', () => {
       await expect(JSON.stringify(manifestOf(p), null, 1) + '\n').toMatchFileSnapshot(`../../test/fixtures/codegen/template-${id}-${theme}.pages.json`)
     })
   }
-  it('has exactly fourteen complete fixture triplets and reports the authored JSON size', () => {
+  it('has exactly twenty complete fixture triplets and reports the authored JSON size', () => {
     const files = readdirSync(new URL('../../test/fixtures/codegen/', import.meta.url)).filter(n => n.startsWith('template-'))
-    for (const suffix of ['.lua', '.host.json', '.pages.json']) expect(files.filter(n => n.endsWith(suffix))).toHaveLength(14)
+    for (const suffix of ['.lua', '.host.json', '.pages.json']) expect(files.filter(n => n.endsWith(suffix))).toHaveLength(20)
     const bytes = ids.reduce((n, id) => n + readFileSync(new URL(`../../../templates/${id}.json`, import.meta.url)).length, 0)
     expect(bytes).toBeGreaterThan(0)
     console.log(`Template JSON: ${bytes} UTF-8 bytes across ${ids.length} projects`)
@@ -362,5 +392,61 @@ describe('plain-shape needle gauge', () => {
     const texts = scene.root.slice(6, 11).map(n => widgetOf(n, t)!)
     expect(texts.map(w => w.type)).toEqual(['text', 'text', 'text', 'text', 'text'])
     expect(texts.map(w => w.params.text)).toEqual(['0', '50', '100', '{$gauge_value:%.0f}', 'Pressure kPa'])
+  })
+})
+
+describe('the Power wall and Hydro farm starters (docs/templates-power-farm.md)', () => {
+  it.each(CONSOLES)('%s opens at its console shape and is never resized', id => {
+    const p = templateProject(id)
+    const want = id === 'power-wall-2x3' ? { shape: 'v3x2', px: { w: 460, h: 714 }, units: { w: 960, h: 1490 } } : { shape: '3x2', px: { w: 714, h: 460 }, units: { w: 1490, h: 960 } }
+    for (const pg of p.pages) expect({ shape: pg.shape, px: pg.size, units: { w: pg.scene.header.w, h: pg.scene.header.h } }).toEqual(want)
+  })
+  it('gives both Power walls the same devices, reads, writes, thresholds and logic; only the layout differs', () => {
+    const wide = templateProject('power-wall-3x2'), tall = templateProject('power-wall-2x3')
+    for (const k of ['roles', 'reads', 'rules', 'state', 'customLua', 'simDevices'] as const) expect(tall[k], k).toEqual(wide[k])
+    expect(tall.pages[0].scene).not.toEqual(wide.pages[0].scene)
+  })
+  it.each(['power-wall-3x2', 'power-wall-2x3'] as const)('%s: roles, rules, states and actions as mapped', id => {
+    const p = templateProject(id)
+    expect(p.roles).toEqual(POWER_ROLES)
+    expect(p.rules).toEqual(POWER_RULES)
+    expect(p.rules.find(r => r.id === 'genOn')!.value).toBe('S.mode == 1 and 1 or S.mode == 2 and 0 or (P.frac and (P.frac < 0.1 and 1 or P.frac > 0.25 and 0 or nil))')
+    expect(p.reads.find(r => r.id === 'frac')).toMatchObject({ derived: 'P.cap and P.cap > 0 and x / P.cap or nil', th: { critBelow: 0.1, warnBelow: 0.5 } })
+    expect(p.state).toEqual([{ name: 'mode', type: 'number', init: 0, min: 0, max: 2 }, { name: 'parked', type: 'bool', init: false }])
+    expect(p.actions.map(a => [a.id, a.do])).toEqual([
+      ['mode0', [{ op: 'set', state: 'mode', value: '0' }]], ['mode1', [{ op: 'set', state: 'mode', value: '1' }]], ['mode2', [{ op: 'set', state: 'mode', value: '2' }]],
+      ['park', [{ op: 'toggle', state: 'parked' }]], ['devices', [{ op: 'page', page: DEVICES_PAGE }]]])
+    const t = themeOf(p), widgets = p.pages[0].scene.root.map(n => widgetOf(n, t)!)
+    const labels = widgets.filter(w => w.type === 'button').map(w => (w.params.states as { label: string }[]).map(s => s.label))
+    expect(labels).toEqual([['PARK PANELS', 'RESUME TRACKING'], ['DEVICES']])
+    expect(widgets.filter(w => w.type === 'options').map(w => (w.params.options as { label: string }[]).map(o => o.label))).toEqual([['AUTO', 'ON', 'OFF']])
+    expect(widgets.filter(w => w.type === 'panel').map(w => w.params.title)).toEqual(['STORAGE', 'NOW', 'YESTERDAY', 'SOLAR PANELS', 'COAL GENERATORS', 'SUN', 'COAL RESERVE'])
+  })
+  it('hydro-farm: roles, rules, states, pages and actions as mapped', () => {
+    const p = templateProject('hydro-farm'), t = themeOf(p)
+    expect(p.roles).toEqual(FARM_ROLES)
+    expect(p.rules).toEqual(FARM_RULES)
+    expect(p.state.map(s => [s.name, s.init])).toEqual([['plant', 1], ['lmode', 0], ['paused', false], ['first', 2], ['last', 91], ['dump', 1],
+      ['lightLong', 750], ['lightShort', 675], ['lightMush', 0], ['per', 5], ['ann', 5], ['binwarn', 5], ['darkLong', 450], ['darkShort', 525], ['darkMush', 1200]])
+    const steps = p.actions.map(a => a.do)
+    expect(steps).toContainEqual([{ op: 'command', flag: 'skip' }])
+    expect(steps).toContainEqual([{ op: 'command', flag: 'home' }])
+    expect(steps).toContainEqual([{ op: 'command', flag: 'dump' }])
+    expect(steps).toContainEqual([{ op: 'toggle', state: 'paused' }])
+    expect(steps.filter(s => s.length === 1 && s[0].op === 'page' && s[0].page === 'p2')).toHaveLength(2)   // the tile and CHANGE
+    expect(steps).toContainEqual([{ op: 'page', page: 'p3' }])
+    expect(steps).toContainEqual([{ op: 'page', page: DEVICES_PAGE }])
+    const picks = p.actions.filter(a => a.page === 'p2' && a.do.length === 2)
+    expect(picks.map(a => a.do)).toEqual(Array.from({ length: 17 }, (_, k) => [{ op: 'set', state: 'plant', value: String(k + 1) }, { op: 'page', page: 'p1' }]))
+    const stepping = p.actions.filter(a => a.page === 'p3' && a.do[0].op === 'step').map(a => a.do[0])
+    expect(stepping).toHaveLength(24)
+    expect(stepping).toContainEqual({ op: 'step', state: 'first', by: 1, min: 0, max: 'S.last' })
+    expect(stepping).toContainEqual({ op: 'step', state: 'last', by: -1, min: 'S.first', max: 999 })
+    expect(stepping).toContainEqual({ op: 'step', state: 'darkMush', by: -15, min: 0, max: 2400 })
+    expect(p.pages.map(pg => (widgetOf(pg.scene.root[0], t)!.params.title))).toEqual(['HYDRO FARM', 'HYDRO FARM', 'HYDRO FARM SETTINGS'])
+    expect(p.pages[1].scene.root.map(n => widgetOf(n, t)).filter(w => w?.type === 'button')).toHaveLength(18)
+    expect(p.pages[2].scene.root.map(n => widgetOf(n, t)).filter(w => w?.type === 'stepper')).toHaveLength(12)
+    expect(p.pages[1].natives!.map(n => n.params.name)).toEqual(['1929046963', '-1057658015', '658916791', '1924673028', '258339687', '2044798572', '176446172',
+      '-998592080', '1277828144', '892110467', '266654416', '2042955224', '-800947386', '851290561', '-1414203269', '-177792789', '1819167057'])
   })
 })

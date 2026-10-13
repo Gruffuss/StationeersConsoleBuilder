@@ -23,8 +23,8 @@ static class PageBackgroundTests
             var frame = Compositor.Compose(chip, "main", 1, false);
             check(frame.Problems.Length == 0 && FrameTests.Sample(frame, 8.5f, 8.5f).A == 0,
                 "page background " + name + ": empty area has no target coverage");
-            if (name == "none") check(FrameTests.Sample(frame, 1.5f, 1.5f).A > 0,
-                "page background none: the tag's empty-scene diagnostic border remains drawn");
+            if (name == "none") check(frame.Positions.Length == 0 && frame.Indices.Length == 0 && frame.Elements.Length == 0,
+                "page background none: blank page has no marker geometry or target coverage");
             if (name == "translucent") check(Math.Abs(FrameTests.Sample(frame, 32.5f, 32.5f).A - .5) < .01,
                 "page background translucent: scene opacity is not flattened over a native panel");
             if (Environment.GetEnvironmentVariable("VB_BACKGROUND_FRAMES") is { } dir)

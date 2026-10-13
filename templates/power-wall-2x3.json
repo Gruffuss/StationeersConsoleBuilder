@@ -1,0 +1,3382 @@
+{
+  "version": 1,
+  "name": "Power wall (2×3)",
+  "target": {
+    "vectorMod": "0.11.118"
+  },
+  "theme": "neutral",
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Main",
+      "surface": "main",
+      "shape": "v3x2",
+      "size": {
+        "w": 460,
+        "h": 714
+      },
+      "background": [
+        "#2B2B2B",
+        "#202020"
+      ],
+      "scene": {
+        "header": {
+          "w": 960,
+          "h": 1490,
+          "fit": "contain"
+        },
+        "defs": [],
+        "root": [
+          {
+            "op": "G",
+            "attrs": {
+              "id": "hdr1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 24.5,
+                  "w": 911,
+                  "h": 63,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_crit,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 750,
+                      "cy": 56,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#EF5350"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 768,
+                      "y": 39,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_crit:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($hdr1_warn,0)"
+                },
+                "c": [
+                  {
+                    "op": "C",
+                    "attrs": {
+                      "cx": 668,
+                      "cy": 56,
+                      "rx": 8,
+                      "ry": 8,
+                      "f": "#F0B429"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 686,
+                      "y": 39,
+                      "w": 40,
+                      "h": 34,
+                      "text": "{$hdr1_warn:%.0f}",
+                      "size": 24,
+                      "f": "#F2F2F2",
+                      "align": "right",
+                      "valign": "middle"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 28,
+                  "w": 592,
+                  "h": 56,
+                  "text": "POWER",
+                  "size": 30,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 818,
+                  "y": 28,
+                  "w": 100,
+                  "h": 56,
+                  "text": "$hdr1_clock",
+                  "size": 24,
+                  "f": "#C4C4C4",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget header hdr1 {\"x\":24,\"y\":24,\"w\":912,\"h\":64,\"title\":\"POWER\",\"clock\":true,\"counts\":true,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 104.5,
+                  "w": 911,
+                  "h": 415.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 38,
+                  "y": 114,
+                  "w": 884,
+                  "h": 30.799999237060547,
+                  "text": "STORAGE",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl1 {\"x\":24,\"y\":104,\"w\":912,\"h\":416.5,\"title\":\"STORAGE\",\"unit\":\"\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "ro1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 258,
+                  "w": 418,
+                  "h": 24,
+                  "rx": 3,
+                  "f": "#121212"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 43,
+                  "y": 262,
+                  "w": "=clamp($ro1_lvl,0,1)*410",
+                  "h": 16,
+                  "rx": 2,
+                  "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 39,
+                  "y": 124,
+                  "w": 362,
+                  "h": 144,
+                  "text": "{$ro1_v:%.0f}",
+                  "size": 120,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 409,
+                  "y": 187.36093139648438,
+                  "w": 48,
+                  "h": 67.19999694824219,
+                  "text": "%",
+                  "size": 48,
+                  "f": "#9A9A9A",
+                  "valign": "middle"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 39,
+                  "y": 292,
+                  "w": 418,
+                  "h": 33.599998474121094,
+                  "text": "$ro1_status",
+                  "size": 24,
+                  "f": "=if(eq($ro1_st,1),#4CC38A,if(eq($ro1_st,2),#F0B429,if(eq($ro1_st,3),#EF5350,#9A9A9A)))",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 39,
+                  "y": 292,
+                  "w": 418,
+                  "h": 33.599998474121094,
+                  "text": "{$ro1_sub:%.1f}",
+                  "size": 22,
+                  "f": "#C4C4C4",
+                  "align": "right",
+                  "valign": "middle"
+                }
+              }
+            ],
+            "comments": [
+              "widget readout ro1 {\"x\":39,\"y\":124,\"w\":418,\"h\":201.6,\"variant\":\"hero\",\"caption\":\"Label\",\"unit\":\"%\",\"fmt\":\"%.0f\",\"bar\":true,\"subFmt\":\"%.1f\",\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "kv1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 154.89999389648438,
+                  "w": 418,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 154.89999389648438,
+                  "w": 200,
+                  "h": 50,
+                  "text": "Stored",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 154.89999389648438,
+                  "w": 180,
+                  "h": 50,
+                  "text": "$kv1_v0",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 210.89999389648438,
+                  "w": 418,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 210.89999389648438,
+                  "w": 200,
+                  "h": 50,
+                  "text": "Capacity",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 210.89999389648438,
+                  "w": 180,
+                  "h": 50,
+                  "text": "$kv1_v1",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 266.8999938964844,
+                  "w": 418,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 266.8999938964844,
+                  "w": 180,
+                  "h": 50,
+                  "text": "$kv1_v2",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 322.8999938964844,
+                  "w": 418,
+                  "h": 50,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 322.8999938964844,
+                  "w": 200,
+                  "h": 50,
+                  "text": "Batteries",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 322.8999938964844,
+                  "w": 180,
+                  "h": 50,
+                  "text": "{$kv1_v3:%.0f}",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget kvtable kv1 {\"x\":503,\"y\":154.9,\"w\":418,\"h\":218,\"rows\":[{\"caption\":\"Stored\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Capacity\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Batteries\",\"fmt\":\"%.0f\",\"state\":false,\"key\":3}],\"rowH\":50,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt1"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 266.8999938964844,
+                  "w": 200,
+                  "h": 50,
+                  "text": "$timeCaption",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt1 {\"x\":517,\"y\":266.9,\"w\":200,\"h\":50,\"style\":\"value\",\"text\":\"$timeCaption\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 396,
+                  "w": 418,
+                  "h": 72
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 16
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep1_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": "=39+mod(i,8)*53.5",
+                          "y": "=396+floor(i/8)*48",
+                          "w": 43.5,
+                          "h": 24,
+                          "rx": 3,
+                          "f": "#121212"
+                        }
+                      },
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": "=39+mod(i,8)*53.5+4",
+                          "y": "=396+floor(i/8)*48+4",
+                          "w": "=clamp($rep1_lvl[i],0,1)*35.5",
+                          "h": 16,
+                          "rx": 2,
+                          "f": "=if(eq($rep1_st[i],1),#4CC38A,if(eq($rep1_st[i],2),#F0B429,if(eq($rep1_st[i],3),#EF5350,#9A9A9A)))"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep1 {\"x\":39,\"y\":396,\"w\":418,\"h\":72,\"max\":16,\"layout\":\"grid\",\"cols\":8,\"pitch\":48,\"item\":\"bar\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 399.5,
+                  "w": 418,
+                  "h": 100
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 2
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep2_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 503,
+                          "y": "=399.5+i*56",
+                          "w": 418,
+                          "h": 44,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=1-eq($rep2_st[i],1)-eq($rep2_st[i],2)-eq($rep2_st[i],3)",
+                          "cx": 525,
+                          "cy": "=399.5+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#9A9A9A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep2_st[i],1)",
+                          "cx": 525,
+                          "cy": "=399.5+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#4CC38A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep2_st[i],2)",
+                          "cx": 525,
+                          "cy": "=399.5+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#F0B429"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep2_st[i],3)",
+                          "cx": 525,
+                          "cy": "=399.5+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#EF5350"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 543,
+                          "y": "=399.5+i*56",
+                          "w": "=lerp(294,364,clamp(and($rep2_ready,eq($rep2_hasv[i],0)),0,1))",
+                          "h": 44,
+                          "text": "$rep2_name[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=not(and($rep2_ready,eq($rep2_hasv[i],0)))",
+                          "x": 847,
+                          "y": "=399.5+i*56",
+                          "w": 60,
+                          "h": 44,
+                          "text": "{$rep2_v[i]:%.0f}",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep2 {\"x\":503,\"y\":399.5,\"w\":418,\"h\":100,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":60,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 537,
+                  "w": 447,
+                  "h": 297.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 38,
+                  "y": 546.5,
+                  "w": 346,
+                  "h": 30.799999237060547,
+                  "text": "NOW",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 394,
+                  "y": 547.9000244140625,
+                  "w": 64,
+                  "h": 28,
+                  "text": "kW",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "right",
+                  "valign": "middle"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl2 {\"x\":24,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"NOW\",\"unit\":\"kW\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "kv2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 588.2999877929688,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 53,
+                  "y": 588.2999877929688,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Solar",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 263,
+                  "y": 588.2999877929688,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv2_v0",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 647.7249755859375,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 53,
+                  "y": 647.7249755859375,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Coal",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 263,
+                  "y": 647.7249755859375,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv2_v1",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 707.1499633789062,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 53,
+                  "y": 707.1499633789062,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Using",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 263,
+                  "y": 707.1499633789062,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv2_v2",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 766.5750122070312,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 53,
+                  "y": 766.5750122070312,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Net",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 263,
+                  "y": 766.5750122070312,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv2_v3",
+                  "size": 28,
+                  "f": "=if(eq($kv2_s3,2),#F0B429,if(eq($kv2_s3,3),#EF5350,#F2F2F2))",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget kvtable kv2 {\"x\":39,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Using\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl3"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 488.5,
+                  "y": 537,
+                  "w": 447,
+                  "h": 297.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 502,
+                  "y": 546.5,
+                  "w": 346,
+                  "h": 30.799999237060547,
+                  "text": "YESTERDAY",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 858,
+                  "y": 547.9000244140625,
+                  "w": 64,
+                  "h": 28,
+                  "text": "MJ",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "right",
+                  "valign": "middle"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl3 {\"x\":488,\"y\":536.5,\"w\":448,\"h\":298.5,\"title\":\"YESTERDAY\",\"unit\":\"MJ\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "kv3"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 588.2999877929688,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 588.2999877929688,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Solar",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 588.2999877929688,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv3_v0",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 647.7249755859375,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 647.7249755859375,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Coal",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 647.7249755859375,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv3_v1",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 707.1499633789062,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 707.1499633789062,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Used",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 707.1499633789062,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv3_v2",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 766.5750122070312,
+                  "w": 418,
+                  "h": 53.42499923706055,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 766.5750122070312,
+                  "w": 200,
+                  "h": 53.42499923706055,
+                  "text": "Net",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 766.5750122070312,
+                  "w": 180,
+                  "h": 53.42499923706055,
+                  "text": "$kv3_v3",
+                  "size": 28,
+                  "f": "=if(eq($kv3_s3,2),#F0B429,if(eq($kv3_s3,3),#EF5350,#F2F2F2))",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget kvtable kv3 {\"x\":503,\"y\":588.3,\"w\":418,\"h\":231.7,\"rows\":[{\"caption\":\"Solar\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Used\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Net\",\"fmt\":\"\",\"state\":true,\"key\":3}],\"rowH\":53.425,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl4"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 851.5,
+                  "w": 447,
+                  "h": 299.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 38,
+                  "y": 861,
+                  "w": 420,
+                  "h": 30.799999237060547,
+                  "text": "SOLAR PANELS",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl4 {\"x\":24,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SOLAR PANELS\",\"unit\":\"\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt2"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 228,
+                  "y": 866,
+                  "w": 50,
+                  "h": 33.599998474121094,
+                  "text": "Qty",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt2 {\"x\":228,\"y\":866,\"w\":50,\"h\":33.6,\"style\":\"unit\",\"text\":\"Qty\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt3"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 288,
+                  "y": 866,
+                  "w": 74,
+                  "h": 33.599998474121094,
+                  "text": "kW",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt3 {\"x\":288,\"y\":866,\"w\":74,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt4"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 372,
+                  "y": 866,
+                  "w": 70,
+                  "h": 33.599998474121094,
+                  "text": "Eff %",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt4 {\"x\":372,\"y\":866,\"w\":70,\"h\":33.6,\"style\":\"unit\",\"text\":\"Eff %\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep3"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 904.7999877929688,
+                  "w": 418,
+                  "h": 156
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 3
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep3_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": "=904.8+i*56",
+                          "w": 418,
+                          "h": 44,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=1-eq($rep3_st[i],1)-eq($rep3_st[i],2)-eq($rep3_st[i],3)",
+                          "cx": 61,
+                          "cy": "=904.8+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#9A9A9A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep3_st[i],1)",
+                          "cx": 61,
+                          "cy": "=904.8+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#4CC38A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep3_st[i],2)",
+                          "cx": 61,
+                          "cy": "=904.8+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#F0B429"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep3_st[i],3)",
+                          "cx": 61,
+                          "cy": "=904.8+i*56+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#EF5350"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 79,
+                          "y": "=904.8+i*56",
+                          "w": "=lerp(244,364,clamp(and($rep3_ready,eq($rep3_hasv[i],0)),0,1))",
+                          "h": 44,
+                          "text": "$rep3_name[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=not(and($rep3_ready,eq($rep3_hasv[i],0)))",
+                          "x": 333,
+                          "y": "=904.8+i*56",
+                          "w": 110,
+                          "h": 44,
+                          "text": "{$rep3_v[i]:%.0f}",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep3 {\"x\":39,\"y\":904.8,\"w\":418,\"h\":156,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep4"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 228,
+                  "y": 909.7999877929688,
+                  "w": 50,
+                  "h": 145.60000610351562
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 3
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep4_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 228,
+                          "y": "=909.8+i*56",
+                          "w": 50,
+                          "h": 33.599998474121094,
+                          "text": "$rep4_t[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep4 {\"x\":228,\"y\":909.8,\"w\":50,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep5"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 288,
+                  "y": 909.7999877929688,
+                  "w": 74,
+                  "h": 145.60000610351562
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 3
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep5_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 288,
+                          "y": "=909.8+i*56",
+                          "w": 74,
+                          "h": 33.599998474121094,
+                          "text": "$rep5_t[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep5 {\"x\":288,\"y\":909.8,\"w\":74,\"h\":145.6,\"max\":3,\"layout\":\"list\",\"cols\":2,\"pitch\":56,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "al1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 1021.4000244140625,
+                  "w": 418,
+                  "h": 36.400001525878906
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=gt($al1_st,0)"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 53,
+                      "y": 1025.5999755859375,
+                      "w": 72,
+                      "h": 28,
+                      "rx": 3,
+                      "f": "=if(eq($al1_st,1),#4CC38A,if(eq($al1_st,2),#F0B429,if(eq($al1_st,3),#EF5350,#9A9A9A)))"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "v": "=eq($al1_st,1)",
+                      "x": 53,
+                      "y": 1025.5999755859375,
+                      "w": 72,
+                      "h": 28,
+                      "text": "OK",
+                      "size": 20,
+                      "weight": "bold",
+                      "f": "#111111",
+                      "align": "center",
+                      "valign": "middle"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "v": "=eq($al1_st,2)",
+                      "x": 53,
+                      "y": 1025.5999755859375,
+                      "w": 72,
+                      "h": 28,
+                      "text": "WARN",
+                      "size": 20,
+                      "weight": "bold",
+                      "f": "#111111",
+                      "align": "center",
+                      "valign": "middle"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "v": "=eq($al1_st,3)",
+                      "x": 53,
+                      "y": 1025.5999755859375,
+                      "w": 72,
+                      "h": 28,
+                      "text": "CRIT",
+                      "size": 20,
+                      "weight": "bold",
+                      "f": "#111111",
+                      "align": "center",
+                      "valign": "middle"
+                    }
+                  },
+                  {
+                    "op": "T",
+                    "attrs": {
+                      "x": 139,
+                      "y": 1024.0999755859375,
+                      "w": 304,
+                      "h": 31,
+                      "text": "$al1_msg",
+                      "size": 22,
+                      "f": "#F2F2F2",
+                      "valign": "middle",
+                      "fit": "ellipsis"
+                    }
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget alert al1 {\"x\":39,\"y\":1021.4,\"w\":418,\"h\":36.4,\"row\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn1"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn1_hit",
+                  "click": 1,
+                  "x": 39,
+                  "y": 1082.5,
+                  "w": 248,
+                  "h": 54
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=eq($btn1_state,0)"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 1082.5,
+                      "w": 248,
+                      "h": 54,
+                      "rx": 4,
+                      "f": "#2A64BD",
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "v": "=eq($btn1_state,1)"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 39,
+                      "y": 1082.5,
+                      "w": 248,
+                      "h": 54,
+                      "rx": 4,
+                      "f": "#2A64BD",
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "v": "=eq($btn1_state,0)",
+                  "x": 57,
+                  "y": 1082.5,
+                  "w": 212,
+                  "h": 54,
+                  "text": "PARK PANELS",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#FFFFFF",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "v": "=eq($btn1_state,1)",
+                  "x": 57,
+                  "y": 1082.5,
+                  "w": 212,
+                  "h": 54,
+                  "text": "RESUME TRACKING",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#FFFFFF",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn1 {\"x\":39,\"y\":1082.5,\"w\":248,\"h\":54,\"states\":[{\"label\":\"PARK PANELS\",\"variant\":\"primary\",\"key\":0},{\"label\":\"RESUME TRACKING\",\"variant\":\"primary\",\"key\":1}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "btn2"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "id": "btn2_hit",
+                  "click": 1,
+                  "x": 297,
+                  "y": 1082.5,
+                  "w": 160,
+                  "h": 54
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 297.5,
+                  "y": 1083,
+                  "w": 159,
+                  "h": 53,
+                  "rx": 3.5,
+                  "f": "#2C2C2C",
+                  "s": "#4A4A4A",
+                  "sw": 1,
+                  "fo": "=1-0.25*down"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 315,
+                  "y": 1082.5,
+                  "w": 124,
+                  "h": 54,
+                  "text": "DEVICES",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget button btn2 {\"x\":297,\"y\":1082.5,\"w\":160,\"h\":54,\"states\":[{\"label\":\"DEVICES\",\"variant\":\"secondary\",\"key\":0}],\"canDisable\":false,\"canSelect\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl5"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 24.5,
+                  "y": 1168,
+                  "w": 447,
+                  "h": 297.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 38,
+                  "y": 1177.5,
+                  "w": 420,
+                  "h": 30.799999237060547,
+                  "text": "COAL GENERATORS",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl5 {\"x\":24,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL GENERATORS\",\"unit\":\"\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt5"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 272,
+                  "y": 1182.5,
+                  "w": 80,
+                  "h": 33.599998474121094,
+                  "text": "kW",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt5 {\"x\":272,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"kW\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt6"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 362,
+                  "y": 1182.5,
+                  "w": 80,
+                  "h": 33.599998474121094,
+                  "text": "Coal",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt6 {\"x\":362,\"y\":1182.5,\"w\":80,\"h\":33.6,\"style\":\"unit\",\"text\":\"Coal\",\"align\":\"right\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep6"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 39,
+                  "y": 1221.300048828125,
+                  "w": 418,
+                  "h": 111.44999694824219
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 2
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep6_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "R",
+                        "attrs": {
+                          "x": 39,
+                          "y": "=1221.3+i*67.45",
+                          "w": 418,
+                          "h": 44,
+                          "rx": 4,
+                          "f": "#2C2C2C"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=1-eq($rep6_st[i],1)-eq($rep6_st[i],2)-eq($rep6_st[i],3)",
+                          "cx": 61,
+                          "cy": "=1221.3+i*67.45+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#9A9A9A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep6_st[i],1)",
+                          "cx": 61,
+                          "cy": "=1221.3+i*67.45+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#4CC38A"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep6_st[i],2)",
+                          "cx": 61,
+                          "cy": "=1221.3+i*67.45+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#F0B429"
+                        }
+                      },
+                      {
+                        "op": "C",
+                        "attrs": {
+                          "v": "=eq($rep6_st[i],3)",
+                          "cx": 61,
+                          "cy": "=1221.3+i*67.45+22",
+                          "rx": 8,
+                          "ry": 8,
+                          "f": "#EF5350"
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 79,
+                          "y": "=1221.3+i*67.45",
+                          "w": "=lerp(244,364,clamp(and($rep6_ready,eq($rep6_hasv[i],0)),0,1))",
+                          "h": 44,
+                          "text": "$rep6_name[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      },
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "v": "=not(and($rep6_ready,eq($rep6_hasv[i],0)))",
+                          "x": 333,
+                          "y": "=1221.3+i*67.45",
+                          "w": 110,
+                          "h": 44,
+                          "text": "{$rep6_v[i]:%.0f}",
+                          "size": 28,
+                          "f": "#F2F2F2",
+                          "align": "right",
+                          "valign": "middle"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep6 {\"x\":39,\"y\":1221.3,\"w\":418,\"h\":111.45,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"row\",\"fmt\":\"%.0f\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "rep7"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 272,
+                  "y": 1226.300048828125,
+                  "w": 80,
+                  "h": 101.04999542236328
+                }
+              },
+              {
+                "op": "RP",
+                "attrs": {
+                  "n": 2
+                },
+                "c": [
+                  {
+                    "op": "G",
+                    "attrs": {
+                      "v": "=lt(i,$rep7_n)"
+                    },
+                    "c": [
+                      {
+                        "op": "T",
+                        "attrs": {
+                          "x": 272,
+                          "y": "=1226.3+i*67.45",
+                          "w": 80,
+                          "h": 33.599998474121094,
+                          "text": "$rep7_t[i]",
+                          "size": 24,
+                          "f": "#F2F2F2",
+                          "valign": "middle",
+                          "fit": "ellipsis",
+                          "missing": ""
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "comments": [
+              "widget repeater rep7 {\"x\":272,\"y\":1226.3,\"w\":80,\"h\":101.049995,\"max\":2,\"layout\":\"list\",\"cols\":2,\"pitch\":67.45,\"item\":\"text\",\"fmt\":\"\",\"valueW\":0,\"click\":false,\"fade\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt7"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 43,
+                  "y": 1353.199951171875,
+                  "w": 200,
+                  "h": 33.599998474121094,
+                  "text": "Override",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt7 {\"x\":43,\"y\":1353.2,\"w\":200,\"h\":33.6,\"style\":\"unit\",\"text\":\"Override\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "og1"
+            },
+            "c": [
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g0"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o0",
+                      "click": 1,
+                      "x": 42,
+                      "y": 1394,
+                      "w": 130.6666717529297,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,0)",
+                      "x": 41,
+                      "y": 1393,
+                      "w": 132.6666717529297,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 42.5,
+                      "y": 1394.5,
+                      "w": 129.6666717529297,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g1"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o1",
+                      "click": 1,
+                      "x": 182.6666717529297,
+                      "y": 1394,
+                      "w": 130.6666717529297,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,1)",
+                      "x": 181.6666717529297,
+                      "y": 1393,
+                      "w": 132.6666717529297,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 183.1666717529297,
+                      "y": 1394.5,
+                      "w": 129.6666717529297,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "id": "og1_g2"
+                },
+                "c": [
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "id": "og1_o2",
+                      "click": 1,
+                      "x": 323.3333435058594,
+                      "y": 1394,
+                      "w": 130.6666717529297,
+                      "h": 54
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "v": "=eq($og1_sel,2)",
+                      "x": 322.3333435058594,
+                      "y": 1393,
+                      "w": 132.6666717529297,
+                      "h": 56,
+                      "rx": 5,
+                      "f": "none",
+                      "s": "#3D8BFD",
+                      "sw": 2
+                    }
+                  },
+                  {
+                    "op": "R",
+                    "attrs": {
+                      "x": 323.8333435058594,
+                      "y": 1394.5,
+                      "w": 129.6666717529297,
+                      "h": 53,
+                      "rx": 3.5,
+                      "f": "#2C2C2C",
+                      "s": "#4A4A4A",
+                      "sw": 1,
+                      "fo": "=1-0.25*down"
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 42,
+                  "y": 1394,
+                  "w": 130.6666717529297,
+                  "h": 54,
+                  "text": "AUTO",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 182.6666717529297,
+                  "y": 1394,
+                  "w": 130.6666717529297,
+                  "h": 54,
+                  "text": "ON",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 323.3333435058594,
+                  "y": 1394,
+                  "w": 130.6666717529297,
+                  "h": 54,
+                  "text": "OFF",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget options og1 {\"x\":42,\"y\":1394,\"w\":412,\"h\":54,\"options\":[{\"label\":\"AUTO\",\"value\":0,\"key\":0},{\"label\":\"ON\",\"value\":1,\"key\":1},{\"label\":\"OFF\",\"value\":2,\"key\":2}],\"gap\":10,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl6"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 488.5,
+                  "y": 851.5,
+                  "w": 447,
+                  "h": 299.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 502,
+                  "y": 861,
+                  "w": 420,
+                  "h": 30.799999237060547,
+                  "text": "SUN",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl6 {\"x\":488,\"y\":851,\"w\":448,\"h\":300.5,\"title\":\"SUN\",\"unit\":\"\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "gauge1"
+            },
+            "c": [
+              {
+                "op": "P",
+                "attrs": {
+                  "d": "M518.7 1005.2 A99.3 99.3 0 0 1 618 905.9 A99.3 99.3 0 0 1 717.3 1005.2",
+                  "s": "#7A7A7A",
+                  "sw": 4
+                }
+              },
+              {
+                "op": "G",
+                "attrs": {
+                  "a": [
+                    618,
+                    1005.2000122070312
+                  ],
+                  "r": "=-90+clamp(($gauge1_v-0)/1,0,1)*180"
+                },
+                "c": [
+                  {
+                    "op": "L",
+                    "attrs": {
+                      "p": [
+                        618,
+                        1005.2000122070312,
+                        618,
+                        915.8300170898438
+                      ],
+                      "s": "=if(eq($gauge1_st,1),#4CC38A,if(eq($gauge1_st,2),#F0B429,if(eq($gauge1_st,3),#EF5350,#9A9A9A)))",
+                      "sw": 3
+                    }
+                  }
+                ]
+              },
+              {
+                "op": "C",
+                "attrs": {
+                  "cx": 618,
+                  "cy": 1005.2000122070312,
+                  "rx": 4.5,
+                  "ry": 4.5,
+                  "f": "#F2F2F2"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 503,
+                  "y": 1108.5,
+                  "w": 230,
+                  "h": 28,
+                  "text": "Sun angle",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget gauge gauge1 {\"x\":503,\"y\":901.9,\"w\":230,\"h\":234.6,\"label\":\"Sun angle\",\"unit\":\"\",\"min\":0,\"max\":1,\"start\":-90,\"end\":90,\"ticks\":0,\"fmt\":\"\",\"value\":false,\"state\":true,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt8"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 503,
+                  "y": 1010.4000244140625,
+                  "w": 230,
+                  "h": 47.599998474121094,
+                  "text": "$sunAngle",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "center",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt8 {\"x\":503,\"y\":1010.4,\"w\":230,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunAngle\",\"align\":\"center\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt9"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 903,
+                  "w": 178,
+                  "h": 33.599998474121094,
+                  "text": "Sunset in",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt9 {\"x\":743,\"y\":903,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunset in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt10"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 931,
+                  "w": 178,
+                  "h": 47.599998474121094,
+                  "text": "$sunset",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt10 {\"x\":743,\"y\":931,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunset\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt11"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 983.2000122070312,
+                  "w": 178,
+                  "h": 33.599998474121094,
+                  "text": "Sunrise in",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt11 {\"x\":743,\"y\":983.2,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Sunrise in\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt12"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 1011.2000122070312,
+                  "w": 178,
+                  "h": 47.599998474121094,
+                  "text": "$sunrise",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt12 {\"x\":743,\"y\":1011.2,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$sunrise\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt13"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 1063.4000244140625,
+                  "w": 178,
+                  "h": 33.599998474121094,
+                  "text": "Night lasts",
+                  "size": 20,
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt13 {\"x\":743,\"y\":1063.4,\"w\":178,\"h\":33.6,\"style\":\"unit\",\"text\":\"Night lasts\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "txt14"
+            },
+            "c": [
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 743,
+                  "y": 1091.4000244140625,
+                  "w": 178,
+                  "h": 47.599998474121094,
+                  "text": "$night",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget text txt14 {\"x\":743,\"y\":1091.4,\"w\":178,\"h\":47.6,\"style\":\"value-lg\",\"text\":\"$night\",\"align\":\"left\",\"state\":false,\"keys\":{}}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "pnl7"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 488.5,
+                  "y": 1168,
+                  "w": 447,
+                  "h": 297.5,
+                  "rx": 5.5,
+                  "f": "#1A1A1A",
+                  "s": "#4A4A4A",
+                  "sw": 1
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 502,
+                  "y": 1177.5,
+                  "w": 420,
+                  "h": 30.799999237060547,
+                  "text": "COAL RESERVE",
+                  "size": 22,
+                  "weight": "bold",
+                  "f": "#9A9A9A",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget panel pnl7 {\"x\":488,\"y\":1167.5,\"w\":448,\"h\":298.5,\"title\":\"COAL RESERVE\",\"unit\":\"\"}"
+            ]
+          },
+          {
+            "op": "G",
+            "attrs": {
+              "id": "kv4"
+            },
+            "c": [
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 1218.4000244140625,
+                  "w": 418,
+                  "h": 53.650001525878906,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 1218.4000244140625,
+                  "w": 200,
+                  "h": 53.650001525878906,
+                  "text": "Coal left",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 1218.4000244140625,
+                  "w": 180,
+                  "h": 53.650001525878906,
+                  "text": "$kv4_v0",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 1278.050048828125,
+                  "w": 418,
+                  "h": 53.650001525878906,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 1278.050048828125,
+                  "w": 200,
+                  "h": 53.650001525878906,
+                  "text": "Coal energy",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 1278.050048828125,
+                  "w": 180,
+                  "h": 53.650001525878906,
+                  "text": "$kv4_v1",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 1337.7000732421875,
+                  "w": 418,
+                  "h": 53.650001525878906,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 1337.7000732421875,
+                  "w": 200,
+                  "h": 53.650001525878906,
+                  "text": "Coal lasts",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 1337.7000732421875,
+                  "w": 180,
+                  "h": 53.650001525878906,
+                  "text": "$kv4_v2",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "R",
+                "attrs": {
+                  "x": 503,
+                  "y": 1397.3499755859375,
+                  "w": 418,
+                  "h": 53.650001525878906,
+                  "rx": 4,
+                  "f": "#2C2C2C"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 517,
+                  "y": 1397.3499755859375,
+                  "w": 200,
+                  "h": 53.650001525878906,
+                  "text": "Producing",
+                  "size": 24,
+                  "f": "#F2F2F2",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              },
+              {
+                "op": "T",
+                "attrs": {
+                  "x": 727,
+                  "y": 1397.3499755859375,
+                  "w": 180,
+                  "h": 53.650001525878906,
+                  "text": "$kv4_v3",
+                  "size": 28,
+                  "f": "#F2F2F2",
+                  "align": "right",
+                  "valign": "middle",
+                  "fit": "ellipsis"
+                }
+              }
+            ],
+            "comments": [
+              "widget kvtable kv4 {\"x\":503,\"y\":1218.4,\"w\":418,\"h\":232.6,\"rows\":[{\"caption\":\"Coal left\",\"fmt\":\"\",\"state\":false,\"key\":0},{\"caption\":\"Coal energy\",\"fmt\":\"\",\"state\":false,\"key\":1},{\"caption\":\"Coal lasts\",\"fmt\":\"\",\"state\":false,\"key\":2},{\"caption\":\"Producing\",\"fmt\":\"\",\"state\":false,\"key\":3}],\"rowH\":53.65,\"gap\":6,\"valueW\":180,\"keys\":{}}"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "id": "batt",
+      "name": "Batteries",
+      "prefabs": [
+        "StructureBattery",
+        "StructureBatteryLarge"
+      ],
+      "mode": "all",
+      "optional": true
+    },
+    {
+      "id": "gen",
+      "name": "Generators",
+      "prefabs": [
+        "StructureSolidFuelGenerator"
+      ],
+      "mode": "all",
+      "optional": true
+    },
+    {
+      "id": "panels",
+      "name": "Solar panels",
+      "prefabs": [
+        "StructureSolarPanel",
+        "StructureSolarPanelReinforced",
+        "StructureSolarPanelDual",
+        "StructureSolarPanelDualReinforced",
+        "StructureSolarPanelFlat",
+        "StructureSolarPanelFlatReinforced",
+        "StructureSolarPanel45",
+        "StructureSolarPanel45Reinforced",
+        "StructureSolarPanel1x5Single",
+        "StructureSolarPanel1x5ReinforcedSingle",
+        "StructureSolarPanel1x5",
+        "StructureSolarPanel1x5Reinforced"
+      ],
+      "mode": "all",
+      "optional": true
+    },
+    {
+      "id": "tracked",
+      "name": "Tracked panels",
+      "prefabs": [
+        "StructureSolarPanel",
+        "StructureSolarPanelDual",
+        "StructureSolarPanel1x5Single",
+        "StructureSolarPanel1x5",
+        "StructureSolarPanelReinforced",
+        "StructureSolarPanelDualReinforced",
+        "StructureSolarPanel1x5ReinforcedSingle",
+        "StructureSolarPanel1x5Reinforced"
+      ],
+      "mode": "all",
+      "optional": true
+    },
+    {
+      "id": "sun",
+      "name": "Daylight sensor",
+      "prefabs": [
+        "StructureDaylightSensor"
+      ],
+      "mode": "one",
+      "optional": true
+    },
+    {
+      "id": "vent",
+      "name": "Generators vent",
+      "prefabs": [
+        "StructureActiveVent"
+      ],
+      "label": "GeneratorsVent",
+      "mode": "all",
+      "optional": true
+    }
+  ],
+  "reads": [
+    {
+      "id": "cap",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "Maximum"
+        }
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "stored",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "Charge"
+        }
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "frac",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "Charge"
+        }
+      },
+      "agg": "sum",
+      "derived": "P.cap and P.cap > 0 and x / P.cap or nil",
+      "th": {
+        "critBelow": 0.1,
+        "warnBelow": 0.5
+      }
+    },
+    {
+      "id": "using",
+      "role": "batt",
+      "of": {
+        "lt": {
+          "name": "PowerActual"
+        }
+      },
+      "agg": "list"
+    },
+    {
+      "id": "solar",
+      "role": "panels",
+      "of": {
+        "lt": {
+          "name": "Charge"
+        }
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "coal",
+      "role": "gen",
+      "of": {
+        "lt": {
+          "name": "PowerGeneration"
+        }
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "genW",
+      "role": "gen",
+      "of": {
+        "lt": {
+          "name": "PowerGeneration"
+        }
+      },
+      "agg": "list"
+    },
+    {
+      "id": "genCoal",
+      "role": "gen",
+      "of": {
+        "slot": 0,
+        "lst": "Quantity"
+      },
+      "agg": "list"
+    },
+    {
+      "id": "coalN",
+      "role": "gen",
+      "of": {
+        "slot": 0,
+        "lst": "Quantity"
+      },
+      "agg": "sum"
+    },
+    {
+      "id": "sunH",
+      "role": "sun",
+      "of": {
+        "lt": {
+          "name": "Horizontal"
+        }
+      }
+    },
+    {
+      "id": "sunV",
+      "role": "sun",
+      "of": {
+        "lt": {
+          "name": "Vertical"
+        }
+      }
+    },
+    {
+      "id": "tod",
+      "role": "sun",
+      "of": {
+        "lt": {
+          "id": 1110
+        }
+      }
+    },
+    {
+      "id": "dayLen",
+      "role": "sun",
+      "of": {
+        "lt": {
+          "id": 1114
+        }
+      }
+    }
+  ],
+  "state": [
+    {
+      "name": "mode",
+      "type": "number",
+      "init": 0,
+      "min": 0,
+      "max": 2
+    },
+    {
+      "name": "parked",
+      "type": "bool",
+      "init": false
+    }
+  ],
+  "actions": [
+    {
+      "id": "mode0",
+      "on": "og1_o0",
+      "do": [
+        {
+          "op": "set",
+          "state": "mode",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "id": "mode1",
+      "on": "og1_o1",
+      "do": [
+        {
+          "op": "set",
+          "state": "mode",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "id": "mode2",
+      "on": "og1_o2",
+      "do": [
+        {
+          "op": "set",
+          "state": "mode",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "id": "park",
+      "on": "btn1_hit",
+      "do": [
+        {
+          "op": "toggle",
+          "state": "parked"
+        }
+      ]
+    },
+    {
+      "id": "devices",
+      "on": "btn2_hit",
+      "do": [
+        {
+          "op": "page",
+          "page": "vb_devices"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "genOn",
+      "role": "gen",
+      "lt": {
+        "name": "On"
+      },
+      "value": "S.mode == 1 and 1 or S.mode == 2 and 0 or (P.frac and (P.frac < 0.1 and 1 or P.frac > 0.25 and 0 or nil))"
+    },
+    {
+      "id": "ventOn",
+      "role": "vent",
+      "lt": {
+        "name": "On"
+      },
+      "value": "S.mode == 1 and 1 or S.mode == 2 and 0 or (P.frac and (P.frac < 0.1 and 1 or P.frac > 0.25 and 0 or nil))"
+    },
+    {
+      "id": "trackV",
+      "role": "tracked",
+      "lt": {
+        "name": "Vertical"
+      },
+      "value": "S.parked and 90 or (P.sunV and P.sunV + 90)"
+    },
+    {
+      "id": "trackH",
+      "role": "tracked",
+      "lt": {
+        "name": "Horizontal"
+      },
+      "value": "not S.parked and P.sunH and P.sunH + 90 or nil"
+    }
+  ],
+  "bindings": {
+    "hdr1_clock": {
+      "from": "expr",
+      "expr": "util.clock_time and util.clock_time(\"HH:MM\") or \"--:--\""
+    },
+    "hdr1_warn": {
+      "from": "export",
+      "name": "nwarn"
+    },
+    "hdr1_crit": {
+      "from": "const",
+      "value": 0
+    },
+    "ro1_v": {
+      "from": "expr",
+      "expr": "P.frac and P.frac * 100 or \"--\""
+    },
+    "ro1_lvl": {
+      "from": "expr",
+      "expr": "P.frac or 0"
+    },
+    "ro1_st": {
+      "from": "read",
+      "read": "frac",
+      "part": "state"
+    },
+    "ro1_status": {
+      "from": "export",
+      "name": "status"
+    },
+    "ro1_sub": {
+      "from": "export",
+      "name": "netText"
+    },
+    "kv1_v0": {
+      "from": "expr",
+      "expr": "P.frac and string.format(\"%.1f MJ\", P.stored / 1e6) or \"--\""
+    },
+    "kv1_v1": {
+      "from": "expr",
+      "expr": "P.frac and string.format(\"%.1f MJ\", P.cap / 1e6) or \"--\""
+    },
+    "kv1_v2": {
+      "from": "export",
+      "name": "timeLeft"
+    },
+    "kv1_v3": {
+      "from": "expr",
+      "expr": "R.batt.n"
+    },
+    "timeCaption": {
+      "from": "export",
+      "name": "timeCaption"
+    },
+    "rep1_n": {
+      "from": "expr",
+      "expr": "X.cells and #X.cells or 0"
+    },
+    "rep1_lvl": {
+      "from": "export",
+      "name": "cells"
+    },
+    "rep1_st": {
+      "from": "export",
+      "name": "cellSt"
+    },
+    "rep2_n": {
+      "from": "export",
+      "name": "typeN"
+    },
+    "rep2_name": {
+      "from": "export",
+      "name": "typeNames"
+    },
+    "rep2_v": {
+      "from": "export",
+      "name": "typeCounts"
+    },
+    "rep2_st": {
+      "from": "export",
+      "name": "typeSt"
+    },
+    "kv2_v0": {
+      "from": "export",
+      "name": "solarKw"
+    },
+    "kv2_v1": {
+      "from": "export",
+      "name": "coalKw"
+    },
+    "kv2_v2": {
+      "from": "export",
+      "name": "usingKw"
+    },
+    "kv2_v3": {
+      "from": "export",
+      "name": "netKw"
+    },
+    "kv2_s3": {
+      "from": "export",
+      "name": "netSt"
+    },
+    "kv3_v0": {
+      "from": "export",
+      "name": "ySolar"
+    },
+    "kv3_v1": {
+      "from": "export",
+      "name": "yCoal"
+    },
+    "kv3_v2": {
+      "from": "export",
+      "name": "yUsed"
+    },
+    "kv3_v3": {
+      "from": "export",
+      "name": "yNet"
+    },
+    "kv3_s3": {
+      "from": "export",
+      "name": "yNetSt"
+    },
+    "rep3_n": {
+      "from": "export",
+      "name": "solarN"
+    },
+    "rep3_name": {
+      "from": "export",
+      "name": "solarNames"
+    },
+    "rep3_v": {
+      "from": "export",
+      "name": "solarEff"
+    },
+    "rep3_st": {
+      "from": "export",
+      "name": "solarSt"
+    },
+    "rep4_n": {
+      "from": "export",
+      "name": "solarN"
+    },
+    "rep4_t": {
+      "from": "export",
+      "name": "solarQty"
+    },
+    "rep5_n": {
+      "from": "export",
+      "name": "solarN"
+    },
+    "rep5_t": {
+      "from": "export",
+      "name": "solarKws"
+    },
+    "al1_st": {
+      "from": "export",
+      "name": "alertSt"
+    },
+    "al1_msg": {
+      "from": "export",
+      "name": "alertMsg"
+    },
+    "btn1_state": {
+      "from": "expr",
+      "expr": "S.parked and 1 or 0"
+    },
+    "rep6_n": {
+      "from": "export",
+      "name": "genN"
+    },
+    "rep6_name": {
+      "from": "export",
+      "name": "genNames"
+    },
+    "rep6_v": {
+      "from": "export",
+      "name": "genCoal"
+    },
+    "rep6_st": {
+      "from": "export",
+      "name": "genSt"
+    },
+    "rep7_n": {
+      "from": "export",
+      "name": "genN"
+    },
+    "rep7_t": {
+      "from": "export",
+      "name": "genKw"
+    },
+    "og1_sel": {
+      "from": "state",
+      "state": "mode"
+    },
+    "gauge1_v": {
+      "from": "export",
+      "name": "sunf"
+    },
+    "gauge1_st": {
+      "from": "export",
+      "name": "sunSt"
+    },
+    "sunAngle": {
+      "from": "export",
+      "name": "sunAngle"
+    },
+    "sunset": {
+      "from": "export",
+      "name": "sunset"
+    },
+    "sunrise": {
+      "from": "export",
+      "name": "sunrise"
+    },
+    "night": {
+      "from": "export",
+      "name": "night"
+    },
+    "kv4_v0": {
+      "from": "export",
+      "name": "coalLeft"
+    },
+    "kv4_v1": {
+      "from": "export",
+      "name": "coalEnergy"
+    },
+    "kv4_v2": {
+      "from": "export",
+      "name": "coalLasts"
+    },
+    "kv4_v3": {
+      "from": "export",
+      "name": "producing"
+    }
+  },
+  "customLua": "-- Power wall: what the panels cannot say (docs/templates-power-farm.md, \"Custom Lua\"). The roles find the devices, the\n-- reads total them, the rules drive the generators, the vent and the tracked panels; this block groups the solar panels\n-- by type, lists the battery cells and types, names the generators, works out the coal energy, the sun and the times,\n-- and keeps the day totals. Everything it shows goes out as X.<name>, bound in the Data tab.\nlocal fmt, floor, min, max, abs = string.format, math.floor, math.min, math.max, math.abs\nlocal MINUS, DEG = \"−\", \"°\"   -- the true minus (U+2212) and the degree sign, as characters: a Lua-CSharp string is UTF-16\n\n-- Solar panel prefabs and their row names, in the order rows are listed.\nlocal PANELS = {\n  { -2045627372, \"Standard\" }, { -934345724, \"Heavy\" }, { -539224550, \"Dual\" }, { -1545574413, \"Heavy dual\" },\n  { 1968102968, \"Flat\" }, { 1697196770, \"Heavy flat\" }, { -1554349863, \"Angled\" }, { 930865127, \"Heavy angled\" },\n  { -295209029, \"1x5\" }, { -2049226859, \"Heavy 1x5\" }, { 939649277, \"Dual 1x5\" }, { 1945473703, \"Heavy dual 1x5\" },\n}\nlocal PANEL_AT = {}\nfor k, p in ipairs(PANELS) do PANEL_AT[p[1]] = k end\nlocal BATTERIES = { { -400115994, \"Station battery\" }, { -1388288459, \"Large station battery\" } }\nlocal BATTERY_AT = { [-400115994] = 1, [-1388288459] = 2 }\n-- Joules per item burned in the solid fuel generator: Charcoal, Coal ore, Solid fuel.\nlocal FUEL_J = { [252561409] = 20e3, [1724793494] = 100e3, [-365253871] = 200e3 }\n-- Logic Extended types, by number: 0..100 efficiency (includes damage), 0..1 damage.\nlocal EFFICIENCY, DAMAGE = 1224, 1221\n\nlocal function f1(v) return v and fmt(\"%.1f\", v) or \"--\" end\n-- A duration in hours, in minutes below one hour.\nlocal function dur(hours)\n  if hours == nil then return \"--\" end\n  if hours < 1 then return f1(hours * 60) .. \" min\" end\n  return f1(hours) .. \" h\"\nend\n-- Signed with a true minus; \"+\" only where asked.\nlocal function signed(v, plus)\n  if v == nil then return \"--\" end\n  local s = fmt(\"%.1f\", abs(v))\n  if s == \"0.0\" then return s end\n  if v < 0 then return MINUS .. s end\n  return plus and (\"+\" .. s) or s\nend\n\n-- Day totals in joules: today's and yesterday's, kept through a reload under this block's own key.\nlocal KEY = \"days\"\nlocal today, yday, day, canSave, ticks = { solar = 0, coal = 0, used = 0 }, nil, nil, true, 0\nlocal json = util and util.json\nlocal function gameDay()\n  local f = util and util.days_past\n  if not f then return nil end\n  local ok, d = pcall(f)\n  if ok and type(d) == \"number\" then return d end\nend\nlocal function save()\n  if canSave and json and day then persist.set(KEY, json.encode({ day = day, today = today, yday = yday })) end\nend\n\nfunction U.init()\n  X.sunf, X.sunSt = 0, 0   -- the dial's needle has a value from the first frame\n  day = gameDay()\n  local text = persist.get(KEY)\n  if text == nil or not json then return end\n  local ok, d = pcall(json.decode, text)\n  if not ok or type(d) ~= \"table\" then canSave = false return end   -- present but unreadable: never overwrite it\n  if type(d.today) == \"table\" and day then\n    if d.day == day then\n      today = { solar = d.today.solar or 0, coal = d.today.coal or 0, used = d.today.used or 0 }\n      yday = type(d.yday) == \"table\" and d.yday or nil\n    elseif d.day == day - 1 then\n      yday = d.today\n    end\n  end\nend\n\nlocal function sun(P)\n  local tod, len = P.tod, P.dayLen\n  if not tod or not len or len <= 0 then\n    X.sunf, X.sunSt, X.sunAngle, X.sunset, X.sunrise, X.night = 0, 0, \"--\", \"--\", \"--\", \"--\"\n    return\n  end\n  tod = tod % 1\n  local isDay = tod < 0.5\n  local f = isDay and tod / 0.5 or 0\n  local g = isDay and f or (tod - 0.5) / 0.5\n  local angle = floor(180 * min(g, 1 - g) + 0.5)\n  X.sunf, X.sunSt = f, isDay and 1 or 0\n  X.sunAngle = ((not isDay and angle > 0) and MINUS or \"\") .. angle .. DEG\n  X.sunset = f1(((isDay and 0.5 or 1.5) - tod) * len / 60) .. \" min\"\n  X.sunrise = f1((1 - tod) * len / 60) .. \" min\"\n  X.night = f1(0.5 * len / 60) .. \" min\"\nend\n\nfunction U.after_reads(P, S, dt)\n  dt = dt or 0.5\n  ticks = ticks + 1\n  local using = P.using and P.using[1]\n  local net = using and ((P.solar or 0) + (P.coal or 0) - using) or nil\n\n  -- Storage: status, net, time left or to full; cells and battery types.\n  local charging = net ~= nil and net >= 0\n  X.status = net == nil and \"--\" or (charging and \"Charging\" or \"Discharging\")\n  X.netText = signed(net and net / 1000) .. \" kW\"\n  X.timeCaption = charging and \"Time to full\" or \"Time left\"\n  local hours\n  if P.cap and P.stored and net and net > 0 then hours = (P.cap - P.stored) / net / 3600\n  elseif P.stored and net and net < 0 then hours = P.stored / -net / 3600 end\n  X.timeLeft = dur(hours)\n  local cells, cellSt, perType = {}, {}, { 0, 0 }\n  for k = 1, R.batt.n or 0 do\n    local t = BATTERY_AT[rd(\"batt\", \"PrefabHash\", k)]\n    if t then perType[t] = perType[t] + 1 end\n    if #cells < 16 then\n      local charge, maximum = rd(\"batt\", \"Charge\", k) or 0, rd(\"batt\", \"Maximum\", k) or 0\n      local f = maximum > 0 and charge / maximum or 0\n      cells[#cells + 1], cellSt[#cellSt + 1] = f, f < 0.1 and 3 or f < 0.5 and 2 or 1\n    end\n  end\n  X.cells, X.cellSt = cells, cellSt\n  local typeNames, typeCounts, typeSt = {}, {}, {}\n  for t = 1, 2 do\n    if perType[t] > 0 then\n      typeNames[#typeNames + 1], typeCounts[#typeCounts + 1], typeSt[#typeSt + 1] = BATTERIES[t][2], perType[t], 1\n    end\n  end\n  X.typeN, X.typeNames, X.typeCounts, X.typeSt = #typeNames, typeNames, typeCounts, typeSt\n\n  -- Now.\n  X.solarKw = f1(P.solar and P.solar / 1000)\n  X.coalKw = (R.gen.n or 0) > 0 and f1((P.coal or 0) / 1000) or \"--\"\n  X.usingKw = f1(using and using / 1000)\n  X.netKw = signed(net and net / 1000)\n  X.netSt = (net and net < 0 and X.netKw ~= \"0.0\") and 2 or 1\n\n  -- Solar panels by type, in the table's order: count, kW, mean efficiency, damaged count.\n  local by = {}\n  for k = 1, R.panels.n or 0 do\n    local at = PANEL_AT[rd(\"panels\", \"PrefabHash\", k)]\n    if at then\n      local g = by[at] or { n = 0, w = 0, e = 0, d = 0 }\n      by[at] = g\n      g.n, g.w, g.e = g.n + 1, g.w + (rd(\"panels\", \"Charge\", k) or 0), g.e + (rd(\"panels\", EFFICIENCY, k) or 0)\n      if (rd(\"panels\", DAMAGE, k) or 0) > 0 then g.d = g.d + 1 end\n    end\n  end\n  local types = {}\n  for at, p in ipairs(PANELS) do\n    local g = by[at]\n    if g then types[#types + 1] = { name = p[2], n = g.n, kw = g.w / 1000, eff = g.e / g.n, dmg = g.d } end\n  end\n  local names, kws, qty, eff, st = {}, {}, {}, {}, {}\n  for j = 1, min(#types, 3) do\n    local t = types[j]\n    names[j], kws[j], qty[j], eff[j] = t.name, f1(t.kw), fmt(\"%.0f\", t.n), fmt(\"%.0f\", t.eff)\n    st[j] = S.parked and 0 or (t.dmg > 0 and 2 or 1)\n  end\n  X.solarN, X.solarNames, X.solarKws, X.solarQty, X.solarEff, X.solarSt = min(#types, 3), names, kws, qty, eff, st\n  local damaged, total = {}, 0\n  for _, t in ipairs(types) do if t.dmg > 0 then damaged[#damaged + 1] = t; total = total + t.dmg end end\n  local alerts = {}\n  if #damaged == 1 then\n    local t = damaged[1]\n    alerts[1] = fmt(\"%.0f %s panel%s damaged\", t.dmg, t.name:lower(), t.dmg == 1 and \"\" or \"s\")\n  elseif #damaged > 1 then\n    alerts[1] = fmt(\"%.0f panels damaged\", total)\n  end\n  if S.parked then alerts[#alerts + 1] = \"Panels parked\" end\n  X.alertSt = (#alerts > 0 and #types < 3) and 2 or 0\n  X.alertMsg = alerts[1] or \"\"\n  X.nwarn = #alerts\n\n  -- Generators: up to two rows, a generator still wearing its prefab's label shown as \"Generator N\"; coal energy.\n  local gn, gNames, gKw, gCoal, gSt, energy = R.gen.n or 0, {}, {}, {}, {}, 0\n  for k = 1, gn do\n    local q = P.genCoal and P.genCoal[k] or 0\n    energy = energy + q * (FUEL_J[rds(\"gen\", 0, \"OccupantHash\", k) or 0] or 0)\n    if k <= 2 then\n      local name = R.gen.names[k] or \"\"\n      if name == \"\" or name:find(\"Solid Fuel\", 1, true) then name = \"Generator \" .. k end\n      local w = P.genW and P.genW[k] or 0\n      gNames[k], gKw[k], gCoal[k], gSt[k] = name, f1(w / 1000), fmt(\"%.0f\", q), w > 0 and 1 or 0\n    end\n  end\n  X.genN, X.genNames, X.genKw, X.genCoal, X.genSt = min(gn, 2), gNames, gKw, gCoal, gSt\n  X.coalLeft = gn > 0 and fmt(\"%.0f\", P.coalN or 0) or \"--\"\n  X.coalEnergy = gn > 0 and (f1(energy / 1e6) .. \" MJ\") or \"--\"\n  X.coalLasts = dur((using and using > 0 and gn > 0) and energy / using / 3600 or nil)\n  X.producing = X.coalKw == \"--\" and \"--\" or (X.coalKw .. \" kW\")\n\n  sun(P)\n\n  -- Day totals, rolled when the game day changes, saved at the roll and every 120 ticks.\n  local d = gameDay()\n  if d and day and d ~= day then\n    yday, today, day = { solar = today.solar, coal = today.coal, used = today.used }, { solar = 0, coal = 0, used = 0 }, d\n    save()\n  elseif d and not day then\n    day = d\n  end\n  today.solar = today.solar + (P.solar or 0) * dt\n  today.coal = today.coal + (P.coal or 0) * dt\n  today.used = today.used + max(0, using or 0) * dt\n  if ticks % 120 == 0 then save() end\n  if yday then\n    local produced, used = (yday.solar or 0) + (yday.coal or 0), yday.used or 0\n    X.yProduced, X.ySolar, X.yCoal = f1(produced / 1e6), f1((yday.solar or 0) / 1e6), f1((yday.coal or 0) / 1e6)\n    X.yUsed, X.yNet = f1(used / 1e6), signed((produced - used) / 1e6, true)\n    X.yNetSt = (X.yNet == \"0.0\" or produced >= used) and 1 or 2\n  else\n    X.yProduced, X.ySolar, X.yCoal, X.yUsed, X.yNet, X.yNetSt = \"--\", \"--\", \"--\", \"--\", \"--\", 1\n  end\nend\n",
+  "simDevices": [
+    {
+      "id": "s1",
+      "prefab": "StructureBattery",
+      "label": "",
+      "ref": 2,
+      "role": "batt",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 1800000
+        },
+        "Maximum": {
+          "kind": "const",
+          "v": 3600000
+        },
+        "PowerActual": {
+          "kind": "const",
+          "v": 9000
+        }
+      }
+    },
+    {
+      "id": "s2",
+      "prefab": "StructureBatteryLarge",
+      "label": "",
+      "ref": 3,
+      "role": "batt",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 4500000
+        },
+        "Maximum": {
+          "kind": "const",
+          "v": 9000000
+        },
+        "PowerActual": {
+          "kind": "const",
+          "v": 9000
+        }
+      }
+    },
+    {
+      "id": "s3",
+      "prefab": "StructureSolidFuelGenerator",
+      "label": "",
+      "ref": 4,
+      "role": "gen",
+      "values": {
+        "PowerGeneration": {
+          "kind": "const",
+          "v": 0
+        },
+        "On": {
+          "kind": "const",
+          "v": 0
+        }
+      },
+      "slots": {
+        "0": {
+          "Quantity": {
+            "kind": "const",
+            "v": 40
+          },
+          "OccupantHash": {
+            "kind": "const",
+            "v": 1724793494
+          }
+        }
+      }
+    },
+    {
+      "id": "s4",
+      "prefab": "StructureSolarPanel",
+      "label": "",
+      "ref": 5,
+      "role": "panels",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 1150
+        },
+        "Vertical": {
+          "kind": "const",
+          "v": 110
+        },
+        "Horizontal": {
+          "kind": "const",
+          "v": 120
+        },
+        "#1224": {
+          "kind": "const",
+          "v": 97
+        },
+        "#1221": {
+          "kind": "const",
+          "v": 0
+        }
+      }
+    },
+    {
+      "id": "s5",
+      "prefab": "StructureSolarPanelDual",
+      "label": "",
+      "ref": 6,
+      "role": "panels",
+      "values": {
+        "Charge": {
+          "kind": "const",
+          "v": 1300
+        },
+        "Vertical": {
+          "kind": "const",
+          "v": 110
+        },
+        "Horizontal": {
+          "kind": "const",
+          "v": 120
+        },
+        "#1224": {
+          "kind": "const",
+          "v": 88
+        },
+        "#1221": {
+          "kind": "const",
+          "v": 0.2
+        }
+      }
+    },
+    {
+      "id": "s6",
+      "prefab": "StructureDaylightSensor",
+      "label": "",
+      "ref": 7,
+      "role": "sun",
+      "values": {
+        "Horizontal": {
+          "kind": "const",
+          "v": 30
+        },
+        "Vertical": {
+          "kind": "const",
+          "v": 20
+        },
+        "#1110": {
+          "kind": "const",
+          "v": 0.3
+        },
+        "#1114": {
+          "kind": "const",
+          "v": 1200
+        }
+      }
+    },
+    {
+      "id": "s7",
+      "prefab": "StructureActiveVent",
+      "label": "GeneratorsVent",
+      "ref": 8,
+      "role": "vent",
+      "values": {
+        "On": {
+          "kind": "const",
+          "v": 0
+        }
+      }
+    }
+  ],
+  "settings": {
+    "budgets": {
+      "load": 500000,
+      "tick": 50000
+    },
+    "beta": false,
+    "day": {
+      "length": 1200,
+      "start": 0.25
+    },
+    "wipeOnReexport": false
+  }
+}

@@ -67,7 +67,7 @@ export function SimPanel({ project: p, dispatch, catalog, writes, notes, onClear
         <input aria-label={`${name} new value`} list={`vb-sim-types-${d.id}`} placeholder="LogicType" value={adding[d.id] ?? ''}
           onChange={e => setAdding({ ...adding, [d.id]: e.target.value })} />
         <datalist id={`vb-sim-types-${d.id}`}>{types.map(x => <option key={x} value={x} />)}</datalist>
-        <button type="button" aria-label={`add value to ${name}`} disabled={!want || (catalog !== null && !(catalog.lt.includes(want) || types.includes(want))) || Object.hasOwn(d.values, want)} onClick={() => {
+        <button type="button" aria-label={`add value to ${name}`} disabled={!want || (catalog !== null && !(catalog.lt.includes(want) || types.includes(want) || /^#\d+$/.test(want))) || Object.hasOwn(d.values, want)} onClick={() => {
           setDevice(k, { ...d, values: { ...d.values, [want]: defaultSource(want) } })
           setAdding({ ...adding, [d.id]: '' })
         }}>add value</button>

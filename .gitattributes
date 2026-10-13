@@ -1,2 +1,3 @@
 web/test/** -text
 *.bin binary
+web/src/project/starters/*.lua text eol=lf

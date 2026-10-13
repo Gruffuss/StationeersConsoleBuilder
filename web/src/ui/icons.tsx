@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 export type IconName = 'select' | 'points' | 'pen' | 'path' | 'rect' | 'ellipse' | 'polygon' | 'line' | 'text' | 'image' | 'gradient'
   | 'add' | 'remove' | 'close' | 'chevron-down' | 'chevron-right' | 'chevron-up' | 'play' | 'stop' | 'export' | 'download' | 'upload'
   | 'eye' | 'eye-off' | 'lock' | 'unlock' | 'group' | 'widget' | 'page' | 'detach' | 'trash' | 'more' | 'reset' | 'copy' | 'link'
-  | 'code' | 'check' | 'warn' | 'info' | 'file' | 'pan-left' | 'pan-right' | 'pan-up' | 'pan-down'
+  | 'code' | 'check' | 'magnet' | 'warn' | 'info' | 'file' | 'pan-left' | 'pan-right' | 'pan-up' | 'pan-down'
   | 'align-left' | 'align-centre' | 'align-right' | 'align-top' | 'align-middle' | 'align-bottom' | 'distribute-h' | 'distribute-v'
 
 const shapes: Record<IconName, ReactNode> = {
@@ -44,6 +44,7 @@ const shapes: Record<IconName, ReactNode> = {
   link: <path d="M9 15l6-6M8 13l-3 3a3 3 0 004 4l4-4M11 8l4-4a3 3 0 014 4l-3 3" />,
   code: <path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/>,
   check: <path d="M5 12l5 5 9-10"/>,
+  magnet: <path d="M6 4v8a6 6 0 0012 0V4h-4v8a2 2 0 01-4 0V4zM6 8h4M14 8h4"/>,
   warn: <><path d="M12 3L2 21h20zM12 9v5" /><circle cx="12" cy="18" r="0.5" /></>,
   info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v6" /><circle cx="12" cy="7" r="0.5" /></>,
   file: <path d="M5 2h9l5 5v15H5zM14 2v6h5" />,

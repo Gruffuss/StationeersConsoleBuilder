@@ -210,9 +210,26 @@ describe('DataPanel', () => {
     expect(field('ease w')).toBeTruthy()
     ui.unmount()
   })
-  it('writes the recipes down: a weighted fraction, the first device, a count, names, unbound roles', () => {
+  it('explains the recipes in plain words: what each achieves, which controls, and the text to copy', () => {
     const { ui } = setup()
-    for (const s of ['x / P.cap', 'P.<list read>[1]', 'R.<role>.n', 'R.<role>.names', 'VB.unbound()']) expect(ui.container.textContent).toContain(s)
+    const recipes = ui.container.querySelector('.vb-recipes')!
+    const text = recipes.textContent!.replace(/\s+/g, ' ')
+    for (const s of [
+      "A battery bank's charge as a fraction or a percentage.",
+      "In the Logic tab, give the batteries a role and set its mode to all.",
+      "Add a read of Maximum with the aggregate sum and set its id to cap.",
+      "Below it (reads run from top to bottom, so cap must come first), add a read of Charge with the aggregate sum and type this in its derived field:",
+      "x is this read's own value and P.cap is the value of the read called cap.",
+      "The first device in a list.",
+      "How many devices were found.",
+      "The devices' names.",
+      "Labeller name",
+      "Missing devices.",
+      "counts the roles that found no device",
+    ]) expect(text).toContain(s)
+    expect(Array.from(recipes.querySelectorAll('code'), c => c.textContent)).toEqual(
+      ['P.cap and P.cap > 0 and x / P.cap or nil', 'x * 100 / P.cap', 'P.temps[1]', 'R.batteries.n', 'R.batteries.names', 'VB.unbound()'])
+    for (const jargon of ['derived over', 'P.<list read>', 'R.<role>', "a Repeater's name slot)"]) expect(text).not.toContain(jargon)
     expect(Array.from(ui.container.querySelectorAll('#vb-data-names option'), o => o.getAttribute('value'))).toEqual(expect.arrayContaining(['R.tank.names', 'VB.unbound()']))
     ui.unmount()
   })
@@ -280,9 +297,9 @@ describe('DataPanel', () => {
   })
   it('warns when a state slot reads a value, clearing the hint for read state', () => {
     const { ui, project } = setup({ reads: [{ id: 'pressure', role: 'tank', of: { lt: { name: 'Pressure' } } }], bindings: { bar1_st: { from: 'read', read: 'pressure' } } })
-    expect(ui.container.textContent).toContain("a state slot reads 0..3: bind the read's state")
+    expect(ui.container.textContent).toContain('This slot shows a colour state (ok, warn or crit), not a number: pick "read pressure state" as its source')
     ui.rerender(<DataPanel project={{ ...project, bindings: { bar1_st: { from: 'read', read: 'pressure', part: 'state' } } }} theme={vanillaPlus} dispatch={() => {}} catalog={cat} />)
-    expect(ui.container.textContent).not.toContain('a state slot reads 0..3')
+    expect(ui.container.textContent).not.toContain('This slot shows a colour state')
     ui.unmount()
   })
   it('toggles raw ease in one action and preserves it when changing a source', async () => {
@@ -304,7 +321,9 @@ describe('DataPanel', () => {
     const page = newProject().pages[0]
     const wide = { ...page.scene, header: { w: 960, h: 480 } }
     ui.rerender(<DataPanel project={{ ...project, pages: [{ ...page, scene: putWidget(wide, instance('header', { clock: true }), vanillaPlus) }] }} theme={vanillaPlus} dispatch={a => actions.push(a)} catalog={cat} />)
-    for (const [slot, expr] of [['clock', 'util.clock_time("HH:MM")'], ['crit', 'alarms(3)'], ['warn', 'alarms(2)']]) {
+    for (const [slot, expr, words] of [['clock', 'util.clock_time("HH:MM")', 'Show the game clock'], ['crit', 'alarms(3)', 'Count the reads in crit'],
+      ['warn', 'alarms(2)', 'Count the reads in warn']]) {
+      expect(ui.container.querySelector(`[aria-label="preset for hdr1_${slot}"]`)!.textContent).toBe(words)
       await run(() => (ui.container.querySelector(`[aria-label="preset for hdr1_${slot}"]`) as HTMLButtonElement).click())
       expect((actions.at(-1) as Extract<Action, { type: 'setLogic' }>).patch.bindings?.[`hdr1_${slot}`]).toEqual({ from: 'expr', expr })
     }

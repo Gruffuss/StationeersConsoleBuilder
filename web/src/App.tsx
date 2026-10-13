@@ -10,7 +10,7 @@ import { FrameLabel } from './editor/shell/FrameLabel'
 import { SourcePane } from './editor/shell/SourcePane'
 import { useCallback, useEffect, useEffectEvent, useReducer, useRef, useState, useMemo, useSyncExternalStore, type CSSProperties } from 'react'
 import { SCENE_ELEMENT } from './codegen/lua'
-import { generate, bannerSrc, exportScenes } from './codegen/generate'
+import { generate, bannerSrc, exportScenes, hasVectorScene } from './codegen/generate'
 import { hostOf, simOf } from './codegen/hostOf'
 import { readTraps } from './codegen/checks'
 import { mapError, type MapEntry } from './codegen/linemap'
@@ -103,7 +103,7 @@ const unsubscribed = () => () => {}
 // What the preview holds: the page layout of the last load and the scenes sent since, the last valid project, and
 // what waits to be sent (each surface's src and the scene it prints). `reloaded`: a restart was answered with a load and
 // no frame has arrived since.
-type Preview = { layout: string; scenes: Map<string, Scene>; good: Project | null
+type Preview = { layout: string; scenes: Map<string, Scene>; vectors: Set<string>; good: Project | null
   patches: Map<string, { src: string; scene: Scene }>; reloaded: boolean }
 // A scene change patches; export config, host shape and simulated source keys determine whether to reload.
 const keyOf = (p: Project, catalog: Catalog | null) => generate(p, () => '').lua + JSON.stringify(hostOf(p, catalog, null, { values: false }).host)
@@ -180,7 +180,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
   const [run, setRun] = useState<Status | null>(null)
   const [patchError, setPatchError] = useState('')   // the last patch's failure, kept until a patch succeeds or a load
   const [problems, setProblems] = useState('')
-  const preview = useRef<Preview>({ layout: '', scenes: new Map(), good: null, patches: new Map(), reloaded: false })
+  const preview = useRef<Preview>({ layout: '', scenes: new Map(), vectors: new Set(), good: null, patches: new Map(), reloaded: false })
   const shown = useRef<Frame | null>(null)   // the frame on the canvas
   const [note, setNote] = useState('')   // the editing layer's status line (ctx.note)
   const [adoption, setAdoption] = useState<AdoptReport | null>(null)
@@ -212,7 +212,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
     sentSim.current = ''
     visited.current = null
     loadedShape.current = ''
-    preview.current = { layout: '', scenes: new Map(), good: null, patches: new Map(), reloaded: false }
+    preview.current = { layout: '', scenes: new Map(), vectors: new Set(), good: null, patches: new Map(), reloaded: false }
     asked.current.clear()
     shown.current = null
     setRun(null)
@@ -604,7 +604,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
   // Loads a project whose pages all checked clean (the patch effect's last good one), so each has its src. Each
   // surface's ui:size() is its page's size.
   const load = useEffectEvent((b: CoreBridge, p: Project, restart = false) => {
-    const { lua, map } = generate(p, pg => checker?.get(pg.scene)?.src!)
+    const { lua, map, pages } = generate(p, pg => checker?.get(pg.scene)?.src!)
     if (!lua) return false
     // Size the Devices surface only when a role scans the network; other surfaces use their own page size.
     const devices = p.roles.some(r => r.pin === undefined && r.ref === undefined)
@@ -616,6 +616,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
         setLoadedPages(new Set(p.pages.map(x => x.id)))
         return JSON.stringify(hostOf(p, catalog, chipStore.current).host)
       }, map)
+    preview.current.vectors = new Set(pages.filter(pg => !pg.empty).map(pg => pg.id))
     sentSim.current = JSON.stringify(simOf(p, catalog))
     loadedShape.current = JSON.stringify(hostOf(p, catalog, null, { values: false }).host.devices)
     if (!play) { b.visit(state.activePageId); visited.current = state.activePageId }
@@ -671,7 +672,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
     const v = preview.current
     if (ready && !issues.length) {
       if (v.layout) project.pages.forEach((p, k) => {
-        if (v.scenes.has(p.id) && v.scenes.get(p.id) !== p.scene && (p.scene.root.length > 0 || nativesOf(p, theme).length === 0))
+        if (v.scenes.has(p.id) && v.scenes.get(p.id) !== p.scene && v.vectors.has(p.id) && hasVectorScene(p.scene))
           v.patches.set(p.surface, { src: checks[k]!.src! + bannerSrc(p.scene.header), scene: p.scene })
       })
       v.scenes = new Map(project.pages.map(p => [p.id, p.scene]))
@@ -686,7 +687,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
         const s = l[k]
         asked.current.set(p.id, l.slice(k))
         const src = checker.get(s)!.src
-        if (src != null && v.scenes.has(p.id) && v.scenes.get(p.id) !== s && (s.root.length > 0 || nativesOf(p, theme).length === 0)) {
+        if (src != null && v.scenes.has(p.id) && v.scenes.get(p.id) !== s && v.vectors.has(p.id) && hasVectorScene(s)) {
           v.patches.set(p.surface, { src: src + bannerSrc(s.header), scene: s })
           v.scenes.set(p.id, s)
         }
@@ -775,13 +776,15 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
   const sidebarChrome = useMemo(() => (!scripts && <Sidebar tab={sidebarTab} onTab={setSidebarTab}
         layers={<><PageTabs pages={project.pages} activeId={picturePage} dispatch={dispatch} /><DevicesRow project={project} play={play} active={active} problems={gen.problems} /><Layers key={page.id} page={page} selection={selection} also={state.also} entered={state.entered} dispatch={dispatch} ctx={editor.ctx} /></>}
         widgets={<WidgetPalette onInsert={type => dispatch({ type: 'insertWidget', pageId: page.id, widget: type })} />} />), [scripts, sidebarTab, committed, fitKey, JSON.stringify(state.entered), picturePage, play, active, JSON.stringify(gen.problems), editor.ctx])
-  const inspectorChrome = useMemo(() => (!scripts && <Inspector ctx={editor.ctx} tab={tab} onTab={setTab}>{checker && <>
+  const inspectorChrome = useMemo(() => { const pageSection = tab === 'Design' && <details className="disc vb-page-section" open={!selection}><summary>Page</summary><PageSettings key={page.id} page={page} pages={project.pages} dispatch={dispatch}><PictureControls notes={pictures.notes(picturePage)} canLoad={pictures.canLoad(picturePage)} onLoad={() => { void pictures.loadPictures(picturePage) }} /></PageSettings></details>
+    return !scripts && <Inspector ctx={editor.ctx} tab={tab} onTab={setTab}>{checker && <>
         {tab === 'Design' && <PendingColours />}
+        {!selection && pageSection}{/* nothing selected: the page leads (owner, 2026-10-13) */}
         {tab === 'Design' && (chosen
         ? <WidgetPanel key={chosen.uid} page={page} pages={project.pages.map(p => ({ id: p.id, name: p.name }))} widget={chosen}
             boundName={Object.hasOwn(project.bindings, `@${chosen.uid}.name`)} native={!!native} checker={checker} theme={theme} dispatch={dispatch} sceneOf={sceneOf} themeNow={themeNow} pageNow={pageNow} />
         : <PropertyPanel page={page} selection={selection} checker={checker} theme={theme} dispatch={dispatch} sceneOf={sceneOf} />)}
-        {tab === 'Design' && <details className="disc vb-page-section" open={!selection}><summary>Page</summary><PageSettings key={page.id} page={page} pages={project.pages} dispatch={dispatch}><PictureControls notes={pictures.notes(picturePage)} canLoad={pictures.canLoad(picturePage)} onLoad={() => { void pictures.loadPictures(picturePage) }} /></PageSettings></details>}
+        {selection && pageSection}
         {tab === 'Data' && <DataPanel project={project} theme={theme} dispatch={dispatch} catalog={catalog} />}
         {tab === 'Logic' && <LogicPanel project={project} theme={theme} dispatch={dispatch} catalog={catalog} roleDevice={id => {
           const role = project.roles.find(r => r.id === id)
@@ -793,7 +796,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
           onWipePersist={() => { chipStore.current.wipePersist(); bridge?.sim(JSON.stringify({ wipePersist: true })) }} />}
         {tab === 'Lua' && <CustomLuaPane project={project} dispatch={dispatch} />}
         </>}
-      </Inspector>), [scripts, tab, committed, fitKey, JSON.stringify(state.entered), checker, theme, chosen?.uid, catalog, writes, hostNotes, pictures.version, picturePage, editor.ctx, editor.ctx.tool(), editor.ctx.settings()])
+      </Inspector> }, [scripts, tab, committed, fitKey, JSON.stringify(state.entered), checker, theme, chosen?.uid, catalog, writes, hostNotes, pictures.version, picturePage, editor.ctx, editor.ctx.tool(), editor.ctx.settings()])
   const dialogChrome = useMemo(() => {
     const fonts = <FontImport key={chipRevision} page={page} project={project} dispatch={dispatch} />
     const exporter = exportTransfer && <ExportControls project={committed} checker={checker} makeWorker={makeExportWorker} transfer={exportTransfer}
@@ -803,7 +806,8 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
         if (!saveToThemeLibrary(theme)) return false
         setThemeLibrary(loadThemeLibrary()); return true
       }} />
-    const templates = <TemplatePicker theme={themeOf(project)} onPick={p => { onLoad(p); setProjectDialog(null) }} />
+    // The starters' projects load the first time the New dialog opens.
+    const templates = (open: string | null) => <TemplatePicker theme={themeOf(project)} active={open === 'new'} onPick={p => { onLoad(p); setProjectDialog(null) }} />
     const examples = <div><span className="chip idle">DEV</span><ExamplePicker onPick={p => { onLoad(p); setProjectDialog(null) }} /></div>
     return <>
     <DialogHost dialogs={dialogs} name="fonts">{open => <Dialog open={open} title="Fonts" size="lg" onClose={() => setDialog(null)}>{fonts}</Dialog>}</DialogHost>
@@ -813,7 +817,7 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
     <DialogHost dialogs={dialogs} name="shortcuts">{open => <ShortcutsDialog open={open} onClose={() => setDialog(null)} ctx={editor.ctx} />}</DialogHost>
     {exportTransfer && <ProjectDialogHost dialogs={dialogs}>{open => <ProjectControls project={committed} onLoad={onLoad} transfer={exportTransfer} onNotice={setNote} makeCaptureWorker={makeCaptureWorker} adoption={adoption} onAdoption={setAdoption}
       dialogs={{ open, onOpen: setProjectDialog,
-        templates, examples,
+        templates: templates(open), examples,
       }} />}</ProjectDialogHost>}
   </>
   }, [dialogs, committed, page.id, checker, exportTransfer, chipRevision, theme, themeNames, themeTaken, adoption, makeCaptureWorker, makeExportWorker])
@@ -832,7 +836,11 @@ export function App({ makeWorker = defaultWorker, makeCheckWorker = defaultCheck
         pictures={pictures} picturePage={picturePage}
         navigate={!scripts && !play} selectionBox={selectionBox} viewSlot={viewSlot} viewApi={viewApi}
         chrome={scripts || play ? undefined : ({ zoom }) => <>
-          <FrameLabel page={page} />
+          <FrameLabel page={page} dispatch={dispatch} onCustom={() => { setTab('Design'); requestAnimationFrame(() => {
+            const section = document.querySelector<HTMLDetailsElement>('.vb-page-section'), select = section?.querySelector<HTMLSelectElement>('select[aria-label="Console size"]')
+            if (section) section.open = true
+            select?.scrollIntoView({ block: 'center' }); select?.focus()
+          }) }} />
           <TaskBar ctx={editor.ctx} box={selectionBox} zoom={zoom} onDataNames={() => { setTab('Design'); requestAnimationFrame(() => document.getElementById('vb-widget-data-names')?.scrollIntoView()) }} />
         </>}
         onHover={p => { const u = p && apply(unview(viewbox(page.scene.header, page.size)), p.x, p.y); pointerStore.set(u ? { x: u[0], y: u[1] } : null) }}

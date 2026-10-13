@@ -2,8 +2,8 @@
  {
   "id": "p1",
   "surface": "main",
-  "empty": false,
-  "src": "SCENE w=480 h=480 fit=contain\nG v==lt(ver,11118) {\n    R x=0 y=0 w=480 h=58 f=#000000CC\n    T x=14.4 y=0 w=451.2 h=58 text=\"Update ScriptedScreens Vector to 0.11.118 or newer\" size=26 f=#FFCC00\n}\n",
+  "empty": true,
+  "src": "",
   "w": 460,
   "h": 460
  }

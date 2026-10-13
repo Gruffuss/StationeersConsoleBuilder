@@ -186,6 +186,7 @@ foreach (var guard in new[] { "pcall(alloc)", "xpcall(alloc, print)" })
 
 RepinTests.Run(Check);
 PageBackgroundTests.Run(Check);
+EmptyPageTests.Run(Check);
 RepinTables.Run(Check);
 HostTests.Run(Check);
 StationeersTests.Run(Check);

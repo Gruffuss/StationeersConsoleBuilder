@@ -879,11 +879,14 @@ do
     VB.fit(pg, w, h)
     local sent, sn, ea = collect(pg, data), {}, {}
     for k, v in pairs(sent) do if snapped(pg, k, v) then sn[k] = v else ea[k] = v end end
-    local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
-    if next(sn) then p1.data = sn end
-    if next(ea) then p2.data = ea end
-    pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
-    pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    pg.hs, pg.he = nil, nil
+    if not pg.empty then
+      local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
+      if next(sn) then p1.data = sn end
+      if next(ea) then p2.data = ea end
+      pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
+      pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    end
     pg.nv = {}
     for _, n in ipairs(pg.natives or {}) do VB.native(ui, pg, n) end
     ui:commit()
@@ -900,8 +903,8 @@ do
         if snap then sn[k], s1 = v, true else ea[k], s2 = v, true end
       end
     end
-    if s1 then pg.hs:set_props({ data = sn }) end
-    if s2 then pg.he:set_props({ data = ea }) end
+    if s1 and pg.hs then pg.hs:set_props({ data = sn }) end
+    if s2 and pg.he then pg.he:set_props({ data = ea }) end
     for _, n in ipairs(pg.natives or {}) do
       if n.bind then
         local was, diff = pg.nv[n.uid] or {}, false
@@ -1090,7 +1093,7 @@ G id=bar1 {
 G id=txt1 {
     T x=24 y=180 w=300 h=39.2 text=$room_c size=28 font="Barlow SemiBold" f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
 }
-# widget repeater rep1 {"x":24,"y":240,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep1 {"x":24,"y":240,"w":440,"h":330,"max":6,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=240 w=440 h=330
     RP n=6 {
@@ -1137,7 +1140,7 @@ G id=vbhdr {
     R x=25.5 y=25.5 w=429 h=61 rx=12.5 f=@theme_brand s=#FF772D sw=3
     T x=42 y=30 w=386 h=52 text=DEVICES size=36 font="Barlow Condensed Bold" cspace=4.17 f=#FFFFFF sh=[[0,2,2,0,#00000099]] valign=middle fit=ellipsis
 }
-# widget repeater vbdev {"x":24,"y":100,"w":432,"h":162,"max":3,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"","click":true,"keys":{}}
+# widget repeater vbdev {"x":24,"y":100,"w":432,"h":162,"max":3,"layout":"list","cols":2,"pitch":56,"item":"row","fmt":"","valueW":0,"click":true,"fade":false,"keys":{}}
 G id=vbdev {
     R x=24 y=100 w=432 h=162
     RP n=3 {

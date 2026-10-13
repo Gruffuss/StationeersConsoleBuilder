@@ -878,11 +878,14 @@ do
     VB.fit(pg, w, h)
     local sent, sn, ea = collect(pg, data), {}, {}
     for k, v in pairs(sent) do if snapped(pg, k, v) then sn[k] = v else ea[k] = v end end
-    local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
-    if next(sn) then p1.data = sn end
-    if next(ea) then p2.data = ea end
-    pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
-    pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    pg.hs, pg.he = nil, nil
+    if not pg.empty then
+      local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
+      if next(sn) then p1.data = sn end
+      if next(ea) then p2.data = ea end
+      pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
+      pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    end
     pg.nv = {}
     for _, n in ipairs(pg.natives or {}) do VB.native(ui, pg, n) end
     ui:commit()
@@ -899,8 +902,8 @@ do
         if snap then sn[k], s1 = v, true else ea[k], s2 = v, true end
       end
     end
-    if s1 then pg.hs:set_props({ data = sn }) end
-    if s2 then pg.he:set_props({ data = ea }) end
+    if s1 and pg.hs then pg.hs:set_props({ data = sn }) end
+    if s2 and pg.he then pg.he:set_props({ data = ea }) end
     for _, n in ipairs(pg.natives or {}) do
       if n.bind then
         local was, diff = pg.nv[n.uid] or {}, false
@@ -1057,17 +1060,12 @@ VB.cfg = { lib = 1, floor = 11118, start = 1, logKeep = 8, memLow = 256, magic =
   },
   pages = {
     { id = "p1", surface = "main", bg = nil, src = [==[
-SCENE w=64 h=64 fit=stretch
-G v==lt(ver,11118) {
-    R x=0 y=0 w=64 h=24 f=#000000CC
-    T x=1.92 y=0 w=60.16 h=24 text="Update ScriptedScreens Vector to 0.11.118 or newer" size=11 f=#FFCC00
-}
 ]==],
       snap = {  }, samples = {  }, nils = {  }, eased = {  }, arrays = {  },
       data = function(o)
       end,
       natives = {  },
-      empty = false, w = 64, h = 64, dw = 64, dh = 64, fit = "stretch" },
+      empty = true, w = 64, h = 64, dw = 64, dh = 64, fit = "stretch" },
   },
   devices = { id = "vb_devices", surface = "vb_devices", bg = nil, src = [==[
 SCENE w=64 h=64 fit=contain
@@ -1076,7 +1074,7 @@ G id=vbhdr {
     R x=24.5 y=24.5 w=15 h=55 f=#1A1A1A s=#4A4A4A sw=1
     T x=42 y=28 w=0 h=48 text=Devices size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget repeater vbdev {"x":24,"y":90,"w":16,"h":44,"max":1,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"","click":true,"keys":{}}
+# widget repeater vbdev {"x":24,"y":90,"w":16,"h":44,"max":1,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"","valueW":0,"click":true,"fade":false,"keys":{}}
 G id=vbdev {
     R x=24 y=90 w=16 h=44
     RP n=1 {

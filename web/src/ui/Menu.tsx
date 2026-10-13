@@ -88,6 +88,7 @@ function Menus(p: { label: string; menus: Menu[]; single?: boolean; align?: 'end
   })
 
   function renderItems(list: MenuItem[], level: number) {
+    const checks = list.some(item => item.kind === 'item' && item.checked !== undefined)   // a check column for the whole menu
     return list.map((item, index) => {
       if (item.kind === 'separator') return <div key={index} role="separator" className="hsep" />
       if (item.kind === 'group') return <div key={index} role="presentation" className="mgroup">{item.label}{item.dev && <span className="chip idle">DEV</span>}</div>
@@ -99,7 +100,7 @@ function Menus(p: { label: string; menus: Menu[]; single?: boolean; align?: 'end
         className={`mi${selected ? ' on' : ''}`} tabIndex={selected && !item.disabled ? 0 : -1} data-menu-index={index}
         onMouseDown={keepFocus} onMouseEnter={() => { if (item.disabled) return; if (level === 0) { setActive(index); if (sub !== index) setSub(null) } else setSubActive(index) }}
         onClick={() => activate(item, index, false)}>
-        <span>{item.label}</span>{item.kind === 'item' ? <>{item.dev && <span className="chip idle">DEV</span>}{item.note && <span className="unit">{item.note}</span>}{item.keys && <span className="kbd">{item.keys}</span>}</> : <>{item.count !== undefined && <span className="unit">{item.count}</span>}<Icon name="chevron-right" /></>}
+        {checks && <span className="mi-check">{item.kind === 'item' && item.checked && <Icon name="check" />}</span>}<span>{item.label}</span>{item.kind === 'item' ? <>{item.dev && <span className="chip idle">DEV</span>}{item.note && <span className="unit">{item.note}</span>}{item.keys && <span className="kbd">{item.keys}</span>}</> : <>{item.count !== undefined && <span className="unit">{item.count}</span>}<Icon name="chevron-right" /></>}
       </button>
     })
   }

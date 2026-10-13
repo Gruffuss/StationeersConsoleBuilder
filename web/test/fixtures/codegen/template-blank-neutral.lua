@@ -878,11 +878,14 @@ do
     VB.fit(pg, w, h)
     local sent, sn, ea = collect(pg, data), {}, {}
     for k, v in pairs(sent) do if snapped(pg, k, v) then sn[k] = v else ea[k] = v end end
-    local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
-    if next(sn) then p1.data = sn end
-    if next(ea) then p2.data = ea end
-    pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
-    pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    pg.hs, pg.he = nil, nil
+    if not pg.empty then
+      local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
+      if next(sn) then p1.data = sn end
+      if next(ea) then p2.data = ea end
+      pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
+      pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    end
     pg.nv = {}
     for _, n in ipairs(pg.natives or {}) do VB.native(ui, pg, n) end
     ui:commit()
@@ -899,8 +902,8 @@ do
         if snap then sn[k], s1 = v, true else ea[k], s2 = v, true end
       end
     end
-    if s1 then pg.hs:set_props({ data = sn }) end
-    if s2 then pg.he:set_props({ data = ea }) end
+    if s1 and pg.hs then pg.hs:set_props({ data = sn }) end
+    if s2 and pg.he then pg.he:set_props({ data = ea }) end
     for _, n in ipairs(pg.natives or {}) do
       if n.bind then
         local was, diff = pg.nv[n.uid] or {}, false
@@ -1056,17 +1059,12 @@ VB.cfg = { lib = 1, floor = 11118, start = 1, logKeep = 8, memLow = 256, magic =
   },
   pages = {
     { id = "p1", surface = "main", bg = { bg = "#2B2B2B", gradient = "#202020" }, src = [==[
-SCENE w=480 h=480 fit=contain
-G v==lt(ver,11118) {
-    R x=0 y=0 w=480 h=58 f=#000000CC
-    T x=14.4 y=0 w=451.2 h=58 text="Update ScriptedScreens Vector to 0.11.118 or newer" size=26 f=#FFCC00
-}
 ]==],
       snap = {  }, samples = {  }, nils = {  }, eased = {  }, arrays = {  },
       data = function(o)
       end,
       natives = {  },
-      empty = false, w = 460, h = 460, dw = 480, dh = 480, fit = "contain" },
+      empty = true, w = 460, h = 460, dw = 480, dh = 480, fit = "contain" },
   },
   devices = nil,
 }

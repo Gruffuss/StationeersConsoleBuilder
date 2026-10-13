@@ -19,7 +19,7 @@ const shape = (pageId: string, shape: 'custom' | '2x1', size?: { w: number; h: n
 function setup(init = initialState()) {
   const log: Action[] = []
   const ui = mount(<Harness log={log} init={init} />)
-  const select = ui.container.querySelector<HTMLSelectElement>('select[aria-label="Page shape"]')!
+  const select = ui.container.querySelector<HTMLSelectElement>('select[aria-label="Console size"]')!
   const choose = (value: string) => run(() => {
     select.value = value
     select.dispatchEvent(new Event('change', { bubbles: true }))

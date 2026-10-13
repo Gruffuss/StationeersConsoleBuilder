@@ -27,7 +27,7 @@ export function PageShape({ page, dispatch }: { page: Page; dispatch: Dispatch<A
   const input = (k: 'w' | 'h', label: string) => <input type="number" min={1} max={8192} aria-label={label} value={shown[k]}
     onChange={e => setDraft({ ...shown, [k]: e.target.value })} onBlur={commit} onKeyDown={enter} />
   return <span className="vb-shape">
-    <select aria-label="Page shape" value={custom ? 'custom' : page.shape} onChange={e => choose(e.target.value as ShapeKind)}>
+    <select aria-label="Console size" value={custom ? 'custom' : page.shape} onChange={e => choose(e.target.value as ShapeKind)}>
       {Object.entries(SHAPES).map(([k, s]) => <option key={k} value={k}>{s.label}</option>)}
       <option value="custom">Custom</option>
     </select>

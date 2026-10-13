@@ -11,7 +11,8 @@ import { printSrc } from '../srctext/print'
 import { DEFAULT_THEME, THEMES } from '../theme'
 import { compressProject, decompressProject, projectText } from './codec'
 import { embeddedToken, readProject } from './input'
-import { TEMPLATES, templateProject } from './templates'
+import { TEMPLATES } from './templates'
+import { templateProject } from './templateData'
 import { writeArtifactStamp } from './artifactStamp'
 
 const at = new Date('2026-10-12T00:00:00.000Z')
@@ -44,9 +45,9 @@ beforeAll(async () => {
   writeArtifactStamp(output, artifacts)
 })
 
-it('m4_exact_fourteen_just_generated_template_artifacts', () => {
-  expect(pairs.filter(p => p.id !== 'font-native')).toHaveLength(7)
-  expect(readdirSync(output).filter(f => /^template-.*\.lua$/.test(f))).toHaveLength(14)
+it('m4_exact_twenty_just_generated_template_artifacts', () => {
+  expect(pairs.filter(p => p.id !== 'font-native')).toHaveLength(10)
+  expect(readdirSync(output).filter(f => /^template-.*\.lua$/.test(f))).toHaveLength(20)
 })
 it.each(TEMPLATES.map(t => [t.id] as const))('m4_%s_decoded_fields_metadata_preamble_and_manifest', async id => {
   const { project: p, generated: g, on, off } = pairs.find(p => p.id === id)!
@@ -57,7 +58,11 @@ it.each(TEMPLATES.map(t => [t.id] as const))('m4_%s_decoded_fields_metadata_prea
   for (const a of [on, off]) {
     expect(a.lua).not.toContain('\r')
     expect(a.lua.slice(a.lua.indexOf('\n'), a.lua.indexOf('-- VectorBuilder runtime'))).toBe(g.lua.slice(g.lua.indexOf('\n'), g.lua.indexOf('-- VectorBuilder runtime')))
-    expect(a.lua).toContain('floor = 11118'); expect(a.lua).toContain('lt(ver,11118)')
+    expect(a.lua).toContain('floor = 11118')
+    if (id === 'blank') {
+      expect(a.lua).not.toContain('lt(ver,11118)')
+      expect(g.pages).toEqual([{ id: 'p1', surface: 'main', src: '', empty: true, w: 460, h: 460 }])
+    } else expect(a.lua).toContain('lt(ver,11118)')
     expect(a.problems.filter(p => p.level === 'error')).toEqual([])
     expect(a.totalBytes).toBe(new TextEncoder().encode(a.lua).length)
   }

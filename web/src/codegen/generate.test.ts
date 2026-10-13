@@ -15,7 +15,7 @@ import { bannerSrc, CUSTOM_BEGIN, CUSTOM_END, floorVer, generate } from './gener
 import { hostOf } from './hostOf'
 import { REQUIREMENTS } from './requirements'
 import RUNTIME from './runtime.lua?raw'
-import { fixtureProjects, lex } from './testing'
+import { emptyPageProjects, fixtureProjects, lex } from './testing'
 import { compressProject } from '../project/codec'
 import { assembleExport } from './export'
 import { answer } from '../project/transfer.worker'
@@ -163,6 +163,7 @@ describe('retired shell guards', () => {
   it('keeps supplied src whole, picking the smallest free long bracket before the last-child banner', () => {
     const p = newProject()
     p.pages.push(newPage(p))
+    for (const pg of p.pages) pg.scene.root = [{ op: 'R', attrs: { w: 10, h: 10 } }]
     const { lua } = generate(p, pg => `${pg.id} text="a]==]b ]===]"\n`)
     const srcs = [...lua.matchAll(/src = \[(=+)\[\n([^]*?)\]\1\]/g)]
     expect(srcs).toHaveLength(2)
@@ -170,7 +171,7 @@ describe('retired shell guards', () => {
       expect(srcs[k][1]).toBe('====')
       expect(srcs[k][2]).toBe(`${p.pages[k].id} text="a]==]b ]===]"\n` + bannerSrc(p.pages[k].scene.header))
     }
-    expect(gen(newProject()).lua).toContain('src = [==[\nSCENE')
+    expect(gen(p).lua).toContain('src = [==[\nSCENE')
   })
   it('writes bounded whole sizes and quotes surface names', () => {
     const p = newProject()
@@ -181,7 +182,7 @@ describe('retired shell guards', () => {
     p.pages[0].size = { w: 300.6, h: -5 }
     expect(gen(p).lua).toContain('w = 301, h = 1, dw =')
   })
-  it('writes assigned backgrounds, uses transparent for invalid colours and keeps an empty scene patchable', () => {
+  it('writes assigned backgrounds and uses transparent for invalid colours on a blank page', () => {
     const p = newProject()
     p.pages[0].background = ['#3A3A43', '#24242A']
     expect(gen(p).lua).toContain('bg = { bg = "#3A3A43", gradient = "#24242A" }')
@@ -192,7 +193,7 @@ describe('retired shell guards', () => {
     p.pages[0].background = ['#123', '#11223344']
     const { lua } = gen(p)
     expect(lua).toContain('bg = { bg = "#00000000", gradient = "#11223344" }')
-    expect(lua).toContain('empty = false')
+    expect(lua).toContain('empty = true')
   })
 })
 
@@ -478,6 +479,14 @@ describe('the codegen fixtures (the C# suite runs them: FixtureTests.Codegen)', 
     })
 })
 
+describe('empty page runtime fixtures', () => {
+  for (const [name, p] of Object.entries(emptyPageProjects())) it(`writes ${name}`, async () => {
+    const g = gen(p)
+    expect(g.pages[0].empty).toBe(name === 'blank')
+    await expect(g.lua).toMatchFileSnapshot(`../../test/fixtures/empty-pages/${name}.lua`)
+  })
+})
+
 describe('generated page manifest', () => {
   // Read the emitted cfg string literals, not a second scene producer. long() adds an initial LF which Lua discards.
   const cfgPages = (lua: string) => {
@@ -495,11 +504,11 @@ describe('generated page manifest', () => {
     expect(g.lua).toBe(readFileSync(new URL(`../../test/fixtures/codegen/${name}.lua`, import.meta.url), 'utf8'))
     expect(JSON.stringify(hostOf(p, cat, null).host, null, 1) + '\n').toBe(readFileSync(new URL(`../../test/fixtures/codegen/${name}.host.json`, import.meta.url), 'utf8'))
   })
-  it('keeps a scene for a blank page, with its banner and exact clamped pixel dimensions', () => {
+  it('omits the vector scene for a blank page with exact clamped pixel dimensions', () => {
     const p = newProject()
     p.pages[0].size = { w: 459.6, h: 9000 }
     const g = gen(p)
-    expect(g.pages).toEqual([{ id: 'p1', surface: 'main', src: 'SCENE w=480 h=480 fit=contain\n' + bannerSrc(p.pages[0].scene.header), empty: false, w: 460, h: 8192 }])
+    expect(g.pages).toEqual([{ id: 'p1', surface: 'main', src: '', empty: true, w: 460, h: 8192 }])
     expect(g.pages).toEqual(cfgPages(g.lua))
   })
   it('omits the scene only for natives alone without a direct FONT declaration', () => {

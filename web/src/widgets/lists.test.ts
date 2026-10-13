@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { vanillaPlus as t } from '../theme/vanillaPlus'
 import { parseSrc } from '../srctext/parse'
 import { printChecked } from '../srctext/print'
-import { expandRoot, reassociate } from './core'
+import { expandRoot, reassociate, widgetOf } from './core'
 import { holds, instance, printed, sceneOf } from './testing'
 import type { Params } from './types'
 
@@ -13,6 +13,30 @@ const ST4 = (v: string) => `if(eq(${v},1),#7FD970,if(eq(${v},2),#F2B233,if(eq(${
 const NEGATIVE = / [wh]=-| [wh]==\S*\*-/
 
 describe('Repeater', () => {
+  it('fades each item by its own data when fade is on: opacity 1 - fade[i], a missing entry opaque', () => {
+    expect(exp('repeater', { item: 'bar' }).slots.map(s => s.slot)).not.toContain('fade')
+    expect(printed(instance('repeater', { item: 'bar' }))).toContain('G v==lt(i,$rep1_n) {')
+    for (const item of ['row', 'text', 'bar', 'light']) {
+      const w = instance('repeater', { item, fade: true })
+      expect(w.params.fade).toBe(true)
+      expect(printed(w)).toContain('G v==lt(i,$rep1_n) o==1-clamp($rep1_fade[i],0,1) {')
+      expect(exp('repeater', { item, fade: true }).slots.find(s => s.slot === 'fade')).toEqual({ slot: 'fade', key: 'rep1_fade', kind: 'numbers', snap: true, sample: [0, 0, 0.65, 0] })
+    }
+    holds('repeater', { fade: true }, { item: 'bar' }, { item: 'light', layout: 'grid', cols: 4, pitch: 28 })
+  })
+  it("widens or narrows a row's value column with valueW, saved in its marker, the name taking the rest", () => {
+    // 0: the theme's width, so an untouched repeater follows a theme switch.
+    expect(instance('repeater').params.valueW).toBe(0)
+    expect(printed(instance('repeater', { x: 24, y: 24 })).find(l => l.includes('{$rep1_v[i]'))).toContain(`w=${t.metrics['repeater.valueW']} h=50`)
+    const w = instance('repeater', { x: 24, y: 24, valueW: 60 }), p = printed(w)
+    expect(w.params.valueW).toBe(60)
+    expect(p.find(l => l.includes('$rep1_name[i]'))).toContain('w==lerp(314,384,')
+    expect(p.find(l => l.includes('{$rep1_v[i]'))).toContain('x=390 y==24+i*56 w=60 h=50')
+    const back = widgetOf(parseSrc(printChecked(sceneOf(w))).scene!.root[0], t)!
+    expect(back.params.valueW).toBe(60)
+    expect(printed(back)).toEqual(p)
+    expect(printed(instance('repeater', { x: 24, y: 24, valueW: 1000 })).find(l => l.includes('{$rep1_v[i]'))).toContain('x=38 y==24+i*56 w=412')
+  })
   it('keeps numeric value samples so the row preview follows its format', () => {
     const e = exp('repeater', { fmt: '%.0f' })
     expect(e.slots.find(s => s.slot === 'v')!.sample).toEqual([21.4, 19.8, 0, 101.3])

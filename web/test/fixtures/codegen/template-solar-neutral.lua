@@ -878,11 +878,14 @@ do
     VB.fit(pg, w, h)
     local sent, sn, ea = collect(pg, data), {}, {}
     for k, v in pairs(sent) do if snapped(pg, k, v) then sn[k] = v else ea[k] = v end end
-    local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
-    if next(sn) then p1.data = sn end
-    if next(ea) then p2.data = ea end
-    pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
-    pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    pg.hs, pg.he = nil, nil
+    if not pg.empty then
+      local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
+      if next(sn) then p1.data = sn end
+      if next(ea) then p2.data = ea end
+      pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
+      pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    end
     pg.nv = {}
     for _, n in ipairs(pg.natives or {}) do VB.native(ui, pg, n) end
     ui:commit()
@@ -899,8 +902,8 @@ do
         if snap then sn[k], s1 = v, true else ea[k], s2 = v, true end
       end
     end
-    if s1 then pg.hs:set_props({ data = sn }) end
-    if s2 then pg.he:set_props({ data = ea }) end
+    if s1 and pg.hs then pg.hs:set_props({ data = sn }) end
+    if s2 and pg.he then pg.he:set_props({ data = ea }) end
     for _, n in ipairs(pg.natives or {}) do
       if n.bind then
         local was, diff = pg.nv[n.uid] or {}, false
@@ -1124,7 +1127,7 @@ G id=vbhdr {
     R x=24.5 y=24.5 w=431 h=55 f=#1A1A1A s=#4A4A4A sw=1
     T x=42 y=28 w=386 h=48 text=Devices size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget repeater vbdev {"x":24,"y":90,"w":432,"h":206,"max":4,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"","click":true,"keys":{}}
+# widget repeater vbdev {"x":24,"y":90,"w":432,"h":206,"max":4,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"","valueW":0,"click":true,"fade":false,"keys":{}}
 G id=vbdev {
     R x=24 y=90 w=432 h=206
     RP n=4 {

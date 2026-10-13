@@ -37,7 +37,7 @@ body { background: var(--surface-screen-lo); color: var(--text); font: var(--f-r
 .danger{background:linear-gradient(var(--danger),var(--danger-lo))}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--h-ctl);height:var(--h-ctl);padding:0;color:var(--text);background:linear-gradient(var(--surface-row-hi),var(--surface-row-lo));border:1px solid var(--border);border-radius:var(--r-md)}
 .flat{background:none;border-color:transparent;color:var(--text-muted)}
-.sel{box-shadow:var(--focus-ring)}
+.sel,.btn[aria-pressed="true"]{box-shadow:var(--focus-ring)}
 .ic{width:var(--ic);height:var(--ic);flex:none}
 .field{display:flex;align-items:center;gap:var(--sp2);min-height:var(--h-ctl);padding:0 var(--sp3);background:var(--surface-well);border:1px solid var(--border);border-radius:var(--r-md);min-width:0}
 .field label,.field .lbl{font:var(--f-unit);color:var(--text-muted);white-space:nowrap}
@@ -68,6 +68,7 @@ body { background: var(--surface-screen-lo); color: var(--text); font: var(--f-r
 .menu{display:flex;flex-direction:column;padding:var(--sp2);gap:1px}
 .mi{display:flex;align-items:center;gap:var(--sp4);min-height:var(--h-row);padding:0 var(--sp4);border-radius:var(--r-sm);color:var(--text);background:none;border:1px solid transparent;text-align:left;width:100%}
 .mi .kbd{margin-left:auto}
+.mi-check{display:inline-flex;width:var(--ic);flex:none}
 .mi.on{background:linear-gradient(var(--surface-row-hi),var(--surface-row-lo));border-color:var(--border)}
 .mi[aria-disabled="true"]{color:var(--text-muted)}
 .mgroup{font:var(--f-unit);color:var(--text-muted);padding:var(--sp2) var(--sp4) 0}
@@ -126,3 +127,18 @@ details.disc[open] > summary::before { transform: rotate(45deg); }
 .vb-submenu-panel { max-height: calc(100dvh - var(--vb-menu-top, 64px) - 16px); overflow-y: auto; overscroll-behavior: contain; }
 .vb-popover { position: absolute; top: 100%; left: 0; z-index: 20; max-width: calc(100vw - 32px); }
 dialog.dlg { position: fixed; }
+/* Dropdown lists in the Vanilla + look: where CSS can style the list (appearance: base-select) it is drawn like the menus;
+   elsewhere the browser draws it, with dark options so the inherited white text stays readable. */
+:where(option, optgroup) { background-color: var(--surface-panel); color: var(--text); }
+@supports (appearance: base-select) {
+  select, ::picker(select) { appearance: base-select; }
+  select::picker-icon { color: var(--text-muted); }
+  .field select { justify-content: flex-end; }   /* a styled select lays out as flex, so text-align no longer places its value */
+  .field select::picker-icon { margin-inline-start: var(--sp2); }
+  ::picker(select) { padding: var(--sp2); background: var(--surface-panel); border: 1px solid var(--border-strong); border-radius: var(--r-lg); color: var(--text); font: var(--f-reading); text-align: left; scrollbar-width: thin; }
+  option { display: flex; align-items: center; gap: var(--sp3); min-height: var(--h-row); padding: 0 var(--sp4); border: 1px solid transparent; border-radius: var(--r-sm); background: none; }
+  option:hover, option:focus-visible { background: linear-gradient(var(--surface-row-hi), var(--surface-row-lo)); border-color: var(--border); outline: 0; }
+  option:checked { color: var(--text); }
+  option:disabled { color: var(--text-muted); }
+  optgroup { font: var(--f-unit); color: var(--text-muted); background: none; }
+}

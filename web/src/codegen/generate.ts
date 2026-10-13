@@ -96,8 +96,10 @@ function sceneProblem(scene: unknown): string | null {
 
 /** The Devices page is generated when a role finds its device by a scan (no housing pin, no fixed ref). */
 const scansDevices = (p: Project) => p.roles.some(r => r.pin === undefined && r.ref === undefined)
-/** The vector scene ids an export of `p` draws: each page's, then the Devices page's when one is generated. */
-export const exportScenes = (p: Project): string[] => [...p.pages.map(pg => pg.id), ...(scansDevices(p) ? [devicesName(p)] : [])]
+/** Nodes and direct FONT declarations need a vector scene; a blank page needs none. */
+export const hasVectorScene = (scene: Scene): boolean => scene.root.length > 0 || scene.defs.some(def => def.op.toUpperCase() === 'FONT')
+/** Only the vector scenes an export draws, including the generated Devices page. */
+export const exportScenes = (p: Project): string[] => [...p.pages.filter(pg => hasVectorScene(pg.scene)).map(pg => pg.id), ...(scansDevices(p) ? [devicesName(p)] : [])]
 
 export function generate(p: Project, srcOf: (page: Page) => string): Generated {
   const out = new Out(), problems: Problem[] = [], t = themeOf(p), ver = floorVer(VECTOR_FLOOR)
@@ -272,8 +274,8 @@ export function generate(p: Project, srcOf: (page: Page) => string): Generated {
   out.add('config', '  },\n  pages = {')
   const unbound: string[] = []
   for (const page of p.pages) {
-    // No scene element only where natives stand alone (an empty page keeps one: its first node is then a patch, not a reload).
-    const size = designSize(page.scene.header), empty = page.scene.root.length === 0 && !page.scene.defs.some(def => def.op.toUpperCase() === 'FONT') && nativesOf(page, t).length > 0
+    // Omit a blank page's vector scene and marker; its first node changes the config and reloads once.
+    const size = designSize(page.scene.header), empty = !hasVectorScene(page.scene)
     const snap: string[] = [], eased: string[] = [], arrays: string[] = [], samples: string[] = [], nils: string[] = [], data: [string, string][] = []
     for (const n of namesOf(page, t)) {
       if (n.native) continue

@@ -37,13 +37,21 @@ export function sourceJson(s: SimSource): SourceJson {
 
 const typeNumber = (lt: Record<string, number>, key: string) => key.startsWith('#') ? Number(key.slice(1)) : lt[key]
 
-/** A simulated device's values by number: LogicTypes as "<lt>", slot types as "<slot>:<lst>". */
-function valuesOf(d: SimDevice, enums: Record<string, Record<string, number>>) {
-  const lt = enums.LogicType ?? {}, lst = enums.LogicSlotType ?? {}
+/** A simulated device's values by number: LogicTypes as "<lt>", slot types as "<slot>:<lst>". A name the enums do not number
+ *  cannot be simulated: `notes` says so (the Sim panel lists it under Not simulated) rather than dropping it unseen. */
+function valuesOf(d: SimDevice, enums: Record<string, Record<string, number>>, notes?: string[]) {
+  const lt = enums.LogicType ?? {}, lst = enums.LogicSlotType ?? {}, who = d.label || d.prefab || 'Device'
   const values: Record<string, SourceJson> = {}, slotValues: Record<string, SourceJson> = {}
-  for (const [k, s] of Object.entries(d.values)) { const n = typeNumber(lt, k); if (Number.isInteger(n)) values[n] = sourceJson(s) }
+  for (const [k, s] of Object.entries(d.values)) {
+    const n = typeNumber(lt, k)
+    if (Number.isInteger(n)) values[n] = sourceJson(s)
+    else notes?.push(`${who}: ${k} is not a LogicType this catalogue numbers, so it is not simulated; a mod's type can be given by its number, as #<number>`)
+  }
   for (const [slot, types] of Object.entries(d.slots ?? {}))
-    for (const [k, s] of Object.entries(types)) if (Object.hasOwn(lst, k)) slotValues[`${slot}:${lst[k]}`] = sourceJson(s)
+    for (const [k, s] of Object.entries(types)) {
+      if (Object.hasOwn(lst, k)) slotValues[`${slot}:${lst[k]}`] = sourceJson(s)
+      else notes?.push(`${who}: slot ${slot} ${k} is not a slot type this catalogue numbers, so it is not simulated`)
+    }
   return { values, slotValues }
 }
 
@@ -65,8 +73,14 @@ function deviceJson(d: SimDevice, cat: Catalog | null, enums: Record<string, Rec
   const out: DeviceJson = { ref: d.ref, prefab: crc32(d.prefab), prefabName: d.prefab, name: d.label, ...(d.pin !== undefined && { pin: d.pin }), logic, slots,
     ...(c && { prefabDisplayName: titleOf(c) }),
     ...(Object.keys(slotLogic).length && { slotLogic }) }
+  // A numbered (mod) LogicType the catalogue does not list for this device, given a simulated value, is carried as the
+  // simulated value says it exists: read and written, as a device the catalogue does not know carries every type.
+  if (c) for (const k of Object.keys(d.values)) {
+    const n = k.startsWith('#') ? Number(k.slice(1)) : NaN
+    if (Number.isInteger(n) && !Object.hasOwn(logic, n)) logic[n] = 'RW'
+  }
   if (!values) return out
-  const v = valuesOf(d, enums)
+  const v = valuesOf(d, enums, cat ? notes : undefined)   // without a catalogue nothing is numbered yet: no note per value
   return { ...out, ...(Object.keys(v.values).length && { values: v.values }), ...(Object.keys(v.slotValues).length && { slotValues: v.slotValues }) }
 }
 

@@ -1,6 +1,6 @@
 # VectorBuilder — design
 
-Status: approved on 2026-10-04, and amended in place since (§12). M0, M1, M2a, M2b, M2c and M3 built; E1's implementation integrated; M4's implementation integrated with browser/console evidence still pending. M4 is not complete; see docs/m4.md.
+Status: approved on 2026-10-04, and amended in place since (§12). M0, M1, M2a, M2b, M2c and M3 built; E1's implementation integrated; M4's implementation integrated with browser/console evidence still pending. M4 is not complete; see docs/m4.md. M5 and M6 built; the site launched on 2026-10-13 (docs/m6.md).
 
 ## 0. Amendments
 
@@ -1096,7 +1096,8 @@ Page shape = proportions of the real surface:
     the prefab's name, and a pick writes the device's prefab into `prefabs` and its Labeller name
     into `label`, never its ref: a device's ref id changes when the device is rebuilt (the owner:
     "never with id as those change on device rebuild"). With no game connected, "Pin to one
-    specific device" stays the fallback. Not built yet.
+    specific device" stays the fallback. Built and launched 2026-10-13: with nothing linked, the
+    picker lists the devices of every network the game reaches.
   - Optional: the console runs without the role (it never opens the Devices page first, and
     its row reads "not present").
   - Distinct (`distinct: true`, 2026-10-12; it acts on `one` roles): the role never takes a
@@ -1171,8 +1172,13 @@ Page shape = proportions of the real surface:
 
 ### 6.3 Pages
 
-- One page = one surface + one scene, emitted as a literal `src` string (literal text is
-  cheap for the instruction budget).
+- One page = one surface, with a vector scene emitted as a literal `src` string only when
+  it has nodes or direct FONT definitions (literal text is cheap for the instruction budget).
+  A blank page exports no vector scene or data carriers, with or without native widgets,
+  so it shows nothing in the game or preview; with No background the preview shows only
+  the checkerboard. Adding the first node creates the scene through one preview reload
+  or a re-push; later scene edits patch. Removing the last node and FONT definition reloads
+  without a scene. Scenes with nodes retain the mod's problem and drew-nothing markers.
 - The start page is built at load; every other page on its first visit, inside a tick, its
   declaration carrying that tick's data; then switched with `ss.ui.activate`. A page is never
   built and rendered in one execution.
@@ -1198,7 +1204,7 @@ Page shape = proportions of the real surface:
 - Exports keep one surface per page. In-game rendering and its cost, hidden surfaces included,
   are the vector mod's to measure and handle, not the builder's (owner, 2026-10-11), so no
   single-surface mode is planned.
-- Each page's last child is the old-mod banner: `G v="=lt(ver,FLOOR)" { … }`, where FLOOR is
+- Each emitted vector scene's last child is the old-mod banner: `G v="=lt(ver,FLOOR)" { … }`, where FLOOR is
   the floor's `ver` number (11118 for `v0.11.118`). It is the only version guard, for a game
   started before an update landed. On a mod older than the floor, `lt` gives 1 (or, on a mod
   too old to know `ver`, the attribute fails and `v` falls back to its default of 1), and the
@@ -1333,7 +1339,9 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   (#282828/#303030) in 8 CSS px squares, independent of zoom and device-pixel density; outside
   the page the editor workspace retains its own background. The cover reconstructs the same
   linear-light composite before its label-coverage alpha pass. Only assigned page backgrounds
-  produce native panel content and can hide the checker. An absent background exports none
+  produce native panel content and can hide the checker. A page with no nodes or direct
+  FONT definitions has no vector scene or marker geometry over the checker. An absent
+  background exports none
   and previews as the checkerboard, including through translucent geometry; the Devices page
   follows the first page's background, including absence. New pages keep their theme ground.
   readPixels and CaptureOverlay read the scene
@@ -1496,20 +1504,38 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   never bypass a known error or claim a pass. Retry and JSON rescue remain available.
   Runtime messages get no guessed node/key links; only structured locations link against
   their matching scene identity.
-- **Send to chip** (M6, owner, 2026-10-12): a section in the Export dialog, hidden until a per-browser
-  "Show Send to chip (advanced)" is ticked, calling the game's MCP endpoint at the fixed
-  `http://127.0.0.1:3030`; each send replaces the program of a chip the player picked, on one
-  explicit click, with no backup, and the panel says so. Not built yet; M4 has no such product
-  panel or browser-origin grant.
-- **The game link** (M6, owner, 2026-10-12): a "Game" item in the status bar (the housing name
-  when linked, "Not linked" otherwise) opens a small link dialog. The player links one chip from
-  the game's chip list, or the chip the open IC editor has selected in one click; the link stays
-  on that chip until changed and lasts for the tab only. It drives Send's target, the device
-  picker (§6.1) scoped to the linked chip's network with live device names, and the page shape:
-  the linked console's screen size is offered as the current page's shape, and the player can
-  override it (the owner: "but with the ability to overide"); the page changes only on the
-  player's click. Send always passes `mode: editor_then_chip`, so an open IC editor showing that
-  chip shows the new code too. No ref, network id or hash shows anywhere. Not built yet.
+- **Send to chip** (M6, built and launched 2026-10-13): a section of the Export dialog, hidden
+  until the per-browser "Show Send to chip (advanced)" is ticked. It talks to StationeersLua's
+  MCP endpoint at the fixed `http://127.0.0.1:3030` (under `npm run dev`, through a development
+  proxy at the page's own origin that forwards only same-origin loopback requests and removes
+  `Origin`). One click pushes exactly the checked artifact, unchanged, with `set_chip_code` in
+  `editor_then_chip` mode, so an open IC editor showing that chip shows the new code too; then it
+  reads `vector_stats` and asks for a capture, which the game saves as a PNG on the player's
+  computer, answering with its path. Each answer is said in words, with the raw answer behind
+  Details. Sending replaces the chip's program with no backup, and the panel says so. A failure
+  the browser cannot name lists its possible causes (the game not running or no world loaded,
+  the endpoint off, this origin not allowed, the local-network permission refused) instead of
+  guessing one. Nothing asks the game anything until a click, and nothing about the game is
+  kept, in the browser or in the project.
+- **The game link** (M6, built and launched 2026-10-13): the status bar's game item ("Game: not
+  linked" until linked) opens a dialog that links this tab to one chip, picked from the game's
+  chip list by name or taken from the IC editor's selection in one click ("Use the chip selected
+  in the IC editor"). The link lasts until the tab closes. Send then writes to the linked chip,
+  and the linked console's screen size is offered as the page's shape, which the page's own shape
+  control can still change (the owner: "but with the ability to overide").
+- **The device picker** (M6, built and launched 2026-10-13): each role in the Logic panel can take
+  a real device from the linked chip's network (every network when nothing is linked), by its
+  name; the pick writes the device's prefab into `prefabs` and its name into `label`, never its
+  ref, so the role finds that device by name (§6.1). A role pinned to one device keeps its pin. No
+  ref, network id or hash shows anywhere.
+- **The game's settings** the player sets: StationeersLua's `[MCP Server] Enabled`, and the site's
+  origin `https://gruffuss.github.io` in `AllowedBrowserOrigins` (a change took effect only after
+  a restart); nothing suggests `*` or another origin. Which chips the game lists follows
+  StationeersLua's chip-access settings (the IC editor's selected chip, a Wireless Development
+  Board with `AllowNetworkChipAccess`, worn gear with `AllowPersonalAreaNetworkChipAccess`). A
+  browser may ask for local-network permission. The game's preflight answer allows the listed
+  origin without an `Access-Control-Allow-Private-Network` header, and Chrome accepted it
+  (2026-10-13).
 
 **Projects and sharing:**
 - IndexedDB keeps one current serialized project and one recovery record, not an edit history
@@ -1551,16 +1577,23 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   open, the inner one is shut). Its two door roles are distinct (§6.1). Still no automatic
   pressure cycle and no safety claim. Solar remains
   read-only raw Charge/Maximum until units are independently verified; no tracking or kW
-  conversion. Blank's drew-nothing marker is intentional. Open example 01–19, including
+  conversion. A blank page shows nothing and exports no vector scene. Open example 01–19,
+  including
   18/19 without automatic font requests, and raw Example scripts remain available.
 
 **Hosting:**
-- GitHub Actions builds `core/` (the .NET wasm workload) and `web/`, then deploys to GitHub
-  Pages.
-  M6 (owner, 2026-10-12): CI runs on pull requests and on pushes to `main`, the deploy only from
-  `main`; the site is the project site `https://<owner>.github.io/<repository>/` (its browser
-  storage is shared with the owner's other github.io project sites); the public repository is a
-  fresh one that starts at the launch commit, while this one stays private with its history;
+- The public repository is `Gruffuss/StationeersConsoleBuilder` on GitHub, and the site is its
+  project site, https://gruffuss.github.io/StationeersConsoleBuilder/ (its browser storage is
+  shared with the owner's other github.io project sites). The public repository started at the
+  launch with a single commit and receives release snapshots of this private repository, which
+  keeps its history.
+- `.github/workflows/ci.yml` builds `core/` (the .NET wasm workload) and `web/` on a clean Linux
+  checkout, runs the suites, builds under the project path (`VB_BASE=/<repository>/`) and deploys
+  `web/dist` to GitHub Pages. CI runs on pull requests and on pushes to `main`, the deploy only on
+  a push to `main`. Both jobs stay off until the repository variables are set: `VB_CI = on` runs
+  the build and tests, `VB_DEPLOY = on` also deploys (with Pages set to deploy from GitHub
+  Actions).
+  M6 (owner, 2026-10-12):
   MIT licence ("Copyright (c) 2026 Gruffus") with third-party notices (Lua-CSharp, the .NET runtime, the vector mod, the fonts,
   the npm packages) in the repository and on the site, the vector mod's notice keeping its own
   MIT line "Copyright (c) 2026 Gruffuss" (D18); no code split before the launch, the
@@ -1581,9 +1614,11 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   kept) and, for a project folder, its same-folder files, with credentials omitted and no
   referrer; a redirect is refused and said; a missing or HTML-answered optional file is a
   note; no claude.ai API is ever called.
-- Only on the owner's go-ahead.
+- Deploys and releases happen only on the owner's go-ahead.
 
 **Testing:**
+- **CI:** the workflow above runs the local check's six steps in order (publish, precore,
+  type-check, web tests, the build, the C# suite), each gating the next.
 - **Core:**
   - the vector mod's own unit suite against the pinned tag, which detects native-only Unity
     calls;
@@ -1688,8 +1723,10 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
    0.2.6403), which also names the vanilla devices (`tools/catalog/`). Open: a mod's LogicTypes
    have no number in the export (the in-game enum probe gives them); a device newer than the md
    is a mod's until `vanilla.txt` names it; the export comes from a modded game.
-7. **Bundle size.** The wasm bundle's size and first-load time on a public site. M4's main
-   JavaScript chunk remains above the 900 kB warning; see docs/m4.md for the measured build.
+7. **Bundle size.** Measured on the deployed site (2026-10-13): first load is about 3.3 MB over
+   the wire, the page's 811 KB plus 25 core files of 2,448 KB (5,698 KB uncompressed), and the
+   core is ready in about 205 ms. The main JavaScript chunk remains above the 900 kB warning; no
+   code split was made (the owner's OQ8 answer). See docs/m6.md.
 8. **Compressed input resources.** R13 bounds startup fragments by the actual 8,000-character
    producer rule and embedded inputs by declared gzip size and the measured engine string
    limit. A real Chrome test of an honest 1,610,612,663-byte expansion stopped at L with the
@@ -1747,11 +1784,18 @@ U.init() once → each tick: U.before_reads(dt) → reads/transforms/thresholds 
   Built on `m5-imports` (2026-10-12; evidence offline, in the browser and in game in
   `docs/m5.md`); it merges into `main` on the owner's go. The vector re-pin is the last step
   before the public deployment (owner, 2026-10-12).
-- M6 send to chip, polish, CI and Pages deploy (on the owner's go-ahead). Planned in
-  the M6 plan; the owner answered its twelve questions with
-  the recommended defaults (2026-10-12). Polish is the player-facing texts, the README and M4's
-  leftovers; M4's real-device items are tested in the re-pin's game session on a save with
-  those devices; the vector re-pin is the last step before the deployment.
+- M6 send to chip, polish, CI and Pages deploy: built and launched on 2026-10-13 (evidence in
+  `docs/m6.md`), at https://gruffuss.github.io/StationeersConsoleBuilder/. Planned in
+  the M6 plan; the owner answered its questions
+  (2026-10-12). Polish was the player-facing texts, the README and M4's leftovers; the vector
+  re-pin to 0.11.118 came last before the deployment.
+
+- Future: pages that adapt to the console's size (owner, 2026-10-13). Today a page has one fixed
+  shape: on its own console it fits exactly, and on any other the scene is only scaled to fit,
+  leaving empty bands. Planned: elements pinned to the page's edges or stretched between them, so
+  spare width or height is used, not left blank; and a landscape and a portrait arrangement in one
+  page, the export choosing by the console's size, as the owner's own Power console does. Its own
+  plan comes first. Until then a console made for both orientations ships as two templates.
 
 Execution: tasks run in parallel wherever only shared lines of text order them; a task waits only
 for another task's output (an interface it consumes). Merge conflicts are resolved at the merge, and
@@ -1882,3 +1926,11 @@ Dated, newest last. The body above states each decision; this log only records w
 - 2026-10-12 · M6 Task 7 re-pins the submodule to v0.11.118 (1f877d7), ver/floor 11118. Catalogue, data cadence/controls, visible dash windows and VBF3 edge/float-colour transport follow the tag; outline and edge formula tables compare directly with it. No builder limit or upstream workaround is added. Offline results and each upstream map row are recorded in docs/m6-repin.md; review, browser observation and game checks remain with the owner (§§3, 6.3, 7, 9).
 - 2026-10-13 · Empty console surfaces (owner: "console without a bg assigned have NO background"; choice: "checkerboard") (§7): remove the dark preview stand-in; clear the scene target transparent and display a fixed 8 CSS px neutral checker only inside the page. Scene and cover RGB blend over it in linear light; readPixels/CaptureOverlay exclude it and report empty alpha 0. Assigned native page backgrounds remain content; the workspace keeps its own background. Results are recorded in docs/m6-repin.md.
 - 2026-10-13 · A page without a background exports none (owner: "console without a bg assigned have NO background", preview choice "checkerboard") (§§5.4, 7): background is optional; export and project load do not invent M1_GROUND. The runtime declares a native bg panel only when assigned, and Devices inherits the first page's background, including none. Design → Page gains the No background choice, one undo step; colour and vertical gradient controls assign backgrounds. New pages keep the theme ground. Generated Lua/core/WebGL checks and the golden diff are recorded in docs/m6-repin.md.
+- 2026-10-13 · Launch (§§8, 10, 11): the site https://gruffuss.github.io/StationeersConsoleBuilder/ is live, deployed by the first public CI run (run 38318128299, a push to `main`; every build step passed, the deploy took 8 s). The owner confirmed it end to end in his Chrome: "getting chips works in chrome", "pushing works flawlesly". First load is about 3.3 MB over the wire; the evidence, by kind, is in `docs/m6.md`.
+- 2026-10-13 · The public repository `Gruffuss/StationeersConsoleBuilder` (§8): its first commit is `f78534d`, a single commit holding the public tree (the development plans and local settings left out, the spec at `docs/spec.md`, process words removed). It receives release snapshots of this private repository with that transformation applied.
+- 2026-10-13 · The owner's game (§8): his StationeersLua `AllowedBrowserOrigins` is permanently `https://gruffuss.github.io`, so the live site can send to his chips.
+
+- 2026-10-13 · Blank pages (§§6.3, 7, 8), owner: "pls for the next veriosn in the builder an empty console should not show a pink border as it will misslead users". He chose option 1: export no vector scene for a page with no nodes or direct FONT definitions, with or without natives, so neither game nor preview draws the marker. Omit its data carriers too; No background shows only the checkerboard. The first node costs one preview reload, or creates the scene on re-push; subsequent edits patch. Scenes with nodes keep the mod's problem and drew-nothing markers.
+- 2026-10-13 · Future milestone (§11), owner: adapting a page to the console's size goes on the roadmap ("Add it as a future feature"), after he noted "my script have the ability to adapt to console size as you can see, the designer i assume does not at the moment" and "the fact that is 100 fixed instead of spread any spare width is not really ok": edge pinning or stretching to use spare space, and a landscape and a portrait arrangement in one page chosen by the export from the console's size. Meanwhile the owner's Power wall ships as two templates, "Power wall (3×2)" and "Power wall (2×3)" (his choice).
+- 2026-10-13 · Inspector (§4), owner: "yes" to moving the Page section (name, console size, background) to the top of the Design tab when nothing is selected; under a selection it stays last and collapsed. The same UI round: the console size opens from the frame label above the page, Snap and Source show their on state, dropdown lists are styled, and checkable menu items show a check.
+- 2026-10-13 · Starters (§5.2), owner: his Power and Hydro farm consoles become starters rebuilt from the builder's widgets, looks from the theme and behaviour from his scripts, at their own shapes and never resized ("do not resize them"): Power wall (3×2), Power wall (2×3) and Hydro farm (3×2); docs/templates-power-farm.md maps every device, read, write and page and lists what could not be built. The Data panel's recipes are rewritten in plain words (owner: "text like this mane no sense for regular users ... make it regular human readable pls").

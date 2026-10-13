@@ -878,11 +878,14 @@ do
     VB.fit(pg, w, h)
     local sent, sn, ea = collect(pg, data), {}, {}
     for k, v in pairs(sent) do if snapped(pg, k, v) then sn[k] = v else ea[k] = v end end
-    local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
-    if next(sn) then p1.data = sn end
-    if next(ea) then p2.data = ea end
-    pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
-    pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    pg.hs, pg.he = nil, nil
+    if not pg.empty then
+      local p1, p2 = { scene = pg.id, keep = 1, snap = 1 }, { scene = pg.id, keep = 1 }
+      if next(sn) then p1.data = sn end
+      if next(ea) then p2.data = ea end
+      pg.hs = ui:element({ id = 'data', type = 'vector', rect = { unit = 'px', x = -4, y = -4, w = 1, h = 1 }, props = p1 })
+      pg.he = ui:element({ id = 'ease', type = 'vector', rect = { unit = 'px', x = -6, y = -4, w = 1, h = 1 }, props = p2 })
+    end
     pg.nv = {}
     for _, n in ipairs(pg.natives or {}) do VB.native(ui, pg, n) end
     ui:commit()
@@ -899,8 +902,8 @@ do
         if snap then sn[k], s1 = v, true else ea[k], s2 = v, true end
       end
     end
-    if s1 then pg.hs:set_props({ data = sn }) end
-    if s2 then pg.he:set_props({ data = ea }) end
+    if s1 and pg.hs then pg.hs:set_props({ data = sn }) end
+    if s2 and pg.he then pg.he:set_props({ data = ea }) end
     for _, n in ipairs(pg.natives or {}) do
       if n.bind then
         local was, diff = pg.nv[n.uid] or {}, false
@@ -1186,7 +1189,7 @@ G id=row1 {
     T x=64 y=24 w=280 h=44 text=Label size=24 f=#F2F2F2 valign=middle fit=ellipsis
     T x=354 y=24 w=96 h=44 text="{$row1_r1:%.1f}" size=28 f==if(eq($row1_st,2),#F0B429,if(eq($row1_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
 }
-# widget repeater rep1 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":true,"keys":{}}
+# widget repeater rep1 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":true,"fade":false,"keys":{}}
 G id=rep1 {
     R x=24 y=24 w=440 h=314
     RP n=6 {
@@ -1959,7 +1962,7 @@ G id=row169 {
     T x=64 y=24 w=280 h=44 text=Label size=24 f=#F2F2F2 valign=middle fit=ellipsis
     T x=354 y=24 w=96 h=44 text="{$row169_r1:%.1f}" size=28 f==if(eq($row169_st,2),#F0B429,if(eq($row169_st,3),#EF5350,#F2F2F2)) align=right valign=middle fit=ellipsis
 }
-# widget repeater rep170 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep170 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep170 {
     R x=24 y=24 w=440 h=314
     RP n=6 {
@@ -1974,7 +1977,7 @@ G id=rep170 {
         }
     }
 }
-# widget repeater rep171 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep171 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep171 {
     R x=24 y=24 w=440 h=314
     RP n=6 {
@@ -1989,7 +1992,7 @@ G id=rep171 {
         }
     }
 }
-# widget repeater rep172 {"x":24,"y":24,"w":440,"h":152,"max":6,"layout":"grid","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep172 {"x":24,"y":24,"w":440,"h":152,"max":6,"layout":"grid","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep172 {
     R x=24 y=24 w=440 h=152
     RP n=6 {
@@ -2004,7 +2007,7 @@ G id=rep172 {
         }
     }
 }
-# widget repeater rep173 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep173 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep173 {
     R x=24 y=24 w=440 h=314
     RP n=6 {
@@ -2019,7 +2022,7 @@ G id=rep173 {
         }
     }
 }
-# widget repeater rep174 {"x":24,"y":24,"w":440,"h":303.6,"max":6,"layout":"list","cols":2,"pitch":54,"item":"text","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep174 {"x":24,"y":24,"w":440,"h":303.6,"max":6,"layout":"list","cols":2,"pitch":54,"item":"text","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep174 {
     R x=24 y=24 w=440 h=303.6
     RP n=6 {
@@ -2028,7 +2031,7 @@ G id=rep174 {
         }
     }
 }
-# widget repeater rep175 {"x":24,"y":24,"w":440,"h":294,"max":6,"layout":"list","cols":2,"pitch":54,"item":"bar","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep175 {"x":24,"y":24,"w":440,"h":294,"max":6,"layout":"list","cols":2,"pitch":54,"item":"bar","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep175 {
     R x=24 y=24 w=440 h=294
     RP n=6 {
@@ -2038,7 +2041,7 @@ G id=rep175 {
         }
     }
 }
-# widget repeater rep176 {"x":24,"y":24,"w":440,"h":286,"max":6,"layout":"list","cols":2,"pitch":54,"item":"light","fmt":"%.1f","click":false,"keys":{}}
+# widget repeater rep176 {"x":24,"y":24,"w":440,"h":286,"max":6,"layout":"list","cols":2,"pitch":54,"item":"light","fmt":"%.1f","valueW":0,"click":false,"fade":false,"keys":{}}
 G id=rep176 {
     R x=24 y=24 w=440 h=286
     RP n=6 {
@@ -2050,7 +2053,7 @@ G id=rep176 {
         }
     }
 }
-# widget repeater rep177 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":true,"keys":{}}
+# widget repeater rep177 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":true,"fade":false,"keys":{}}
 G id=rep177 {
     R x=24 y=24 w=440 h=314
     RP n=6 {
@@ -2066,65 +2069,80 @@ G id=rep177 {
         }
     }
 }
-# widget repeater rep178 {"x":24,"y":24,"w":440,"h":152,"max":6,"layout":"grid","cols":2,"pitch":54,"item":"row","fmt":"%.1f","click":true,"keys":{}}
+# widget repeater rep178 {"x":24,"y":24,"w":440,"h":314,"max":6,"layout":"list","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":false,"fade":true,"keys":{}}
 G id=rep178 {
-    R x=24 y=24 w=440 h=152
+    R x=24 y=24 w=440 h=314
     RP n=6 {
-        G v==lt(i,$rep178_n) {
-            R id=rep178_r click=1 x==24+mod(i,2)*225 y==24+floor(i/2)*54 w=215 h=44
-            R x==24+mod(i,2)*225 y==24+floor(i/2)*54 w=215 h=44 rx=4 f=#2C2C2C
-            C v==1-eq($rep178_st[i],1)-eq($rep178_st[i],2)-eq($rep178_st[i],3) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#9A9A9A
-            C v==eq($rep178_st[i],1) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#4CC38A
-            C v==eq($rep178_st[i],2) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#F0B429
-            C v==eq($rep178_st[i],3) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#EF5350
-            T x==24+mod(i,2)*225+40 y==24+floor(i/2)*54 w==lerp(41,161,clamp(and($rep178_ready,eq($rep178_hasv[i],0)),0,1)) h=44 text="$rep178_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
-            T v==not(and($rep178_ready,eq($rep178_hasv[i],0))) x==24+mod(i,2)*225+91 y==24+floor(i/2)*54 w=110 h=44 text="{$rep178_v[i]:%.1f}" size=28 f=#F2F2F2 align=right valign=middle
+        G v==lt(i,$rep178_n) o==1-clamp($rep178_fade[i],0,1) {
+            R x=24 y==24+i*54 w=440 h=44 rx=4 f=#2C2C2C
+            C v==1-eq($rep178_st[i],1)-eq($rep178_st[i],2)-eq($rep178_st[i],3) cx=46 cy==24+i*54+22 rx=8 ry=8 f=#9A9A9A
+            C v==eq($rep178_st[i],1) cx=46 cy==24+i*54+22 rx=8 ry=8 f=#4CC38A
+            C v==eq($rep178_st[i],2) cx=46 cy==24+i*54+22 rx=8 ry=8 f=#F0B429
+            C v==eq($rep178_st[i],3) cx=46 cy==24+i*54+22 rx=8 ry=8 f=#EF5350
+            T x=64 y==24+i*54 w==lerp(266,386,clamp(and($rep178_ready,eq($rep178_hasv[i],0)),0,1)) h=44 text="$rep178_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+            T v==not(and($rep178_ready,eq($rep178_hasv[i],0))) x=340 y==24+i*54 w=110 h=44 text="{$rep178_v[i]:%.1f}" size=28 f=#F2F2F2 align=right valign=middle
         }
     }
 }
-# widget stepper stp179 {"x":24,"y":24,"w":440,"h":48,"name":"Value","fmt":"%.0f","by":1,"min":0,"max":100,"keys":{}}
-G id=stp179 {
-    G id=stp179_gd {
-        R id=stp179_dec press=1 x=252 y=24 w=48 h=48
+# widget repeater rep179 {"x":24,"y":24,"w":440,"h":152,"max":6,"layout":"grid","cols":2,"pitch":54,"item":"row","fmt":"%.1f","valueW":0,"click":true,"fade":false,"keys":{}}
+G id=rep179 {
+    R x=24 y=24 w=440 h=152
+    RP n=6 {
+        G v==lt(i,$rep179_n) {
+            R id=rep179_r click=1 x==24+mod(i,2)*225 y==24+floor(i/2)*54 w=215 h=44
+            R x==24+mod(i,2)*225 y==24+floor(i/2)*54 w=215 h=44 rx=4 f=#2C2C2C
+            C v==1-eq($rep179_st[i],1)-eq($rep179_st[i],2)-eq($rep179_st[i],3) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#9A9A9A
+            C v==eq($rep179_st[i],1) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#4CC38A
+            C v==eq($rep179_st[i],2) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#F0B429
+            C v==eq($rep179_st[i],3) cx==24+mod(i,2)*225+22 cy==24+floor(i/2)*54+22 rx=8 ry=8 f=#EF5350
+            T x==24+mod(i,2)*225+40 y==24+floor(i/2)*54 w==lerp(41,161,clamp(and($rep179_ready,eq($rep179_hasv[i],0)),0,1)) h=44 text="$rep179_name[i]" size=24 f=#F2F2F2 valign=middle fit=ellipsis missing=""
+            T v==not(and($rep179_ready,eq($rep179_hasv[i],0))) x==24+mod(i,2)*225+91 y==24+floor(i/2)*54 w=110 h=44 text="{$rep179_v[i]:%.1f}" size=28 f=#F2F2F2 align=right valign=middle
+        }
+    }
+}
+# widget stepper stp180 {"x":24,"y":24,"w":440,"h":48,"name":"Value","fmt":"%.0f","by":1,"min":0,"max":100,"keys":{}}
+G id=stp180 {
+    G id=stp180_gd {
+        R id=stp180_dec press=1 x=252 y=24 w=48 h=48
         R x=252.5 y=24.5 w=47 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
-    G id=stp179_gi {
-        R id=stp179_inc press=1 x=416 y=24 w=48 h=48
+    G id=stp180_gi {
+        R id=stp180_inc press=1 x=416 y=24 w=48 h=48
         R x=416.5 y=24.5 w=47 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
     T x=24 y=24 w=218 h=48 text=Value size=24 f=#F2F2F2 valign=middle fit=ellipsis
     T x=252 y=24 w=48 h=48 text=− size=22 weight=bold f=#F2F2F2 align=center valign=middle
-    T x=310 y=28.4 w=96 h=39.2 text="{$stp179_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+    T x=310 y=28.4 w=96 h=39.2 text="{$stp180_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
     T x=416 y=24 w=48 h=48 text=+ size=22 weight=bold f=#F2F2F2 align=center valign=middle
 }
-# widget tabs nav180 {"x":24,"y":24,"w":432,"h":48,"tabs":[{"label":"Main","page":"p1","key":0},{"label":"Power","page":"p2","key":1}],"active":"p1","gap":10}
-G id=nav180 {
-    G id=nav180_g0 {
-        R id=nav180_t0 click=1 x=24 y=24 w=211 h=48
+# widget tabs nav181 {"x":24,"y":24,"w":432,"h":48,"tabs":[{"label":"Main","page":"p1","key":0},{"label":"Power","page":"p2","key":1}],"active":"p1","gap":10}
+G id=nav181 {
+    G id=nav181_g0 {
+        R id=nav181_t0 click=1 x=24 y=24 w=211 h=48
         R x=23 y=23 w=213 h=50 rx=5 f=none s=#3D8BFD sw=2
         R x=24.5 y=24.5 w=210 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
-    G id=nav180_g1 {
-        R id=nav180_t1 click=1 x=245 y=24 w=211 h=48
+    G id=nav181_g1 {
+        R id=nav181_t1 click=1 x=245 y=24 w=211 h=48
         R x=245.5 y=24.5 w=210 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
     T x=24 y=24 w=211 h=48 text=Main size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     T x=245 y=24 w=211 h=48 text=Power size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
 }
-# widget tabs nav181 {"x":24,"y":24,"w":432,"h":48,"tabs":[{"label":"Main","page":"p1","key":0},{"label":"Main","page":"p1","key":1},{"label":"Main","page":"p1","key":2}],"active":"p1","gap":10}
-G id=nav181 {
-    G id=nav181_g0 {
-        R id=nav181_t0 click=1 x=24 y=24 w=137.33333 h=48
+# widget tabs nav182 {"x":24,"y":24,"w":432,"h":48,"tabs":[{"label":"Main","page":"p1","key":0},{"label":"Main","page":"p1","key":1},{"label":"Main","page":"p1","key":2}],"active":"p1","gap":10}
+G id=nav182 {
+    G id=nav182_g0 {
+        R id=nav182_t0 click=1 x=24 y=24 w=137.33333 h=48
         R x=23 y=23 w=139.33333 h=50 rx=5 f=none s=#3D8BFD sw=2
         R x=24.5 y=24.5 w=136.33333 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
-    G id=nav181_g1 {
-        R id=nav181_t1 click=1 x=171.33333 y=24 w=137.33333 h=48
+    G id=nav182_g1 {
+        R id=nav182_t1 click=1 x=171.33333 y=24 w=137.33333 h=48
         R x=170.33333 y=23 w=139.33333 h=50 rx=5 f=none s=#3D8BFD sw=2
         R x=171.83333 y=24.5 w=136.33333 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
-    G id=nav181_g2 {
-        R id=nav181_t2 click=1 x=318.66666 y=24 w=137.33333 h=48
+    G id=nav182_g2 {
+        R id=nav182_t2 click=1 x=318.66666 y=24 w=137.33333 h=48
         R x=317.66666 y=23 w=139.33333 h=50 rx=5 f=none s=#3D8BFD sw=2
         R x=319.16666 y=24.5 w=136.33333 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
     }
@@ -2132,78 +2150,69 @@ G id=nav181 {
     T x=171.33333 y=24 w=137.33333 h=48 text=Main size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
     T x=318.66666 y=24 w=137.33333 h=48 text=Main size=22 weight=bold f=#F2F2F2 align=center valign=middle fit=ellipsis
 }
-# widget text txt182 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt182 {
+# widget text txt183 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt183 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt183 {"x":24,"y":24,"w":300,"h":168,"style":"hero","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt183 {
+# widget text txt184 {"x":24,"y":24,"w":300,"h":168,"style":"hero","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt184 {
     T x=24 y=24 w=300 h=168 text=Label size=120 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt184 {"x":24,"y":24,"w":300,"h":42,"style":"screen-title","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt184 {
+# widget text txt185 {"x":24,"y":24,"w":300,"h":42,"style":"screen-title","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt185 {
     T x=24 y=24 w=300 h=42 text=Label size=30 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt185 {"x":24,"y":24,"w":300,"h":33.6,"style":"clock","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt185 {
+# widget text txt186 {"x":24,"y":24,"w":300,"h":33.6,"style":"clock","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt186 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#C4C4C4 valign=middle fit=ellipsis
 }
-# widget text txt186 {"x":24,"y":24,"w":300,"h":33.6,"style":"panel-title","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt186 {
+# widget text txt187 {"x":24,"y":24,"w":300,"h":33.6,"style":"panel-title","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt187 {
     T x=24 y=24 w=300 h=33.6 text=Label size=22 weight=bold f=#9A9A9A valign=middle fit=ellipsis
 }
-# widget text txt187 {"x":24,"y":24,"w":300,"h":33.6,"style":"button-label","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt187 {
+# widget text txt188 {"x":24,"y":24,"w":300,"h":33.6,"style":"button-label","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt188 {
     T x=24 y=24 w=300 h=33.6 text=Label size=22 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt188 {"x":24,"y":24,"w":300,"h":33.6,"style":"chip-label","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt188 {
+# widget text txt189 {"x":24,"y":24,"w":300,"h":33.6,"style":"chip-label","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt189 {
     T x=24 y=24 w=300 h=33.6 text=Label size=20 weight=bold f=#111111 valign=middle fit=ellipsis
 }
-# widget text txt189 {"x":24,"y":24,"w":300,"h":39.2,"style":"value-lg","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt189 {
+# widget text txt190 {"x":24,"y":24,"w":300,"h":39.2,"style":"value-lg","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt190 {
     T x=24 y=24 w=300 h=39.2 text=Label size=28 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt190 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt190 {
+# widget text txt191 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt191 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt191 {"x":24,"y":24,"w":300,"h":33.6,"style":"reading","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt191 {
+# widget text txt192 {"x":24,"y":24,"w":300,"h":33.6,"style":"reading","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt192 {
     T x=24 y=24 w=300 h=33.6 text=Label size=22 f=#C4C4C4 valign=middle fit=ellipsis
 }
-# widget text txt192 {"x":24,"y":24,"w":300,"h":33.6,"style":"message","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt192 {
+# widget text txt193 {"x":24,"y":24,"w":300,"h":33.6,"style":"message","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt193 {
     T x=24 y=24 w=300 h=33.6 text=Label size=22 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt193 {"x":24,"y":24,"w":300,"h":33.6,"style":"unit","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt193 {
+# widget text txt194 {"x":24,"y":24,"w":300,"h":33.6,"style":"unit","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt194 {
     T x=24 y=24 w=300 h=33.6 text=Label size=20 f=#9A9A9A valign=middle fit=ellipsis
 }
-# widget text txt194 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
-G id=txt194 {
+# widget text txt195 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":false,"keys":{}}
+G id=txt195 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#F2F2F2 valign=middle fit=ellipsis
 }
-# widget text txt195 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"center","state":false,"keys":{}}
-G id=txt195 {
+# widget text txt196 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"center","state":false,"keys":{}}
+G id=txt196 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#F2F2F2 align=center valign=middle fit=ellipsis
 }
-# widget text txt196 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"right","state":false,"keys":{}}
-G id=txt196 {
+# widget text txt197 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"right","state":false,"keys":{}}
+G id=txt197 {
     T x=24 y=24 w=300 h=33.6 text=Label size=24 f=#F2F2F2 align=right valign=middle fit=ellipsis
 }
-# widget text txt197 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":true,"keys":{}}
-G id=txt197 {
-    T x=24 y=24 w=300 h=33.6 text=Label size=24 f==if(eq($txt197_st,2),#F0B429,if(eq($txt197_st,3),#EF5350,#F2F2F2)) valign=middle fit=ellipsis
-}
-# widget toggle tg198 {"x":24,"y":24,"w":300,"h":48,"label":"Label","onText":"On","offText":"Off","look":"button","keys":{}}
-G id=tg198 {
-    R id=tg198_hit click=1 x=24 y=24 w=300 h=48
-    R v==$tg198_on x=23 y=23 w=302 h=50 rx=5 f=none s=#3D8BFD sw=2
-    R x=24.5 y=24.5 w=299 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
-    T x=42 y=24 w=192 h=48 text=Label size=22 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
-    T v==eq($tg198_on,0) x=234 y=24 w=72 h=48 text=Off size=22 weight=bold f=#9A9A9A align=right valign=middle
-    T v==eq($tg198_on,1) x=234 y=24 w=72 h=48 text=On size=22 weight=bold f=#F2F2F2 align=right valign=middle
+# widget text txt198 {"x":24,"y":24,"w":300,"h":33.6,"style":"value","text":"Label","align":"left","state":true,"keys":{}}
+G id=txt198 {
+    T x=24 y=24 w=300 h=33.6 text=Label size=24 f==if(eq($txt198_st,2),#F0B429,if(eq($txt198_st,3),#EF5350,#F2F2F2)) valign=middle fit=ellipsis
 }
 # widget toggle tg199 {"x":24,"y":24,"w":300,"h":48,"label":"Label","onText":"On","offText":"Off","look":"button","keys":{}}
 G id=tg199 {
@@ -2214,27 +2223,21 @@ G id=tg199 {
     T v==eq($tg199_on,0) x=234 y=24 w=72 h=48 text=Off size=22 weight=bold f=#9A9A9A align=right valign=middle
     T v==eq($tg199_on,1) x=234 y=24 w=72 h=48 text=On size=22 weight=bold f=#F2F2F2 align=right valign=middle
 }
-# widget toggle tg200 {"x":24,"y":24,"w":300,"h":48,"label":"Label","onText":"On","offText":"Off","look":"switch","keys":{}}
+# widget toggle tg200 {"x":24,"y":24,"w":300,"h":48,"label":"Label","onText":"On","offText":"Off","look":"button","keys":{}}
 G id=tg200 {
     R id=tg200_hit click=1 x=24 y=24 w=300 h=48
-    R x=250 y=32 w=56 h=32 rx=16 f==mix(#121212,#4CC38A,clamp($tg200_on,0,1))
-    R x==252+24*clamp($tg200_on,0,1) y=34 w=28 h=28 rx=14 f=#F2F2F2
-    T x=42 y=24 w=198 h=48 text=Label size=22 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
+    R v==$tg200_on x=23 y=23 w=302 h=50 rx=5 f=none s=#3D8BFD sw=2
+    R x=24.5 y=24.5 w=299 h=47 rx=3.5 f=#2C2C2C s=#4A4A4A sw=1 fo==1-0.25*down
+    T x=42 y=24 w=192 h=48 text=Label size=22 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
+    T v==eq($tg200_on,0) x=234 y=24 w=72 h=48 text=Off size=22 weight=bold f=#9A9A9A align=right valign=middle
+    T v==eq($tg200_on,1) x=234 y=24 w=72 h=48 text=On size=22 weight=bold f=#F2F2F2 align=right valign=middle
 }
-# widget gauge gauge201 {"x":24,"y":24,"w":300,"h":300,"label":"Label","unit":"","min":0,"max":100,"start":-135,"end":135,"ticks":5,"fmt":"%.0f","value":true,"state":true,"keys":{}}
-G id=gauge201 {
-    P d="M80.6619 253.33809 A132 132 0 0 1 174 28 A132 132 0 0 1 267.3381 253.33809" s=#7A7A7A sw=4
-    L p=[94.66262,239.33739,80.6619,253.33809] s=#4A4A4A sw=2
-    L p=[70.34071,117.06292,52.0479,109.48579] s=#4A4A4A sw=2
-    L p=[174,47.8,174,28] s=#4A4A4A sw=2
-    L p=[277.65927,117.06292,295.9521,109.48579] s=#4A4A4A sw=2
-    L p=[253.33739,239.33739,267.3381,253.33809] s=#4A4A4A sw=2
-    G a=[174,160] r==-135+clamp(($gauge201_v-0)/100,0,1)*270 {
-        L p=[174,160,174,41.2] s==if(eq($gauge201_st,1),#4CC38A,if(eq($gauge201_st,2),#F0B429,if(eq($gauge201_st,3),#EF5350,#9A9A9A))) sw=3
-    }
-    C cx=174 cy=160 rx=4.5 ry=4.5 f=#F2F2F2
-    T x=24 y=164.5 w=300 h=39.2 text="{$gauge201_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
-    T x=24 y=296 w=300 h=28 text=Label size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+# widget toggle tg201 {"x":24,"y":24,"w":300,"h":48,"label":"Label","onText":"On","offText":"Off","look":"switch","keys":{}}
+G id=tg201 {
+    R id=tg201_hit click=1 x=24 y=24 w=300 h=48
+    R x=250 y=32 w=56 h=32 rx=16 f==mix(#121212,#4CC38A,clamp($tg201_on,0,1))
+    R x==252+24*clamp($tg201_on,0,1) y=34 w=28 h=28 rx=14 f=#F2F2F2
+    T x=42 y=24 w=198 h=48 text=Label size=22 weight=bold f=#F2F2F2 valign=middle fit=ellipsis
 }
 # widget gauge gauge202 {"x":24,"y":24,"w":300,"h":300,"label":"Label","unit":"","min":0,"max":100,"start":-135,"end":135,"ticks":5,"fmt":"%.0f","value":true,"state":true,"keys":{}}
 G id=gauge202 {
@@ -2266,13 +2269,28 @@ G id=gauge203 {
     T x=24 y=164.5 w=300 h=39.2 text="{$gauge203_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
     T x=24 y=296 w=300 h=28 text=Label size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
 }
+# widget gauge gauge204 {"x":24,"y":24,"w":300,"h":300,"label":"Label","unit":"","min":0,"max":100,"start":-135,"end":135,"ticks":5,"fmt":"%.0f","value":true,"state":true,"keys":{}}
+G id=gauge204 {
+    P d="M80.6619 253.33809 A132 132 0 0 1 174 28 A132 132 0 0 1 267.3381 253.33809" s=#7A7A7A sw=4
+    L p=[94.66262,239.33739,80.6619,253.33809] s=#4A4A4A sw=2
+    L p=[70.34071,117.06292,52.0479,109.48579] s=#4A4A4A sw=2
+    L p=[174,47.8,174,28] s=#4A4A4A sw=2
+    L p=[277.65927,117.06292,295.9521,109.48579] s=#4A4A4A sw=2
+    L p=[253.33739,239.33739,267.3381,253.33809] s=#4A4A4A sw=2
+    G a=[174,160] r==-135+clamp(($gauge204_v-0)/100,0,1)*270 {
+        L p=[174,160,174,41.2] s==if(eq($gauge204_st,1),#4CC38A,if(eq($gauge204_st,2),#F0B429,if(eq($gauge204_st,3),#EF5350,#9A9A9A))) sw=3
+    }
+    C cx=174 cy=160 rx=4.5 ry=4.5 f=#F2F2F2
+    T x=24 y=164.5 w=300 h=39.2 text="{$gauge204_v:%.0f}" size=28 f=#F2F2F2 align=center valign=middle
+    T x=24 y=296 w=300 h=28 text=Label size=20 f=#9A9A9A align=center valign=middle fit=ellipsis
+}
 G v==lt(ver,11118) {
     R x=0 y=0 w=480 h=58 f=#000000CC
     T x=14.4 y=0 w=451.2 h=58 text="Update ScriptedScreens Vector to 0.11.118 or newer" size=26 f=#FFCC00
 }
 ]==],
-      snap = { ["al100_st"] = true, ["al100_msg"] = true, ["al101_st"] = true, ["al101_msg"] = true, ["bar102_st"] = true, ["bar103_st"] = true, ["bar104_st"] = true, ["bar105_st"] = true, ["bar108_st"] = true, ["bar109_st"] = true, ["bar110_st"] = true, ["btn112_state"] = true, ["btn113_dis"] = true, ["btn114_sel"] = true, ["duct115_run"] = true, ["duct116_run"] = true, ["duct117_run"] = true, ["log118_k"] = true, ["log118_m"] = true, ["log119_k"] = true, ["log119_m"] = true, ["log119_t"] = true, ["hdr155_crit"] = true, ["hdr155_warn"] = true, ["hdr156_crit"] = true, ["hdr156_warn"] = true, ["hdr156_clock"] = true, ["hdr157_crit"] = true, ["hdr157_warn"] = true, ["kv158_v0"] = true, ["kv158_s0"] = true, ["kv158_v1"] = true, ["kv158_v2"] = true, ["kv159_v0"] = true, ["kv159_s0"] = true, ["kv159_v1"] = true, ["kv159_s1"] = true, ["kv159_v2"] = true, ["kv159_s2"] = true, ["lt160_st"] = true, ["og161_sel"] = true, ["og162_sel"] = true, ["ro164_v"] = true, ["ro164_st"] = true, ["ro164_status"] = true, ["ro164_sub"] = true, ["ro165_v"] = true, ["ro165_st"] = true, ["ro165_status"] = true, ["ro165_sub"] = true, ["ro166_v"] = true, ["ro166_st"] = true, ["ro167_st"] = true, ["ro167_status"] = true, ["ro168_v"] = true, ["ro168_st"] = true, ["ro168_status"] = true, ["ro168_sub"] = true, ["row169_st"] = true, ["row169_r1"] = true, ["rep170_n"] = true, ["rep170_name"] = true, ["rep170_v"] = true, ["rep170_hasv"] = true, ["rep170_ready"] = true, ["rep170_st"] = true, ["rep171_n"] = true, ["rep171_name"] = true, ["rep171_v"] = true, ["rep171_hasv"] = true, ["rep171_ready"] = true, ["rep171_st"] = true, ["rep172_n"] = true, ["rep172_name"] = true, ["rep172_v"] = true, ["rep172_hasv"] = true, ["rep172_ready"] = true, ["rep172_st"] = true, ["rep173_n"] = true, ["rep173_name"] = true, ["rep173_v"] = true, ["rep173_hasv"] = true, ["rep173_ready"] = true, ["rep173_st"] = true, ["rep174_n"] = true, ["rep174_t"] = true, ["rep175_n"] = true, ["rep175_st"] = true, ["rep176_n"] = true, ["rep176_st"] = true, ["rep177_n"] = true, ["rep177_name"] = true, ["rep177_v"] = true, ["rep177_hasv"] = true, ["rep177_ready"] = true, ["rep177_st"] = true, ["rep178_n"] = true, ["rep178_name"] = true, ["rep178_v"] = true, ["rep178_hasv"] = true, ["rep178_ready"] = true, ["rep178_st"] = true, ["stp179_v"] = true, ["txt197_st"] = true, ["tg198_on"] = true, ["tg199_on"] = true, ["gauge201_v"] = true, ["gauge201_st"] = true, ["gauge202_v"] = true, ["gauge202_st"] = true, ["gauge203_v"] = true, ["gauge203_st"] = true }, samples = { ["al100_st"] = 2, ["al100_msg"] = "Message", ["al101_st"] = 2, ["al101_msg"] = "Message", ["bar102_lvl"] = 0.62, ["bar102_st"] = 1, ["bar103_lvl"] = 0.62, ["bar103_st"] = 1, ["bar104_lvl"] = 0.62, ["bar104_st"] = 1, ["bar105_lvl"] = 0.62, ["bar105_st"] = 1, ["bar106_lvl"] = 0.62, ["bar107_lvl"] = 0.62, ["bar108_lvl"] = 0.62, ["bar108_st"] = 1, ["bar108_tgt"] = 0.8, ["bar109_lvl"] = 0.62, ["bar109_st"] = 1, ["bar110_lvl"] = 0.62, ["bar110_st"] = 1, ["btn112_state"] = 0, ["btn113_dis"] = 0, ["btn114_sel"] = 0, ["duct115_run"] = 1, ["duct116_run"] = 1, ["duct117_run"] = 1, ["log118_k"] = { 3, 2, 1 }, ["log118_m"] = { "Message 1", "Message 2", "Message 3" }, ["log119_k"] = { 3, 2, 1 }, ["log119_m"] = { "Message 1", "Message 2", "Message 3" }, ["log119_t"] = { "14:02", "13:57", "13:40" }, ["hdr155_crit"] = 1, ["hdr155_warn"] = 2, ["hdr156_crit"] = 1, ["hdr156_warn"] = 2, ["hdr156_clock"] = "14:06", ["hdr157_crit"] = 1, ["hdr157_warn"] = 2, ["kv158_v0"] = 21.4, ["kv158_s0"] = 1, ["kv158_v1"] = 21.4, ["kv158_v2"] = "Auto", ["kv159_v0"] = 21.4, ["kv159_s0"] = 1, ["kv159_v1"] = 21.4, ["kv159_s1"] = 1, ["kv159_v2"] = 21.4, ["kv159_s2"] = 1, ["lt160_st"] = 1, ["og161_sel"] = 0, ["og162_sel"] = 0, ["ro164_v"] = 78, ["ro164_lvl"] = 0.78, ["ro164_st"] = 1, ["ro164_status"] = "Status", ["ro164_sub"] = 101.3, ["ro165_v"] = 78, ["ro165_lvl"] = 0.78, ["ro165_st"] = 1, ["ro165_status"] = "Status", ["ro165_sub"] = 101.3, ["ro166_v"] = 78, ["ro166_lvl"] = 0.78, ["ro166_st"] = 1, ["ro167_st"] = 1, ["ro167_status"] = "Status", ["ro168_v"] = 78, ["ro168_lvl"] = 0.78, ["ro168_st"] = 1, ["ro168_status"] = "Status", ["ro168_sub"] = 101.3, ["row169_st"] = 1, ["row169_r1"] = 21.4, ["rep170_n"] = 4, ["rep170_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep170_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep170_st"] = { 1, 2, 0, 3 }, ["rep171_n"] = 4, ["rep171_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep171_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep171_st"] = { 1, 2, 0, 3 }, ["rep172_n"] = 4, ["rep172_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep172_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep172_st"] = { 1, 2, 0, 3 }, ["rep173_n"] = 4, ["rep173_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep173_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep173_st"] = { 1, 2, 0, 3 }, ["rep174_n"] = 4, ["rep174_t"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep175_n"] = 4, ["rep175_lvl"] = { 0.62, 0.3, 0.05, 0.9 }, ["rep175_st"] = { 1, 2, 3, 1 }, ["rep176_n"] = 4, ["rep176_st"] = { 1, 2, 0, 3 }, ["rep177_n"] = 4, ["rep177_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep177_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep177_st"] = { 1, 2, 0, 3 }, ["rep178_n"] = 4, ["rep178_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep178_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep178_st"] = { 1, 2, 0, 3 }, ["stp179_v"] = 12, ["txt197_st"] = 1, ["tg198_on"] = 1, ["tg199_on"] = 1, ["tg200_on"] = 1, ["gauge201_v"] = 50, ["gauge201_st"] = 1, ["gauge202_v"] = 50, ["gauge202_st"] = 1, ["gauge203_v"] = 50, ["gauge203_st"] = 1 }, nils = { ["al100_st"] = 0, ["al100_msg"] = "--", ["al101_st"] = 0, ["al101_msg"] = "--", ["bar102_st"] = 0, ["bar103_st"] = 0, ["bar104_st"] = 0, ["bar105_st"] = 0, ["bar108_st"] = 0, ["bar109_st"] = 0, ["bar110_st"] = 0, ["btn112_state"] = 0, ["btn113_dis"] = 0, ["btn114_sel"] = 0, ["duct115_run"] = 0, ["duct116_run"] = 0, ["duct117_run"] = 0, ["log118_k"] = { 0 }, ["log118_m"] = { "" }, ["log119_k"] = { 0 }, ["log119_m"] = { "" }, ["log119_t"] = { "" }, ["hdr155_crit"] = 0, ["hdr155_warn"] = 0, ["hdr156_crit"] = 0, ["hdr156_warn"] = 0, ["hdr156_clock"] = "--", ["hdr157_crit"] = 0, ["hdr157_warn"] = 0, ["kv158_v0"] = "--", ["kv158_s0"] = 0, ["kv158_v1"] = "--", ["kv158_v2"] = "--", ["kv159_v0"] = "--", ["kv159_s0"] = 0, ["kv159_v1"] = "--", ["kv159_s1"] = 0, ["kv159_v2"] = "--", ["kv159_s2"] = 0, ["lt160_st"] = 0, ["og161_sel"] = 0, ["og162_sel"] = 0, ["ro164_v"] = "--", ["ro164_st"] = 0, ["ro164_status"] = "--", ["ro164_sub"] = "--", ["ro165_v"] = "--", ["ro165_st"] = 0, ["ro165_status"] = "--", ["ro165_sub"] = "--", ["ro166_v"] = "--", ["ro166_st"] = 0, ["ro167_st"] = 0, ["ro167_status"] = "--", ["ro168_v"] = "--", ["ro168_st"] = 0, ["ro168_status"] = "--", ["ro168_sub"] = "--", ["row169_st"] = 0, ["row169_r1"] = "--", ["rep170_n"] = 0, ["rep170_name"] = { "" }, ["rep170_v"] = { "" }, ["rep170_hasv"] = { 0 }, ["rep170_ready"] = 0, ["rep170_st"] = { 0 }, ["rep171_n"] = 0, ["rep171_name"] = { "" }, ["rep171_v"] = { "" }, ["rep171_hasv"] = { 0 }, ["rep171_ready"] = 0, ["rep171_st"] = { 0 }, ["rep172_n"] = 0, ["rep172_name"] = { "" }, ["rep172_v"] = { "" }, ["rep172_hasv"] = { 0 }, ["rep172_ready"] = 0, ["rep172_st"] = { 0 }, ["rep173_n"] = 0, ["rep173_name"] = { "" }, ["rep173_v"] = { "" }, ["rep173_hasv"] = { 0 }, ["rep173_ready"] = 0, ["rep173_st"] = { 0 }, ["rep174_n"] = 0, ["rep174_t"] = { "" }, ["rep175_n"] = 0, ["rep175_lvl"] = { 0 }, ["rep175_st"] = { 0 }, ["rep176_n"] = 0, ["rep176_st"] = { 0 }, ["rep177_n"] = 0, ["rep177_name"] = { "" }, ["rep177_v"] = { "" }, ["rep177_hasv"] = { 0 }, ["rep177_ready"] = 0, ["rep177_st"] = { 0 }, ["rep178_n"] = 0, ["rep178_name"] = { "" }, ["rep178_v"] = { "" }, ["rep178_hasv"] = { 0 }, ["rep178_ready"] = 0, ["rep178_st"] = { 0 }, ["txt197_st"] = 0, ["tg198_on"] = 0, ["tg199_on"] = 0, ["tg200_on"] = 0, ["gauge201_st"] = 0, ["gauge202_st"] = 0, ["gauge203_st"] = 0 }, eased = { ["bar102_lvl"] = 0.00125, ["bar103_lvl"] = 0.00125, ["bar104_lvl"] = 0.00125, ["bar105_lvl"] = 0.00125, ["bar106_lvl"] = 0, ["bar107_lvl"] = 0.00125, ["bar108_lvl"] = 0.00125, ["bar108_tgt"] = 0.00125, ["bar109_lvl"] = 0.0003125, ["bar110_lvl"] = 0.0003125, ["ro164_lvl"] = 0, ["ro165_lvl"] = 0, ["ro166_lvl"] = 0, ["ro168_lvl"] = 0, ["rep175_lvl"] = 0.0011363636363636363, ["tg200_on"] = 0.008928571428571428 }, arrays = { ["rep175_lvl"] = true },
-      repeaters = { { n = "rep170_n", v = "rep170_v", hasv = "rep170_hasv", ready = "rep170_ready", max = 6 }, { n = "rep171_n", v = "rep171_v", hasv = "rep171_hasv", ready = "rep171_ready", max = 6 }, { n = "rep172_n", v = "rep172_v", hasv = "rep172_hasv", ready = "rep172_ready", max = 6 }, { n = "rep173_n", v = "rep173_v", hasv = "rep173_hasv", ready = "rep173_ready", max = 6 }, { n = "rep177_n", v = "rep177_v", hasv = "rep177_hasv", ready = "rep177_ready", max = 6 }, { n = "rep178_n", v = "rep178_v", hasv = "rep178_hasv", ready = "rep178_ready", max = 6 } },
+      snap = { ["al100_st"] = true, ["al100_msg"] = true, ["al101_st"] = true, ["al101_msg"] = true, ["bar102_st"] = true, ["bar103_st"] = true, ["bar104_st"] = true, ["bar105_st"] = true, ["bar108_st"] = true, ["bar109_st"] = true, ["bar110_st"] = true, ["btn112_state"] = true, ["btn113_dis"] = true, ["btn114_sel"] = true, ["duct115_run"] = true, ["duct116_run"] = true, ["duct117_run"] = true, ["log118_k"] = true, ["log118_m"] = true, ["log119_k"] = true, ["log119_m"] = true, ["log119_t"] = true, ["hdr155_crit"] = true, ["hdr155_warn"] = true, ["hdr156_crit"] = true, ["hdr156_warn"] = true, ["hdr156_clock"] = true, ["hdr157_crit"] = true, ["hdr157_warn"] = true, ["kv158_v0"] = true, ["kv158_s0"] = true, ["kv158_v1"] = true, ["kv158_v2"] = true, ["kv159_v0"] = true, ["kv159_s0"] = true, ["kv159_v1"] = true, ["kv159_s1"] = true, ["kv159_v2"] = true, ["kv159_s2"] = true, ["lt160_st"] = true, ["og161_sel"] = true, ["og162_sel"] = true, ["ro164_v"] = true, ["ro164_st"] = true, ["ro164_status"] = true, ["ro164_sub"] = true, ["ro165_v"] = true, ["ro165_st"] = true, ["ro165_status"] = true, ["ro165_sub"] = true, ["ro166_v"] = true, ["ro166_st"] = true, ["ro167_st"] = true, ["ro167_status"] = true, ["ro168_v"] = true, ["ro168_st"] = true, ["ro168_status"] = true, ["ro168_sub"] = true, ["row169_st"] = true, ["row169_r1"] = true, ["rep170_n"] = true, ["rep170_name"] = true, ["rep170_v"] = true, ["rep170_hasv"] = true, ["rep170_ready"] = true, ["rep170_st"] = true, ["rep171_n"] = true, ["rep171_name"] = true, ["rep171_v"] = true, ["rep171_hasv"] = true, ["rep171_ready"] = true, ["rep171_st"] = true, ["rep172_n"] = true, ["rep172_name"] = true, ["rep172_v"] = true, ["rep172_hasv"] = true, ["rep172_ready"] = true, ["rep172_st"] = true, ["rep173_n"] = true, ["rep173_name"] = true, ["rep173_v"] = true, ["rep173_hasv"] = true, ["rep173_ready"] = true, ["rep173_st"] = true, ["rep174_n"] = true, ["rep174_t"] = true, ["rep175_n"] = true, ["rep175_st"] = true, ["rep176_n"] = true, ["rep176_st"] = true, ["rep177_n"] = true, ["rep177_name"] = true, ["rep177_v"] = true, ["rep177_hasv"] = true, ["rep177_ready"] = true, ["rep177_st"] = true, ["rep178_n"] = true, ["rep178_name"] = true, ["rep178_v"] = true, ["rep178_hasv"] = true, ["rep178_ready"] = true, ["rep178_st"] = true, ["rep178_fade"] = true, ["rep179_n"] = true, ["rep179_name"] = true, ["rep179_v"] = true, ["rep179_hasv"] = true, ["rep179_ready"] = true, ["rep179_st"] = true, ["stp180_v"] = true, ["txt198_st"] = true, ["tg199_on"] = true, ["tg200_on"] = true, ["gauge202_v"] = true, ["gauge202_st"] = true, ["gauge203_v"] = true, ["gauge203_st"] = true, ["gauge204_v"] = true, ["gauge204_st"] = true }, samples = { ["al100_st"] = 2, ["al100_msg"] = "Message", ["al101_st"] = 2, ["al101_msg"] = "Message", ["bar102_lvl"] = 0.62, ["bar102_st"] = 1, ["bar103_lvl"] = 0.62, ["bar103_st"] = 1, ["bar104_lvl"] = 0.62, ["bar104_st"] = 1, ["bar105_lvl"] = 0.62, ["bar105_st"] = 1, ["bar106_lvl"] = 0.62, ["bar107_lvl"] = 0.62, ["bar108_lvl"] = 0.62, ["bar108_st"] = 1, ["bar108_tgt"] = 0.8, ["bar109_lvl"] = 0.62, ["bar109_st"] = 1, ["bar110_lvl"] = 0.62, ["bar110_st"] = 1, ["btn112_state"] = 0, ["btn113_dis"] = 0, ["btn114_sel"] = 0, ["duct115_run"] = 1, ["duct116_run"] = 1, ["duct117_run"] = 1, ["log118_k"] = { 3, 2, 1 }, ["log118_m"] = { "Message 1", "Message 2", "Message 3" }, ["log119_k"] = { 3, 2, 1 }, ["log119_m"] = { "Message 1", "Message 2", "Message 3" }, ["log119_t"] = { "14:02", "13:57", "13:40" }, ["hdr155_crit"] = 1, ["hdr155_warn"] = 2, ["hdr156_crit"] = 1, ["hdr156_warn"] = 2, ["hdr156_clock"] = "14:06", ["hdr157_crit"] = 1, ["hdr157_warn"] = 2, ["kv158_v0"] = 21.4, ["kv158_s0"] = 1, ["kv158_v1"] = 21.4, ["kv158_v2"] = "Auto", ["kv159_v0"] = 21.4, ["kv159_s0"] = 1, ["kv159_v1"] = 21.4, ["kv159_s1"] = 1, ["kv159_v2"] = 21.4, ["kv159_s2"] = 1, ["lt160_st"] = 1, ["og161_sel"] = 0, ["og162_sel"] = 0, ["ro164_v"] = 78, ["ro164_lvl"] = 0.78, ["ro164_st"] = 1, ["ro164_status"] = "Status", ["ro164_sub"] = 101.3, ["ro165_v"] = 78, ["ro165_lvl"] = 0.78, ["ro165_st"] = 1, ["ro165_status"] = "Status", ["ro165_sub"] = 101.3, ["ro166_v"] = 78, ["ro166_lvl"] = 0.78, ["ro166_st"] = 1, ["ro167_st"] = 1, ["ro167_status"] = "Status", ["ro168_v"] = 78, ["ro168_lvl"] = 0.78, ["ro168_st"] = 1, ["ro168_status"] = "Status", ["ro168_sub"] = 101.3, ["row169_st"] = 1, ["row169_r1"] = 21.4, ["rep170_n"] = 4, ["rep170_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep170_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep170_st"] = { 1, 2, 0, 3 }, ["rep171_n"] = 4, ["rep171_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep171_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep171_st"] = { 1, 2, 0, 3 }, ["rep172_n"] = 4, ["rep172_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep172_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep172_st"] = { 1, 2, 0, 3 }, ["rep173_n"] = 4, ["rep173_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep173_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep173_st"] = { 1, 2, 0, 3 }, ["rep174_n"] = 4, ["rep174_t"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep175_n"] = 4, ["rep175_lvl"] = { 0.62, 0.3, 0.05, 0.9 }, ["rep175_st"] = { 1, 2, 3, 1 }, ["rep176_n"] = 4, ["rep176_st"] = { 1, 2, 0, 3 }, ["rep177_n"] = 4, ["rep177_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep177_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep177_st"] = { 1, 2, 0, 3 }, ["rep178_n"] = 4, ["rep178_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep178_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep178_st"] = { 1, 2, 0, 3 }, ["rep178_fade"] = { 0, 0, 0.65, 0 }, ["rep179_n"] = 4, ["rep179_name"] = { "Item 1", "Item 2", "Item 3", "Item 4" }, ["rep179_v"] = { 21.4, 19.8, 0, 101.3 }, ["rep179_st"] = { 1, 2, 0, 3 }, ["stp180_v"] = 12, ["txt198_st"] = 1, ["tg199_on"] = 1, ["tg200_on"] = 1, ["tg201_on"] = 1, ["gauge202_v"] = 50, ["gauge202_st"] = 1, ["gauge203_v"] = 50, ["gauge203_st"] = 1, ["gauge204_v"] = 50, ["gauge204_st"] = 1 }, nils = { ["al100_st"] = 0, ["al100_msg"] = "--", ["al101_st"] = 0, ["al101_msg"] = "--", ["bar102_st"] = 0, ["bar103_st"] = 0, ["bar104_st"] = 0, ["bar105_st"] = 0, ["bar108_st"] = 0, ["bar109_st"] = 0, ["bar110_st"] = 0, ["btn112_state"] = 0, ["btn113_dis"] = 0, ["btn114_sel"] = 0, ["duct115_run"] = 0, ["duct116_run"] = 0, ["duct117_run"] = 0, ["log118_k"] = { 0 }, ["log118_m"] = { "" }, ["log119_k"] = { 0 }, ["log119_m"] = { "" }, ["log119_t"] = { "" }, ["hdr155_crit"] = 0, ["hdr155_warn"] = 0, ["hdr156_crit"] = 0, ["hdr156_warn"] = 0, ["hdr156_clock"] = "--", ["hdr157_crit"] = 0, ["hdr157_warn"] = 0, ["kv158_v0"] = "--", ["kv158_s0"] = 0, ["kv158_v1"] = "--", ["kv158_v2"] = "--", ["kv159_v0"] = "--", ["kv159_s0"] = 0, ["kv159_v1"] = "--", ["kv159_s1"] = 0, ["kv159_v2"] = "--", ["kv159_s2"] = 0, ["lt160_st"] = 0, ["og161_sel"] = 0, ["og162_sel"] = 0, ["ro164_v"] = "--", ["ro164_st"] = 0, ["ro164_status"] = "--", ["ro164_sub"] = "--", ["ro165_v"] = "--", ["ro165_st"] = 0, ["ro165_status"] = "--", ["ro165_sub"] = "--", ["ro166_v"] = "--", ["ro166_st"] = 0, ["ro167_st"] = 0, ["ro167_status"] = "--", ["ro168_v"] = "--", ["ro168_st"] = 0, ["ro168_status"] = "--", ["ro168_sub"] = "--", ["row169_st"] = 0, ["row169_r1"] = "--", ["rep170_n"] = 0, ["rep170_name"] = { "" }, ["rep170_v"] = { "" }, ["rep170_hasv"] = { 0 }, ["rep170_ready"] = 0, ["rep170_st"] = { 0 }, ["rep171_n"] = 0, ["rep171_name"] = { "" }, ["rep171_v"] = { "" }, ["rep171_hasv"] = { 0 }, ["rep171_ready"] = 0, ["rep171_st"] = { 0 }, ["rep172_n"] = 0, ["rep172_name"] = { "" }, ["rep172_v"] = { "" }, ["rep172_hasv"] = { 0 }, ["rep172_ready"] = 0, ["rep172_st"] = { 0 }, ["rep173_n"] = 0, ["rep173_name"] = { "" }, ["rep173_v"] = { "" }, ["rep173_hasv"] = { 0 }, ["rep173_ready"] = 0, ["rep173_st"] = { 0 }, ["rep174_n"] = 0, ["rep174_t"] = { "" }, ["rep175_n"] = 0, ["rep175_lvl"] = { 0 }, ["rep175_st"] = { 0 }, ["rep176_n"] = 0, ["rep176_st"] = { 0 }, ["rep177_n"] = 0, ["rep177_name"] = { "" }, ["rep177_v"] = { "" }, ["rep177_hasv"] = { 0 }, ["rep177_ready"] = 0, ["rep177_st"] = { 0 }, ["rep178_n"] = 0, ["rep178_name"] = { "" }, ["rep178_v"] = { "" }, ["rep178_hasv"] = { 0 }, ["rep178_ready"] = 0, ["rep178_st"] = { 0 }, ["rep178_fade"] = { 0 }, ["rep179_n"] = 0, ["rep179_name"] = { "" }, ["rep179_v"] = { "" }, ["rep179_hasv"] = { 0 }, ["rep179_ready"] = 0, ["rep179_st"] = { 0 }, ["txt198_st"] = 0, ["tg199_on"] = 0, ["tg200_on"] = 0, ["tg201_on"] = 0, ["gauge202_st"] = 0, ["gauge203_st"] = 0, ["gauge204_st"] = 0 }, eased = { ["bar102_lvl"] = 0.00125, ["bar103_lvl"] = 0.00125, ["bar104_lvl"] = 0.00125, ["bar105_lvl"] = 0.00125, ["bar106_lvl"] = 0, ["bar107_lvl"] = 0.00125, ["bar108_lvl"] = 0.00125, ["bar108_tgt"] = 0.00125, ["bar109_lvl"] = 0.0003125, ["bar110_lvl"] = 0.0003125, ["ro164_lvl"] = 0, ["ro165_lvl"] = 0, ["ro166_lvl"] = 0, ["ro168_lvl"] = 0, ["rep175_lvl"] = 0.0011363636363636363, ["tg201_on"] = 0.008928571428571428 }, arrays = { ["rep175_lvl"] = true },
+      repeaters = { { n = "rep170_n", v = "rep170_v", hasv = "rep170_hasv", ready = "rep170_ready", max = 6 }, { n = "rep171_n", v = "rep171_v", hasv = "rep171_hasv", ready = "rep171_ready", max = 6 }, { n = "rep172_n", v = "rep172_v", hasv = "rep172_hasv", ready = "rep172_ready", max = 6 }, { n = "rep173_n", v = "rep173_v", hasv = "rep173_hasv", ready = "rep173_ready", max = 6 }, { n = "rep177_n", v = "rep177_v", hasv = "rep177_hasv", ready = "rep177_ready", max = 6 }, { n = "rep178_n", v = "rep178_v", hasv = "rep178_hasv", ready = "rep178_ready", max = 6 }, { n = "rep179_n", v = "rep179_v", hasv = "rep179_hasv", ready = "rep179_ready", max = 6 } },
       data = function(o)
       end,
       natives = {  },
